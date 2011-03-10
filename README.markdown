@@ -9,11 +9,11 @@ what is it
 
 you can play with a demo here:
 
-- http://scrumblr.ca/demo
+- [scrumblr.ca/demo](http://scrumblr.ca/demo)
 
 And view a video here:
 
-- [YouTube Video Demo](http://www.youtube.com/watch?v=gAKxyOh1zPk)
+- [Video Demo](http://www.youtube.com/watch?v=gAKxyOh1zPk)
 
 use scrumblr
 ------------
