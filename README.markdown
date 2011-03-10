@@ -3,7 +3,7 @@ scrumblr
 
 what is it
 ----------
-scrumblr is a simulation of an agile sprint board. using node.js, websockets + CSS3, it is able to synchronize the board across many clients so teams can work collaboratively in real time. i hope you like it.
+[scrumblr](http://scrumblr.ca) is a simulation of an agile sprint board. using node.js, websockets (using socket.io), CSS3, and jquery. it is able to synchronize the board across many clients so teams can work collaboratively in real time. i hope you like it.
 
 ![Wellca Board](http://scrumblr.ca/images/screenshot.png)
 
@@ -18,19 +18,20 @@ And view a video here:
 use scrumblr
 ------------
 
-if you'd like to use scrumblr in your organization, you can use my hosted version at scrumblr.ca. new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: scrumblr.ca/thisisoursecretboard23423242
+if you'd like to use scrumblr in your organization, you can use my hosted version at [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
 
 alternatively, you can follow the instructions below to host scrumblr yourself. it is very simple -- it just uses redis and node.js.
+
+if you are a developer, please fork and submit changes/fixes.
 
 browser support
 ---------------
 
 scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx.
 
-
 design philosophy
 -----------------
-my goal was to avoid buttons and ui (everything is edit in place). everything should be discoverable (no "help"). the look is meant to be as close as possible to Well.ca's real sprint board. see picture below. many of the decisions were to make the app look and feel as much as possible like well.ca's real sprint board -- you may find this annoying but we find it kinda funny.
+my goal was to avoid buttons and ui (everything is edit in place). everything should be discoverable (no "help"). the look is meant to be as close as possible to [Well.ca's](http://well.ca) real sprint board. see picture below. many of the decisions were to make the app look and feel as much as possible like well.ca's real sprint board -- you may find this annoying but we find it kinda funny.
 
 ![Wellca Board](http://scrumblr.ca/images/DSC_7093.jpg)
 
@@ -50,5 +51,15 @@ how to install and run on your own computer (linux/osx)
 	- sanitizer
 	- socket.io
 	- (and perhaps more which you will notice when you try to start it)
-- now start redis ($redis-server)
-- now start ($node server.js 80) where "80" is the port you want it to run on. 
+- now start redis ($ redis-server)
+- now start ($ node server.js 80) where "80" is the port you want it to run on. 
+
+licence
+-------
+
+feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code. if you make changes, please post them on github. and if you are an interesting person or company using scrumblr, or using it in an interesting way, please email me as i'd love to hear about it.
+
+author
+------
+
+ali asaria - [well.ca](http://well.ca) - ali@well.ca
