@@ -18,16 +18,16 @@ And view a video here:
 use scrumblr
 ------------
 
-if you'd like to use scrumblr in your organization, you can use my hosted version at [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
+if you'd like to use scrumblr for personal use or in your organization, i have a free hosted version at [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
 
-alternatively, you can follow the instructions below to host scrumblr yourself. it is very simple -- it just uses redis and node.js.
+alternatively, you can follow the instructions below to setup scrumblr yourself. it is very simple -- it just uses redis and node.js.
 
 if you are a developer, please fork and submit changes/fixes.
 
 browser support
 ---------------
 
-scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx.
+scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx. this was not designed for browser support.
 
 design philosophy
 -----------------
@@ -57,7 +57,7 @@ how to install and run on your own computer (linux/osx)
 licence
 -------
 
-feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code. if you make changes, please post them on github. and if you are an interesting person or company using scrumblr, or using it in an interesting way, please email me as i'd love to hear about it.
+feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code. if you make changes, please post them on github. and if you are an interesting person or company using scrumblr, think it is cool, or using it in an interesting way, please email me as i'd love to hear about it.
 
 author
 ------
