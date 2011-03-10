@@ -1,0 +1,60 @@
+!!! 5
+html(lang="en")
+	head
+		<!-- SCRIPTS -->
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<!-- FONTS -->
+		<link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
+
+		title scrumblr
+
+body
+	h1 scrumblr by <a href="http://aliasaria.ca">aliasaria</a>
+
+	div.board-outline
+		div#board
+			div#board-doodles
+		
+			
+			table#board-table.board-table
+				tr
+					td 
+						h1.home scrumblr.
+						form.home(onsubmit="return go();")
+							label name your new board:
+							br
+							input.text(type="text", name="name") formname
+							a#go(onclick="return go();") &nbsp;go.
+						<br><br>
+						p.home example board:
+						p.home <a href="http://scrumblr.ca/demo">http://scrumblr.ca/demo</a>
+						<br><br><br>
+						p.home.small sourcecode at <a href="http://github.com/aliasaria/">github</a>
+				
+	div.stickers
+		div.sticker#sticker-red
+			image(src="/images/stickers/sticker-red.png")
+		div.sticker#sticker-blue
+			image(src="/images/stickers/sticker-blue.png")
+		div.sticker#sticker-yellow
+			image(src="/images/stickers/sticker-yellow.png")
+		div.sticker#sticker-green
+			image(src="/images/stickers/sticker-green.png")
+		div.sticker#sticker-gold
+			image(src="/images/stickers/sticker-gold.png")
+		div.sticker#sticker-bluestar
+			image(src="/images/stickers/sticker-bluestar.png")
+		div.sticker#sticker-redstar
+			image(src="/images/stickers/sticker-redstar.png")
+		div.sticker#sticker-silverstar
+			image(src="/images/stickers/sticker-silverstar.png")
+
+
+	//display # of active users here
+
+	//<div style="width: 980px; height: 450px; border: solid 2px; opacity:.1; margin-top: 100px"> this will be the backlog that only appears on drag or perhaps not at all</div>
+
+	<script type="text/javascript">function go() {var value = document.forms[0].elements["name"].value; value = escape(value); window.location.href = value; return false;}</script>
+
+	<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-2069672-4']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>

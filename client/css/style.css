@@ -1,0 +1,453 @@
+
+
+
+body {
+	font-family: 'Helvetica Neue Light', arial, serif;
+	font-size: 13px;
+	color: #333;
+	background-color: #ddd;
+	xbackground-image: -webkit-gradient(radial, 265 118, 456, 147 0, 29, from(#DDDDDD), to(#f3f3f3));
+	
+	padding-left: 10px;
+	
+	height: 1400px;
+	width: 2000px;
+}
+
+#board {
+	position: relative;
+	background-color: #dcd5d1;
+	
+	height: 450px;
+	width: 980px;
+	border: solid silver 8px;
+	
+	background-image: -webkit-gradient(
+	    linear,
+	    left top,
+	    right bottom,
+	    color-stop(0.49, rgb(214,210,206)),
+	    color-stop(0.84, rgb(196,191,182))
+	);
+	
+	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
+	
+	-webkit-box-shadow:inset 1px 1px 3px #999;
+	-moz-box-shadow:inset 1px 1px 3px #999;
+	box-shadow:inset 1px 1px 3px #999;
+}
+
+.board-outline {
+	border: solid #ccc 1px;
+	width: 996px;
+	height: 466px;
+	
+	xmargin-left: auto;
+	xmargin-right: auto;
+	
+	-webkit-box-shadow: 1px 1px 2px #aaa;
+	-moz-box-shadow: 1px 1px 2px #aaa;
+	
+	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
+}
+
+#board-doodles {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: inline;
+	opacity: .08;
+	background-image: url('nexum_whiteboard.jpg');
+}
+
+
+
+.hover .content {
+	xborder: solid rgba(92, 157, 181,0.5) 3px;
+}
+
+
+.card-icon {
+display:none;
+position: absolute;
+top: 3%; left: 82%;
+opacity: .3;
+width: 16px; height: 16px;
+}
+
+.card-icon-hover {
+	opacity: .9;	
+}
+
+.card-edit-form, .card-edit-form input, .card-edit-form textarea {
+	border:none;
+	font-size:inherit;
+	font-weight:inherit;
+	background-color:inherit;
+	xvertical-align: inherit;
+	font-family: inherit;
+	text-align: center;
+	xcolor: #444;
+	padding: 0;
+	margin: 0;
+	outline-width:0;
+	overflow: hidden;
+	resize: none;
+	width: 100%;
+	
+}
+
+
+
+.board-table {
+	xz-index: 1;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	xborder: solid black 1px;
+	height: 100%;
+	width: 100%;
+}
+
+.board-table .col{
+	xborder-left: dashed #19ba98 5px;
+	text-align: center;
+	vertical-align: top;
+	height: 100%;
+	xopacity: 1;
+	background-image: url('/images/green-board-line.png');
+	background-repeat: repeat-y;
+	background-position: left top;
+}
+
+.board-table .first{
+	border-left: none;
+	text-align: center;
+	vertical-align: top;
+	height: 100%;
+	background-image: none;
+	
+}
+
+h1, h1 a {
+	color: #b6b6b6;
+	padding: 0px;
+	margin: 0px;
+	margin-left: 1px;
+	font-weight: normal;
+	xtext-shadow: 1px 1px 1px #b6b6b6;
+	font-size: 15px;
+	padding-top: 14px;
+	letter-spacing: +1px;
+	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	text-decoration: none;
+}
+
+h2 { 
+	font-family: 'Rock Salt', "Arial Rounded MT Bold", arial, serif;
+	color: #5c9db4;
+	font-size: 18px;
+	}
+	
+.bottom-icon {
+	padding: 5px;
+	opacity: .3;
+}
+
+.bottom-icon:hover {
+	padding: 5px;
+	opacity: .4;
+}
+
+#add-col {
+	position: absolute; right: 3px; top: 200px; display: none; opacity: .15;
+}
+#add-col:hover {
+	opacity: .5;
+}
+
+#delete-col {
+	position: absolute; right: 3px; top: 224px; display: none; opacity: .15;
+}
+#delete-col:hover {
+	opacity: .5;
+}
+
+#config-dropdown {
+	border: solid #666 5px;
+	width: 200px;
+	height: 34px;
+	border-radius: 15px;
+	background-color: #888;
+	box-shadow: 0px 0px 10px #444;
+	padding: 2px;
+	display: none;
+}
+
+.config-dropdown-icon {
+	padding: 5px;
+	opacity: .5;
+}
+
+.buttons {
+	float: left;
+}
+
+.names {
+	padding-left: 10px;
+	width: 980px;
+	text-align: right;
+	color: #bbb;
+	letter-spacing: 4px;
+	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	font-size: 13px;
+	
+}
+
+.names p {
+	padding: 0; margin 0;
+}
+
+.names ul {
+	list-style: none;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+#yourname-li {
+	color: #888;
+}
+
+.names input {
+   padding: 0; //2px 8px 2px 2px;  
+    border: none;
+    outline: 0;  
+    width: 100px;  
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+    background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
+
+	background: none; 
+	border-radius: 10px;
+	color: #666;
+	text-align: right;
+	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	font-size: 13px;	
+	letter-spacing: 4px;
+	margin:0;
+	
+	position: relative;
+}
+
+.names input:hover {
+    padding: 2px 2px 2px 2px;  
+    xborder: solid 1px #E5E5E5;
+    outline: 0;  
+    width: 100px;  
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+    background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
+xopacity: .5;  
+	background: none;
+    box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+	border-radius: 10px;
+	color: #aaa;
+	text-align: right;
+	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	font-size: 13px;	
+	letter-spacing: 4px;
+	margin:0;
+	
+}
+
+.names .focused {
+	color: #444;
+}
+
+.you-text {
+	letter-spacing: 2px;
+}
+
+
+#user-icon {
+	vertical-align: text-top;
+	position: relative;
+	left: 0px;
+}
+
+.sticker {
+	padding-top:  3px;
+	padding-left: 2px;
+	z-index:10;
+	display: inline;
+}
+
+.stickers {
+	width: 1000px;
+	text-align: right;
+	padding-top: 2px; margin: 0;
+}
+
+#sticker-gold, #sticker-bluestar, #sticker-redstar, #sticker-silverstar {
+	position: relative;
+	top: 2px;
+	padding: 0; margin 0;
+}
+
+#sticker-nostar {
+	position: relative;
+	top: 3px;
+	opacity: .5;
+}
+
+#sticker-redstar {
+	top: 1px;
+}
+
+.sticker-red {
+	background-image: url('/images/stickers/sticker-red.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-blue {
+	background-image: url('/images/stickers/sticker-blue.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-yellow {
+	background-image: url('/images/stickers/sticker-yellow.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-green {
+	background-image: url('/images/stickers/sticker-green.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-gold {
+	background-image: url('/images/stickers/sticker-gold.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-bluestar {
+	background-image: url('/images/stickers/sticker-bluestar.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-silverstar {
+	background-image: url('/images/stickers/sticker-silverstar.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-redstar {
+	background-image: url('/images/stickers/sticker-redstar.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-pink {
+	background-image: url('/images/stickers/sticker-pink.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-orange {
+	background-image: url('/images/stickers/sticker-orange.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-lightblue {
+	background-image: url('/images/stickers/sticker-lightblue.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+.sticker-purple {
+	background-image: url('/images/stickers/sticker-purple.png');
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+
+
+
+/* Stuff for landing page */
+h1.home {
+	font-size: 100px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #19ba98;
+	opacity: .8;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	xline-height: .9em;
+}
+
+.home {
+	font-size: 30px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #19ba98;
+	color: #222;
+	opacity: 1;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	xline-height: .9em;
+}
+
+p.home a {
+	color: #5c9db4;
+
+	text-decoration: none;
+}
+
+p.small {
+	font-size: 22px;
+}
+
+#video {
+	height: 450px;
+	width: 1000px;
+	padding-top: 100px;
+}
+
+input.text {
+    width: 230px;
+    background: none;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: none;
+	font-size: 30px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #5c9db4;
+	text-align: center;
+	border-bottom: dashed 3px #19ba98;
+}
+
+input:hover {
+    x-webkit-box-shadow: 0px 0px 4px #000;
+    xbackground: none;
+}
+
+#go {
+	 background: none;
+    margin-bottom: 10px;
+    border: none;
+	font-size: 40px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #19ba98;
+	color: black;
+	
+	xborder: solid 1px;
+	
+	
+	
+}
