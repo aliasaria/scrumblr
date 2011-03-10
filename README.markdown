@@ -15,7 +15,7 @@ design philosophy
 -----------------
 my goal was to avoid buttons and ui (everything is edit in place). everything should be discoverable (no "help"). the look is meant to be as close as possible to Well.ca's real sprint board. see picture below.
 
-![Wellca Board](http://scrumblr.ca/DSC_7093.jpg)
+![Wellca Board](http://scrumblr.ca/images/DSC_7093.jpg)
 
 
 how to install and run on your own computer (linux/osx)
