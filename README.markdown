@@ -57,7 +57,7 @@ how to install and run on your own computer (linux/osx)
 licence
 -------
 
-feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code. if you make changes, please post them on github. and if you are an interesting person or company using scrumblr, think it is cool, or using it in an interesting way, please email me as i'd love to hear about it.
+feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code including derivatives, on their own, or in a product. if you make changes, please post them on github and retain attribution. and if you are an interesting person or company using scrumblr, think it is cool, or using it in an interesting way, please email me as i'd love to hear about it.
 
 author
 ------
