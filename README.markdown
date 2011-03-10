@@ -31,7 +31,7 @@ scrumblr works on up to date chrome and firefox browsers. enable websockets for 
 
 design philosophy
 -----------------
-my goal was to avoid buttons and ui (everything is edit in place). everything should be discoverable (no "help"). the look is meant to be as close as possible to [Well.ca's](http://well.ca) real sprint board. see picture below. many of the decisions were to make the app look and feel as much as possible like well.ca's real sprint board -- you may find this annoying but we find it kinda funny.
+my goal was to avoid buttons and ui (almost everything is edit in place or draggable). everything should be discoverable (no "help"). the look is meant to be as close as possible to [Well.ca's](http://well.ca) real sprint board. see picture below. many of the decisions were to make the app look and feel as much as possible like well.ca's real sprint board -- you may find this annoying but we find it kinda funny.
 
 ![Wellca Board](http://scrumblr.ca/images/DSC_7093.jpg)
 
