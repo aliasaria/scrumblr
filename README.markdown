@@ -50,6 +50,8 @@ how to install and run on your own computer (linux/osx)
 	- redis
 	- sanitizer
 	- socket.io
+	- simplesets
+	- connect-redis
 	- (and perhaps more which you will notice when you try to start it)
 - now start redis ($ redis-server)
 - now start ($ node server.js 80) where "80" is the port you want it to run on. 
