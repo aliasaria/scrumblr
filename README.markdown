@@ -3,7 +3,7 @@ scrumblr
 
 what is it
 ----------
-[scrumblr](http://scrumblr.ca) is a simulation of an agile sprint board. using node.js, websockets (using socket.io), CSS3, and jquery. it is able to synchronize the board across many clients so teams can work collaboratively in real time. i hope you like it.
+[scrumblr](http://scrumblr.ca) is a web-based simulation of a physical agile sprint board that supports real-time collaboration. it is built using node.js, websockets (using socket.io), CSS3, and jquery. i hope you like it.
 
 ![Wellca Board](http://scrumblr.ca/images/screenshot.png)
 
@@ -18,7 +18,7 @@ And view a video here:
 use scrumblr
 ------------
 
-if you'd like to use scrumblr for personal use or in your organization, i have a free hosted version at [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
+if you'd like to use scrumblr go to [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
 
 alternatively, you can follow the instructions below to setup scrumblr yourself. it is very simple -- it just uses redis and node.js.
 
