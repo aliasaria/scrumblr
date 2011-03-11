@@ -56,10 +56,24 @@ how to install and run on your own computer (linux/osx)
 - now start redis ($ redis-server)
 - now start ($ node server.js 80) where "80" is the port you want it to run on. 
 
-licence
+license
 -------
 
-feel free to use scrumblr, its code and the images and design for personal use or at your workplace but you may not sell the images or code including derivatives, on their own, or in a product. if you make changes, please post them on github and retain attribution. and if you are an interesting person or company using scrumblr, think it is cool, or using it in an interesting way, please email me as i'd love to hear about it.
+scrumblr is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+See <http://www.gnu.org/licenses/>.
+
+the *images* used in scrumblr, however are licensed under cc non commercial noderivs:
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License</a>.
 
 author
 ------
