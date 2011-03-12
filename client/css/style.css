@@ -278,7 +278,7 @@ xopacity: .5;
 .sticker {
 	padding-top:  3px;
 	padding-left: 2px;
-	z-index:10;
+	xz-index:10;
 	display: inline;
 }
 
