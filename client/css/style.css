@@ -10,8 +10,8 @@ body {
 	
 	padding-left: 10px;
 	
-	height: 1400px;
-	width: 2000px;
+	xheight: 1400px;
+	xwidth: 2000px;
 }
 
 #board {
@@ -278,7 +278,7 @@ xopacity: .5;
 .sticker {
 	padding-top:  3px;
 	padding-left: 2px;
-	z-index:10;
+	xz-index:10;
 	display: inline;
 }
 
@@ -450,4 +450,17 @@ input:hover {
 	
 	
 	
+}
+
+.notice-bar {
+	xbackground-color: #ccc;
+	opacity: .2;
+	padding: 0;
+	margin: 0;
+	xtext-align: center;
+	margin-left: 300px;
+}
+
+.notice-bar a {
+	color: #333;
 }

@@ -66,9 +66,16 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/:id', function(req, res){
+app.get('/demo', function(req, res) {
 	res.render('index.jade', {
-		locals: {pageTitle: 'scrumblr'}
+		locals: {pageTitle: 'scrumblr - demo', demo: true}
+	});
+});
+
+app.get('/:id', function(req, res){
+	
+	res.render('index.jade', {
+		locals: {pageTitle: ('scrumblr - ' + req.params.id) }
 	});
 });
 
@@ -242,35 +249,47 @@ function scrub( text ) {
 				break;
 				
 			case 'updateColumns':				
-				//@TODO -- scrub each column
-				getRoom( client, function(room) {
-					setColumns( room, message.data );
-				});
+				var columns = message.data;
 				
-				broadcastToRoom( client, message );
+				if (!(columns instanceof Array))
+					break;
+				
+				var clean_columns = [];
+				
+				for (i in columns)
+				{
+					clean_columns[i] = scrub( columns[i] );
+				}
+				
+				setColumns( room, clean_columns );
 
+				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
+				
 				break;
 				
 			case 'changeTheme':
-				//@TODO -- scrub 
-				message.data = scrub(message.data);
+				var clean_message = {};
+				clean_message.data = scrub(message.data);
 				
 				getRoom( client, function(room) {
-					setTheme( room, message.data );
+					setTheme( room, clean_message.data );
 				});
 				
-				broadcastToRoom( client, message );
+				clean_message.action = 'changeTheme';
+				
+				broadcastToRoom( client, clean_message );
 				break;
 				
 			case 'setUserName':
-				//@TODO -- scrub 
-				name = scrub(message.data);
+				var clean_message = {};
 				
-				setUserName(client, name);
+				clean_message.data = scrub(message.data);
+				
+				setUserName(client, clean_message.data);
 				
 				var msg = {};
 				msg.action = 'nameChangeAnnounce';
-				msg.data = { sid: client.sessionId, user_name: name };
+				msg.data = { sid: client.sessionId, user_name: clean_message.data };
 				broadcastToRoom( client, msg );
 				break;
 				
@@ -447,9 +466,7 @@ function setColumns ( room, columns ) {
 		async.forEachSeries(
 			columns,
 			function( item, callback ) {
-				//console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + ' -- ' + item);
-				item = sanitizer.sanitize(item);
-				
+				//console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + ' -- ' + item);				
 				redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', item, 
 					function (err, res) {
 						callback();
@@ -594,16 +611,10 @@ function setUserName ( client, name )
 	console.dir(sids_to_user_names);
 }
 
-
-
-
-// DUMMY DATA
-/*
-redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
-	redisClient.del(REDIS_PREFIX + '-room:/demo-columns', function (err, res) {
-*/
-var db = new data.db(function() {
-  db.clearRoom('/demo', function() {
+function cleanAndInitializeDemoRoom()
+{
+	// DUMMY DATA
+	db.clearRoom('/demo', function() {
 		createColumn( '/demo', 'Not Started' );
 		createColumn( '/demo', 'Started' );
 		createColumn( '/demo', 'Testing' );
@@ -620,16 +631,14 @@ var db = new data.db(function() {
 		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
 		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
 		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
-  });
-});
-/*
 	});
-});
-*/
+}
 // 
 
 
-
+var db = new data.db(function() {
+  cleanAndInitializeDemoRoom();
+});
 
 
 

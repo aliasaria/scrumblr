@@ -27,7 +27,7 @@ if you are a developer, please fork and submit changes/fixes.
 browser support
 ---------------
 
-scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx. this was not designed for browser support.
+scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx. this was not designed for browser support. use chrome for this app.
 
 design philosophy
 -----------------
@@ -64,7 +64,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+scrumblr is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -78,4 +78,4 @@ the *images* used in scrumblr, however are licensed under cc non commercial node
 author
 ------
 
-ali asaria - [well.ca](http://well.ca) - ali@well.ca
+ali asaria - [well.ca](http://well.ca) - ali [at] well.ca

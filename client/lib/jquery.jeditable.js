@@ -177,7 +177,13 @@
                 $(self).html('');
 
                 /* create the form object */
-                var form = $('<form />');
+					/* #########################
+					###################
+					##################
+					Big HACK by ali: i make the form a div so that it no longer has default
+					submit behaviours -- because we don't want HTTP submissions to happen */
+               //var form = $('<form />'); 
+					var form = $('<div />');
                 
                 /* apply css or style or both */
                 if (settings.cssclass) {
@@ -279,16 +285,16 @@
                 } else if ('submit' == settings.onblur) {
                     input.blur(function(e) {
                         /* prevent double submit if submit was clicked */
-                        t = setTimeout(function() {
+                        //t = setTimeout(function() {
                             form.submit();
-                        }, 200);
+                        //}, 200);
                     });
 						//ali here: i hacked this in so that submit happens on mouseout too
 						input.mouseout(function(e) {
                         /* prevent double submit if submit was clicked */
-                        t = setTimeout(function() {
+                        //t = setTimeout(function() {
                             form.submit();
-                        }, 200);
+                        //}, 200);
                     });
                 } else if ($.isFunction(settings.onblur)) {
                     input.blur(function(e) {
