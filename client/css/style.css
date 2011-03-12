@@ -10,8 +10,8 @@ body {
 	
 	padding-left: 10px;
 	
-	height: 1400px;
-	width: 2000px;
+	xheight: 1400px;
+	xwidth: 2000px;
 }
 
 #board {
