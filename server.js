@@ -106,14 +106,21 @@ socket.on('connection', function(client){
 	
 //santizes text
 function scrub( text ) {
-	
-	//clip the string if it is too long
-	if (text.length > 65535)
+	if (typeof text != "undefined" && text !== null)
 	{
-		text = text.substr(0,65535);
-	}
 	
-	return sanitizer.sanitize(text);
+		//clip the string if it is too long
+		if (text.length > 65535)
+		{
+			text = text.substr(0,65535);
+		}
+	
+		return sanitizer.sanitize(text);
+	}
+	else
+	{
+		return null;
+	}
 }	
 	
 	

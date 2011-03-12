@@ -1,7 +1,7 @@
 var cards = {};
 var totalcolumns = 0;
 var columns = [];
-var currentStyle = "bigcards";
+var currentTheme = "bigcards";
 
 
 var socket = new io.Socket(  );
@@ -448,6 +448,7 @@ function initColumns( columnArray )
 
 function changeThemeTo( theme )
 {
+	currentTheme = theme;
 	$("link[title=cardsize]").attr("href", "/css/" + theme + ".css");
 }
 
@@ -556,23 +557,21 @@ $(function() {
 		
 	// Style changer
 	$("#smallify").click(function(){
-		if (currentStyle == "bigcards")
+		if (currentTheme == "bigcards")
 		{
-			currentStyle = "smallcards";
 			changeThemeTo('smallcards');
 		}
-		else if (currentStyle == "smallcards")
+		else if (currentTheme == "smallcards")
 		{
-			currentStyle = "bigcards";
 			changeThemeTo('bigcards');
 		}
-		/*else if (currentStyle == "nocards")
+		/*else if (currentTheme == "nocards")
 		{
-			currentStyle = "bigcards";
+			currentTheme = "bigcards";
 			$("link[title=cardsize]").attr("href", "css/bigcards.css");
 		}*/		
 		
-		sendAction('changeTheme', currentStyle);
+		sendAction('changeTheme', currentTheme);
 		
 	
 		return false;
