@@ -236,35 +236,47 @@ function scrub( text ) {
 				break;
 				
 			case 'updateColumns':				
-				//@TODO -- scrub each column
-				getRoom( client, function(room) {
-					setColumns( room, message.data );
-				});
+				var columns = message.data;
 				
-				broadcastToRoom( client, message );
+				if (!(columns instanceof Array))
+					break;
+				
+				var clean_columns = [];
+				
+				for (i in columns)
+				{
+					clean_columns[i] = scrub( columns[i] );
+				}
+				
+				setColumns( room, clean_columns );
 
+				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
+				
 				break;
 				
 			case 'changeTheme':
-				//@TODO -- scrub 
-				message.data = scrub(message.data);
+				var clean_message = {};
+				clean_message.data = scrub(message.data);
 				
 				getRoom( client, function(room) {
-					setTheme( room, message.data );
+					setTheme( room, clean_message.data );
 				});
 				
-				broadcastToRoom( client, message );
+				clean_message.action = 'changeTheme';
+				
+				broadcastToRoom( client, clean_message );
 				break;
 				
 			case 'setUserName':
-				//@TODO -- scrub 
-				name = scrub(message.data);
+				var clean_message = {};
 				
-				setUserName(client, name);
+				clean_message.data = scrub(message.data);
+				
+				setUserName(client, clean_message.data);
 				
 				var msg = {};
 				msg.action = 'nameChangeAnnounce';
-				msg.data = { sid: client.sessionId, user_name: name };
+				msg.data = { sid: client.sessionId, user_name: clean_message.data };
 				broadcastToRoom( client, msg );
 				break;
 				
@@ -433,9 +445,7 @@ function setColumns ( room, columns ) {
 		async.forEachSeries(
 			columns,
 			function( item, callback ) {
-				//console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + ' -- ' + item);
-				item = sanitizer.sanitize(item);
-				
+				//console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + ' -- ' + item);				
 				redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', item, 
 					function (err, res) {
 						callback();
