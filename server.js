@@ -3,8 +3,10 @@ var	http = require('http'),
 		express = require('express'),
 		connect = require('connect');
 		
+/*
 var 	redis = require("redis"),
 		redisClient = redis.createClient();
+*/
 		
 var 	sys = require('sys');
 	
@@ -13,20 +15,22 @@ var 	app = express.createServer();
 var	async = require('async');
 
 var	rooms	= require('./lib/rooms.js');
+var	data	= require('./lib/data.js');
 
 var 	sanitizer = require('sanitizer');
+
 
 // If you want Memory Store instead...
 // var MemoryStore = require('connect/middleware/session/memory');
 // var session_store = new MemoryStore();
 
-var 	RedisStore = require('connect-redis');
-var 	session_store = new RedisStore( );
+//var 	RedisStore = require('connect-redis');
+//var 	session_store = new RedisStore( );
 
 //Map of sids to user_names
 var sids_to_user_names = [];
 
-var REDIS_PREFIX = '#scrumscrum#';
+//var REDIS_PREFIX = '#scrumscrum#';
 
 app.configure( function(){
 	app.use(express.static(__dirname + '/client'));
@@ -39,7 +43,7 @@ app.configure( function(){
 		express.session({
 			key: "scrumscrum-cookie",
 			secret: "kookoorikoo",
-			store: session_store,
+//			store: session_store,
 			cookie: { path: '/', httpOnly: true, maxAge: 14400000 }
 		})
 	);
@@ -48,10 +52,12 @@ app.configure( function(){
 });
 
 
+/*
 //For Redis Debugging
 redisClient.on("error", function (err) {
     console.log("Redis error: " + err);
 });
+*/
 
 
 app.get('/', function(req, res) {
@@ -393,39 +399,47 @@ function broadcastToRoom ( client, message ) {
 
 function getTheme ( room , callbackFunction )
 {
-	redisClient.get(REDIS_PREFIX + '-room:' + room + '-theme', function (err, res) {
-		callbackFunction(res);
-	});
+	db.getTheme(room, callbackFunction);
+//	redisClient.get(REDIS_PREFIX + '-room:' + room + '-theme', function (err, res) {
+//		callbackFunction(res);
+//	});
 }
 
 function setTheme ( room, theme )
 {
-	redisClient.set(REDIS_PREFIX + '-room:' + room + '-theme', theme);
+  db.setTheme(room, theme);
+//	redisClient.set(REDIS_PREFIX + '-room:' + room + '-theme', theme);
 }
 
 //----------------COL FUNCTIONS
 function getAllColumns ( room, callbackFunction ) {
-	redisClient.lrange(REDIS_PREFIX + '-room:' + room + '-columns', 0, -1, function(err, res) {
-		callbackFunction(res);
-	});
+  db.getAllColumns(room, callbackFunction);
+//	redisClient.lrange(REDIS_PREFIX + '-room:' + room + '-columns', 0, -1, function(err, res) {
+//		callbackFunction(res);
+//	});
 }
 
 function createColumn ( room, name, callback ) {
-	console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + " -- " + name);
-	redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', name, 
-		function (err, res) {
+//	console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + " -- " + name);
+  db.createColumn(room, name, callback);
+//	redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', name, 
+//		function (err, res) {
 				if (typeof callback != "undefined" && callback !== null) callback();
-		}
-	);
+//		}
+//	);
 }
 
 function deleteColumn ( room ) {
-	redisClient.rpop(REDIS_PREFIX + '-room:' + room + '-columns');
+console.log('deleteColumn');
+  db.deleteColumn();
+//	redisClient.rpop(REDIS_PREFIX + '-room:' + room + '-columns');
 }
 
 function setColumns ( room, columns ) {
 	console.dir('SetColumns:');
 	console.dir(columns);
+    db.setColumns(room, columns);
+/*
 	
 	//1. first delete all columns
 	redisClient.del(REDIS_PREFIX + '-room:' + room + '-columns', function () {
@@ -446,6 +460,7 @@ function setColumns ( room, columns ) {
 			}
 		);
 	});
+*/
 }
 
 
@@ -459,22 +474,27 @@ function createCard( room, id, text, x, y, rot, colour ) {
 		x: x,
 		y: y,
 		text: text,
-		stickerId: null
+		sticker: null
 	};
 	
-	var cardString = JSON.stringify(card);
+//	var cardString = JSON.stringify(card);
 
+  db.createCard(room, id, card);
+/*
 	redisClient.hset(
 		REDIS_PREFIX + '-room:' + room + '-cards',
 		id,
 		cardString
 	)
+*/
 	
 	//console.log(JSON.stringify(cards));
 }
 
 function cardSetXY( room, id, x, y )
 {
+  db.cardSetXY(room, id, x, y);
+/*
 	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', id, function(err, res) {
 		var card = JSON.parse(res);
 		if (card !== null)
@@ -485,9 +505,12 @@ function cardSetXY( room, id, x, y )
 		}
 		
 	});
+*/
 }
 
 function cardEdit( room , id, text) {
+  db.cardEdit(room, id, text);
+/*
 	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', id, function(err, res) {
 		var card = JSON.parse(res);
 		if (card !== null)
@@ -497,18 +520,24 @@ function cardEdit( room , id, text) {
 		}
 		
 	});
+*/
 }
 
 function deleteCard( room, id ) {
+  db.deleteCard(room, id);
 	//console.log('deletecard in redis: ' + id);
+/*
 	redisClient.hdel(
 		REDIS_PREFIX + '-room:' + room + '-cards',
 		id
 	)
+*/
 }
 
 function getAllCards( room, callbackFunction ) {
-	console.log('getall from: ' + REDIS_PREFIX + '-room' + room + '-cards');
+//	console.log('getall from: ' + REDIS_PREFIX + '-room' + room + '-cards');
+  db.getAllCards(room, callbackFunction);
+/*
 	redisClient.hgetall(REDIS_PREFIX + '-room:' + room + '-cards', function (err, res) {
 		
 		var cards = Array();
@@ -522,9 +551,12 @@ function getAllCards( room, callbackFunction ) {
 		
 		callbackFunction (cards);
 	});
+*/
 }
 
 function addSticker( room, cardId, stickerId ) {
+  db.addSticker(room, cardId, stickerId);
+/*
 	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', cardId, function(err, res) {
 		var card = JSON.parse(res);
 		if (card !== null)
@@ -534,6 +566,7 @@ function addSticker( room, cardId, stickerId ) {
 		}
 
 	});
+*/
 }
 
 function roundRand( max )
@@ -565,8 +598,12 @@ function setUserName ( client, name )
 
 
 // DUMMY DATA
+/*
 redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
 	redisClient.del(REDIS_PREFIX + '-room:/demo-columns', function (err, res) {
+*/
+var db = new data.db(function() {
+  db.clearRoom('/demo', function() {
 		createColumn( '/demo', 'Not Started' );
 		createColumn( '/demo', 'Started' );
 		createColumn( '/demo', 'Testing' );
@@ -583,8 +620,12 @@ redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
 		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
 		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
 		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+  });
+});
+/*
 	});
 });
+*/
 // 
 
 
