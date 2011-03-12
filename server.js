@@ -60,9 +60,16 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/:id', function(req, res){
+app.get('/demo', function(req, res) {
 	res.render('index.jade', {
-		locals: {pageTitle: 'scrumblr'}
+		locals: {pageTitle: 'scrumblr - demo', demo: true}
+	});
+});
+
+app.get('/:id', function(req, res){
+	
+	res.render('index.jade', {
+		locals: {pageTitle: ('scrumblr - ' + req.params.id) }
 	});
 });
 
@@ -572,33 +579,34 @@ function setUserName ( client, name )
 }
 
 
+function cleanAndInitializeDemoRoom()
+{
+	// DUMMY DATA
+	redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
+		redisClient.del(REDIS_PREFIX + '-room:/demo-columns', function (err, res) {
+			createColumn( '/demo', 'Not Started' );
+			createColumn( '/demo', 'Started' );
+			createColumn( '/demo', 'Testing' );
+			createColumn( '/demo', 'Review' );
+			createColumn( '/demo', 'Complete' );
 
 
-// DUMMY DATA
-redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
-	redisClient.del(REDIS_PREFIX + '-room:/demo-columns', function (err, res) {
-		createColumn( '/demo', 'Not Started' );
-		createColumn( '/demo', 'Started' );
-		createColumn( '/demo', 'Testing' );
-		createColumn( '/demo', 'Review' );
-		createColumn( '/demo', 'Complete' );
+			createCard('/demo', 'card1', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+			createCard('/demo', 'card2', 'Hello this is a new story.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'white');
+			createCard('/demo', 'card3', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
+			createCard('/demo', 'card4', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
 
-
-		createCard('/demo', 'card1', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-		createCard('/demo', 'card2', 'Hello this is a new story.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'white');
-		createCard('/demo', 'card3', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
-		createCard('/demo', 'card4', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
-
-		createCard('/demo', 'card5', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
-		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+			createCard('/demo', 'card5', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+			createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+			createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
+			createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+		});
 	});
-});
+}
 // 
 
 
-
+cleanAndInitializeDemoRoom();
 
 
 

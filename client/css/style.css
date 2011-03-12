@@ -451,3 +451,16 @@ input:hover {
 	
 	
 }
+
+.notice-bar {
+	xbackground-color: #ccc;
+	opacity: .2;
+	padding: 0;
+	margin: 0;
+	xtext-align: center;
+	margin-left: 300px;
+}
+
+.notice-bar a {
+	color: #333;
+}
