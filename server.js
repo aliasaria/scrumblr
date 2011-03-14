@@ -1,62 +1,44 @@
-var	http = require('http'), 
-		io = require('socket.io'), // for npm, otherwise use require('./path/to/socket.io') 
+var	http = require('http'),
+		io = require('socket.io'), // for npm, otherwise use require('./path/to/socket.io')
 		express = require('express'),
 		connect = require('connect');
-		
-var 	redis = require("redis"),
-		redisClient = redis.createClient();
-		
+
 var 	sys = require('sys');
-	
+
 var 	app = express.createServer();
 
 var	async = require('async');
 
 var	rooms	= require('./lib/rooms.js');
+var	data	= require('./lib/data.js').db;
 
 var 	sanitizer = require('sanitizer');
 
-// If you want Memory Store instead...
-// var MemoryStore = require('connect/middleware/session/memory');
-// var session_store = new MemoryStore();
-
-var 	RedisStore = require('connect-redis');
-var 	session_store = new RedisStore( );
-
 //Map of sids to user_names
 var sids_to_user_names = [];
-
-var REDIS_PREFIX = '#scrumscrum#';
 
 app.configure( function(){
 	app.use(express.static(__dirname + '/client'));
 	app.use(express.bodyParser());
 	//app.use(express.cookieParser());
-	
+
 	//Cookies are not really needed... but may be in the future?
 	app.use(express.cookieParser());
 	app.use(
 		express.session({
 			key: "scrumscrum-cookie",
 			secret: "kookoorikoo",
-			store: session_store,
+//			store: session_store,
 			cookie: { path: '/', httpOnly: true, maxAge: 14400000 }
 		})
 	);
 
-	
+
 });
-
-
-//For Redis Debugging
-redisClient.on("error", function (err) {
-    console.log("Redis error: " + err);
-});
-
 
 app.get('/', function(req, res) {
 	res.render('home.jade', {
-		 layout: false 
+		 layout: false
 	});
 });
 
@@ -67,7 +49,7 @@ app.get('/demo', function(req, res) {
 });
 
 app.get('/:id', function(req, res){
-	
+
 	res.render('index.jade', {
 		locals: {pageTitle: ('scrumblr - ' + req.params.id) }
 	});
@@ -88,11 +70,11 @@ app.listen(process.argv[2]);
 
 
 // socket.io SETUP
-var socket = io.listen(app); 
-socket.on('connection', function(client){ 
-	// new client is here! 
+var socket = io.listen(app);
+socket.on('connection', function(client){
+	// new client is here!
 	//console.dir(client.request.headers);
-		// 
+		//
 		// var cookie_string = client.request.headers.cookie;
 		// var parsed_cookies = connect.utils.parseCookie(cookie_string);
 		// console.log('parsed:'); console.dir(parsed_cookies);
@@ -103,7 +85,7 @@ socket.on('connection', function(client){
 		//     console.dir(session);
 		//   });
 		// }
-	
+
 //santizes text
 function scrub( text ) {
 	if (typeof text != "undefined" && text !== null)
@@ -127,25 +109,25 @@ function scrub( text ) {
 	
 	client.on('message', function( message ){ 
 		console.log(message.action + " -- " + sys.inspect(message.data) );
-		
+
 		if (!message.action)	return;
-		
+
 		switch (message.action)
 		{
 			case 'initializeMe':
 				initClient(client);
 				break;
-				
+
 			case 'joinRoom':
-				
+
 				joinRoom(client, message.data, function(clients) {
 
 						client.send( { action: 'roomAccept', data: '' } );
-				
+
 				});
-					
+
 				break;
-				
+
 			case 'moveCard':
 				//report to all other browsers
 				var messageOut = {
@@ -158,19 +140,19 @@ function scrub( text ) {
 						}
 					}
 				};
-				
-				
+
+
 				broadcastToRoom( client, messageOut );
-				
+
 				// console.log("-----" + message.data.id);
 				// console.log(JSON.stringify(message.data));
-				
+
 				getRoom(client, function(room) {
-					cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top)
+					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top)
 				});
-								
+
 				break;
-				
+
 			case 'createCard':
 				data = message.data;
 				var clean_data = {};
@@ -180,137 +162,138 @@ function scrub( text ) {
 				clean_data.y = scrub(data.y);
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
-				
+
 				getRoom(client, function(room) {
 					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
 				});
-				
+
 				var message_out = {
 					action: 'createCard',
 					data: clean_data
 				};
-				
+
 				//report to all other browsers
 				broadcastToRoom( client, message_out );
 				break;
-				
+
 			case 'editCard':
-				
+
 				var clean_data = {};
 				clean_data.value = scrub(message.data.value);
 				clean_data.id = scrub(message.data.id);
-				
-				//send update to Redis
+
+				//send update to database
 				getRoom(client, function(room) {
-					cardEdit( room , clean_data.id, clean_data.value );
+					db.cardEdit( room , clean_data.id, clean_data.value );
 				});
-				
+
 				var message_out = {
 					action: 'editCard',
 					data: clean_data
 				};
-				
-				broadcastToRoom(client, message_out);				
-				
+
+				broadcastToRoom(client, message_out);
+
 				break;
-				
-								
+
+
 			case 'deleteCard':
 				var clean_message = {
 					action: 'deleteCard',
 					data: { id: scrub(message.data.id) }
-				} 
-				
+				}
+
 				getRoom( client, function(room) {
-					deleteCard ( room, clean_message.data.id );
+					db.deleteCard ( room, clean_message.data.id );
 				});
-				
+
 				//report to all other browsers
 				broadcastToRoom( client, clean_message );
 
 				break;
-				
-			case 'createColumn':	
+
+			case 'createColumn':
 				var clean_message = { data: scrub(message.data) };
-				
+
 				getRoom( client, function(room) {
-					createColumn( room, clean_message.data, function() {} );
+					db.createColumn( room, clean_message.data, function() {} );
 				});
-				
+
 				broadcastToRoom( client, clean_message );
-				
+
 				break;
-			
+
 			case 'deleteColumn':
 				getRoom( client, function(room) {
-					deleteColumn();
+					db.deleteColumn(room);
 				});
 				broadcastToRoom( client, { action: 'deleteColumn' } );
-				
+
 				break;
-				
-			case 'updateColumns':				
+
+			case 'updateColumns':
 				var columns = message.data;
-				
+
 				if (!(columns instanceof Array))
 					break;
-				
+
 				var clean_columns = [];
-				
+
 				for (i in columns)
 				{
 					clean_columns[i] = scrub( columns[i] );
 				}
-				
-				setColumns( room, clean_columns );
+
+				db.setColumns( room, clean_columns );
 
 				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
-				
+
 				break;
-				
+
 			case 'changeTheme':
 				var clean_message = {};
 				clean_message.data = scrub(message.data);
-				
+
 				getRoom( client, function(room) {
-					setTheme( room, clean_message.data );
+					db.setTheme( room, clean_message.data );
 				});
-				
+
 				clean_message.action = 'changeTheme';
-				
+
 				broadcastToRoom( client, clean_message );
 				break;
-				
+
 			case 'setUserName':
 				var clean_message = {};
-				
+
 				clean_message.data = scrub(message.data);
-				
+
 				setUserName(client, clean_message.data);
-				
+
 				var msg = {};
 				msg.action = 'nameChangeAnnounce';
 				msg.data = { sid: client.sessionId, user_name: clean_message.data };
 				broadcastToRoom( client, msg );
 				break;
-				
+
 			case 'addSticker':
 				var cardId = scrub(message.data.cardId);
 				var stickerId = scrub(message.data.stickerId);
-				
+
 				getRoom(client, function(room) {
-					addSticker( room , cardId, stickerId );
+					db.addSticker( room , cardId, stickerId );
 				});
-				
+
 				broadcastToRoom( client, { action: 'addSticker', data: { cardId: cardId, stickerId: stickerId }});
-							
+				break;
+
 			default:
 				console.log('unknown action');
 				break;
-		}	
-	}); 
-	
-	client.on('disconnect', function() { 
+		}
+	});
+
+	client.on('disconnect', function() {
 			leaveRoom(client);
 	});
 
@@ -328,58 +311,57 @@ function initClient ( client )
 {
 	//console.log ('initClient Started');
 	getRoom(client, function(room) {
-		
-		
-		getAllCards( room , function (cards) { 
-			
-			client.send( 
+
+		db.getAllCards( room , function (cards) {
+
+			client.send(
 				{
 					action: 'initCards',
 					data: cards
 				}
 			);
-	
+
 		});
-		
-		
-		getAllColumns ( room, function (columns) {
-			client.send( 
+
+
+		db.getAllColumns ( room, function (columns) {
+			client.send(
 				{
 					action: 'initColumns',
 					data: columns
 				}
 			);
 		});
-		
 
-		getTheme( room, function(theme) {
-			
+
+		db.getTheme( room, function(theme) {
+
 			if (theme == null) theme = 'bigcards';
-			
-			client.send( 
+
+			client.send(
 				{
 					action: 'changeTheme',
-					data: theme 
+					data: theme
 				}
 			);
 		});
-		
+
 		roommates_clients = rooms.room_clients(room);
 		roommates = [];
-		
+
 		var j = 0;
 		for (i in roommates_clients)
 		{
 			if (roommates_clients[i].sessionId != client.sessionId)
 			{
-				roommates[j] = { 
+				roommates[j] = {
 					sid: roommates_clients[i].sessionId,
 					user_name:  sids_to_user_names[roommates_clients[i].sessionId]
 					};
 				j++;
 			}
 		}
-		
+
 		console.log('initialusers: ' + roommates);
 		client.send(
 			{
@@ -397,7 +379,7 @@ function joinRoom (client, room, successFunction)
 	var msg = {};
 	msg.action = 'join-announce';
 	msg.data		= { sid: client.sessionId, user_name: client.user_name };
-	
+
 	rooms.add_to_room_and_announce(client, room, msg);
 	successFunction();
 }
@@ -409,7 +391,7 @@ function leaveRoom (client)
 	msg.action = 'leave-announce';
 	msg.data	= { sid: client.sessionId };
 	rooms.remove_from_all_rooms_and_announce(client, msg);
-	
+
 	delete sids_to_user_names[client.sessionId];
 }
 
@@ -417,147 +399,19 @@ function broadcastToRoom ( client, message ) {
 	rooms.broadcast_to_roommates(client, message);
 }
 
-function getTheme ( room , callbackFunction )
-{
-	redisClient.get(REDIS_PREFIX + '-room:' + room + '-theme', function (err, res) {
-		callbackFunction(res);
-	});
-}
-
-function setTheme ( room, theme )
-{
-	redisClient.set(REDIS_PREFIX + '-room:' + room + '-theme', theme);
-}
-
-//----------------COL FUNCTIONS
-function getAllColumns ( room, callbackFunction ) {
-	redisClient.lrange(REDIS_PREFIX + '-room:' + room + '-columns', 0, -1, function(err, res) {
-		callbackFunction(res);
-	});
-}
-
-function createColumn ( room, name, callback ) {
-	console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + " -- " + name);
-	redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', name, 
-		function (err, res) {
-				if (typeof callback != "undefined" && callback !== null) callback();
-		}
-	);
-}
-
-function deleteColumn ( room ) {
-	redisClient.rpop(REDIS_PREFIX + '-room:' + room + '-columns');
-}
-
-function setColumns ( room, columns ) {
-	console.dir('SetColumns:');
-	console.dir(columns);
-	
-	//1. first delete all columns
-	redisClient.del(REDIS_PREFIX + '-room:' + room + '-columns', function () {
-		//2. now add columns for each thingy
-		async.forEachSeries(
-			columns,
-			function( item, callback ) {
-				//console.log('rpush: ' + REDIS_PREFIX + '-room:' + room + '-columns' + ' -- ' + item);				
-				redisClient.rpush(REDIS_PREFIX + '-room:' + room + '-columns', item, 
-					function (err, res) {
-						callback();
-					});
-				},
-			function() {
-				//this happens when the series is complete
-			}
-		);
-	});
-}
-
-
 //----------------CARD FUNCTIONS
 function createCard( room, id, text, x, y, rot, colour ) {
-	//console.log ('create card in ' + room);
-	var card = { 
+	var card = {
 		id: id,
 		colour: colour,
 		rot: rot,
 		x: x,
 		y: y,
 		text: text,
-		stickerId: null
+		sticker: null
 	};
-	
-	var cardString = JSON.stringify(card);
 
-	redisClient.hset(
-		REDIS_PREFIX + '-room:' + room + '-cards',
-		id,
-		cardString
-	)
-	
-	//console.log(JSON.stringify(cards));
-}
-
-function cardSetXY( room, id, x, y )
-{
-	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', id, function(err, res) {
-		var card = JSON.parse(res);
-		if (card !== null)
-		{
-			card.x = x;
-			card.y = y;
-			redisClient.hset(REDIS_PREFIX + '-room:' + room + '-cards', id, JSON.stringify(card));
-		}
-		
-	});
-}
-
-function cardEdit( room , id, text) {
-	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', id, function(err, res) {
-		var card = JSON.parse(res);
-		if (card !== null)
-		{
-			card.text = text;
-			redisClient.hset(REDIS_PREFIX + '-room:' + room + '-cards', id, JSON.stringify(card));
-		}
-		
-	});
-}
-
-function deleteCard( room, id ) {
-	//console.log('deletecard in redis: ' + id);
-	redisClient.hdel(
-		REDIS_PREFIX + '-room:' + room + '-cards',
-		id
-	)
-}
-
-function getAllCards( room, callbackFunction ) {
-	console.log('getall from: ' + REDIS_PREFIX + '-room' + room + '-cards');
-	redisClient.hgetall(REDIS_PREFIX + '-room:' + room + '-cards', function (err, res) {
-		
-		var cards = Array();
-		
-		for (i in res)
-		{
-			cards.push( JSON.parse(res[i]) );
-		}
-		console.dir(cards);
-		
-		
-		callbackFunction (cards);
-	});
-}
-
-function addSticker( room, cardId, stickerId ) {
-	redisClient.hget(REDIS_PREFIX + '-room:' + room + '-cards', cardId, function(err, res) {
-		var card = JSON.parse(res);
-		if (card !== null)
-		{
-			card.sticker = stickerId;
-			redisClient.hset(REDIS_PREFIX + '-room:' + room + '-cards', cardId, JSON.stringify(card));
-		}
-
-	});
+	db.createCard(room, id, card);
 }
 
 function roundRand( max )
@@ -585,35 +439,33 @@ function setUserName ( client, name )
 	console.dir(sids_to_user_names);
 }
 
-
 function cleanAndInitializeDemoRoom()
 {
 	// DUMMY DATA
-	redisClient.del(REDIS_PREFIX + '-room:/demo-cards', function (err, res) {
-		redisClient.del(REDIS_PREFIX + '-room:/demo-columns', function (err, res) {
-			createColumn( '/demo', 'Not Started' );
-			createColumn( '/demo', 'Started' );
-			createColumn( '/demo', 'Testing' );
-			createColumn( '/demo', 'Review' );
-			createColumn( '/demo', 'Complete' );
+	db.clearRoom('/demo', function() {
+		db.createColumn( '/demo', 'Not Started' );
+		db.createColumn( '/demo', 'Started' );
+		db.createColumn( '/demo', 'Testing' );
+		db.createColumn( '/demo', 'Review' );
+		db.createColumn( '/demo', 'Complete' );
 
 
-			createCard('/demo', 'card1', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-			createCard('/demo', 'card2', 'Hello this is a new story.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'white');
-			createCard('/demo', 'card3', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
-			createCard('/demo', 'card4', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+		createCard('/demo', 'card1', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+		createCard('/demo', 'card2', 'Hello this is a new story.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'white');
+		createCard('/demo', 'card3', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
+		createCard('/demo', 'card4', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
 
-			createCard('/demo', 'card5', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-			createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
-			createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
-			createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
-		});
+		createCard('/demo', 'card5', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
+		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
+		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
 	});
 }
-// 
+//
 
-
-cleanAndInitializeDemoRoom();
+var db = new data(function() {
+	cleanAndInitializeDemoRoom();
+});
 
 
 
