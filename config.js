@@ -8,6 +8,6 @@
 
 exports.database = {
 	type: 'redis',
-	prefix: '#scrumscrum#'
+	prefix: '#scrumblr#'
 };
 
