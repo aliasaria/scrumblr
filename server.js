@@ -243,8 +243,9 @@ function scrub( text ) {
 				{
 					clean_columns[i] = scrub( columns[i] );
 				}
-
-				db.setColumns( room, clean_columns );
+				getRoom( client, function(room) {
+					db.setColumns( room, clean_columns );
+				});
 
 				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
 
