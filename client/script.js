@@ -661,19 +661,7 @@ $( ".sticker" ).draggable({
 });
 
 
-	// //After a drag:
-	// $( "#" + id ).bind( "dragstop", function(event, ui) {
-	// 	var data = {
-	// 		id: this.id,
-	// 		position: ui.position,
-	// 		oldposition: ui.originalPosition,
-	// 	};
-	// 
-	// 	sendAction('moveCard', data);
-	// });
-
-
-	
+$( ".board-outline" ).resizable( { ghost: false, minWidth: 700, minHeight: 400 , maxWidth: 3200, maxHeight: 1800} );	
 
 	
 });
