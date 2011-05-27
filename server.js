@@ -287,6 +287,19 @@ function scrub( text ) {
 
 				broadcastToRoom( client, { action: 'addSticker', data: { cardId: cardId, stickerId: stickerId }});
 				break;
+				
+			case 'setBoardSize':
+
+				var size = {};
+				size.width = scrub(message.data.width);;
+				size.height = scrub(message.data.height);
+				
+				getRoom(client, function(room) {
+					db.setBoardSize( room, size );
+				});
+				
+				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
+				break;
 
 			default:
 				console.log('unknown action');
@@ -345,6 +358,18 @@ function initClient ( client )
 					data: theme
 				}
 			);
+		});
+		
+		db.getBoardSize( room, function(size) {
+
+			if (size != null) {
+				client.send(
+					{
+						action: 'setBoardSize',
+						data: size
+					}
+				);
+			}
 		});
 
 		roommates_clients = rooms.room_clients(room);

@@ -119,6 +119,10 @@ function getMessage( m )
 			addSticker( message.data.cardId, message.data.stickerId );
 			break;
 			
+		case 'setBoardSize':
+			resizeBoard( message.data );
+			break;
+			
 		default:
 			//unknown message
 			alert('unknown action: ' + JSON.stringify(message));
@@ -533,6 +537,23 @@ function updateName ( sid, name )
 	
 	$('#names-ul').children(id).text( name );
 }
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+function boardResizeHappened(event, ui)
+{
+	var newsize = ui.size
+	
+	sendAction( 'setBoardSize', newsize);
+}
+
+function resizeBoard (size) {
+	$( ".board-outline" ).animate( { 
+		height: size.height,
+		width: size.width
+	} );
+}
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -661,19 +682,17 @@ $( ".sticker" ).draggable({
 });
 
 
-	// //After a drag:
-	// $( "#" + id ).bind( "dragstop", function(event, ui) {
-	// 	var data = {
-	// 		id: this.id,
-	// 		position: ui.position,
-	// 		oldposition: ui.originalPosition,
-	// 	};
-	// 
-	// 	sendAction('moveCard', data);
-	// });
+$( ".board-outline" ).resizable( { 
+	ghost: false,
+	minWidth: 700,
+	minHeight: 400 ,
+	maxWidth: 3200,
+	maxHeight: 1800,
+	stop: function(event, ui) { 
+		boardResizeHappened(event, ui);
+	}
+} );
 
-
-	
 
 	
 });
