@@ -134,7 +134,7 @@ function getMessage( m )
 
 
 
-function drawNewCard(id, text, x, y, rot, colour, sticker)
+function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 {
 	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 	
@@ -181,10 +181,13 @@ function drawNewCard(id, text, x, y, rot, colour, sticker)
 	 	}
 	);
 	
+	var speed = Math.floor(Math.random() * 1000);
+	if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+	
 	$("#" + id).animate({
 		left: x + "px",
 		top: y + "px" 
-	}, Math.floor(Math.random() * 1000));
+	}, speed);
 	
 	$("#" + id).hover( 
 		function(){ 
