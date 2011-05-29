@@ -593,7 +593,7 @@ function resizeBoard (size) {
 $(function() {
 	
 	if (boardInitialized == false)
-		blockUI('Loading...');
+		blockUI('<img src="/images/ajax-loader.gif" width=43 height=11/>');
 
 	//setTimeout($.unblockUI, 2000); 
 
