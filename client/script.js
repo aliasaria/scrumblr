@@ -2,6 +2,7 @@ var cards = {};
 var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
+var boardInitialized = false;
 
 
 var socket = new io.Socket(  );
@@ -33,12 +34,38 @@ socket.on('connect', function(){
 })
 
 socket.on('disconnect', function(){ 
-	alert("Server disconnected. Please reload page.");
+	blockUI("Server disconnected. Refresh page to try and reconnect...");
+	//$('.blockOverlay').click($.unblockUI);
 });
 
 socket.on('message', function(data){ 
 	getMessage(data);
 })
+
+function unblockUI()
+{
+	$.unblockUI();
+}
+
+function blockUI(message)
+{
+	message = message || 'Waiting...';
+	
+	$.blockUI({ 
+		message: message,
+	
+		css: { 
+	   		border: 'none', 
+		   	padding: '15px', 
+		    backgroundColor: '#000', 
+		    '-webkit-border-radius': '10px', 
+		    '-moz-border-radius': '10px', 
+		    opacity: .5, 
+		    color: '#fff',
+			fontSize: '20px'
+		}
+	}); 
+}
 
 //respond to an action event
 function getMessage( m )
@@ -134,7 +161,7 @@ function getMessage( m )
 
 
 
-function drawNewCard(id, text, x, y, rot, colour, sticker)
+function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 {
 	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 	
@@ -181,10 +208,13 @@ function drawNewCard(id, text, x, y, rot, colour, sticker)
 	 	}
 	);
 	
+	var speed = Math.floor(Math.random() * 1000);
+	if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+	
 	$("#" + id).animate({
 		left: x + "px",
 		top: y + "px" 
-	}, Math.floor(Math.random() * 1000));
+	}, speed);
 	
 	$("#" + id).hover( 
 		function(){ 
@@ -316,6 +346,9 @@ function initCards( cardArray )
 			card.sticker
 		);
 	}
+
+	boardInitialized = true;
+	unblockUI();
 }
 
 
@@ -558,6 +591,11 @@ function resizeBoard (size) {
 //////////////////////////////////////////////////////////
 
 $(function() {
+	
+	if (boardInitialized == false)
+		blockUI('Loading...');
+
+	//setTimeout($.unblockUI, 2000); 
 
 
 	$( "#create-card" )
