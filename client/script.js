@@ -330,6 +330,9 @@ function randomCardColour()
 
 function initCards( cardArray )
 {
+	//first delete any cards that exist
+	$('.card').remove();
+	
 	cards = cardArray;
 	
 	for (i in cardArray)
