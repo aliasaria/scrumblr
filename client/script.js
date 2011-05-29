@@ -167,7 +167,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker)
 	
 	$( ".droppable" ).droppable(
 		{ 
-			xaccept: '.sticker',
+			accept: '.sticker',
 			drop: function( event, ui ) {
 							var stickerId = ui.draggable.attr("id");
 							var cardId = $(this).parent().attr('id');
