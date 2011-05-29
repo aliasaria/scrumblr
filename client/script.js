@@ -2,6 +2,7 @@ var cards = {};
 var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
+var boardInitialized = false;
 
 
 var socket = new io.Socket(  );
@@ -33,12 +34,38 @@ socket.on('connect', function(){
 })
 
 socket.on('disconnect', function(){ 
-	alert("Server disconnected. Please reload page.");
+	blockUI("Server disconnected. Refresh page to try and reconnect...");
+	//$('.blockOverlay').click($.unblockUI);
 });
 
 socket.on('message', function(data){ 
 	getMessage(data);
 })
+
+function unblockUI()
+{
+	$.unblockUI();
+}
+
+function blockUI(message)
+{
+	message = message || 'Waiting...';
+	
+	$.blockUI({ 
+		message: message,
+	
+		css: { 
+	   		border: 'none', 
+		   	padding: '15px', 
+		    backgroundColor: '#000', 
+		    '-webkit-border-radius': '10px', 
+		    '-moz-border-radius': '10px', 
+		    opacity: .5, 
+		    color: '#fff',
+			fontSize: '20px'
+		}
+	}); 
+}
 
 //respond to an action event
 function getMessage( m )
@@ -319,6 +346,9 @@ function initCards( cardArray )
 			card.sticker
 		);
 	}
+
+	boardInitialized = true;
+	unblockUI();
 }
 
 
@@ -561,6 +591,11 @@ function resizeBoard (size) {
 //////////////////////////////////////////////////////////
 
 $(function() {
+	
+	if (boardInitialized == false)
+		blockUI('Loading...');
+
+	//setTimeout($.unblockUI, 2000); 
 
 
 	$( "#create-card" )
