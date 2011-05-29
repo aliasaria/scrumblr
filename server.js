@@ -68,9 +68,14 @@ app.post('/edit-column', function(req, res) {
 
 app.listen(process.argv[2]);
 
+//I limit the number of potential transports because xhr was causing trouble
+//with frequent disconnects
+var socketio_options = {
+	transports: ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']
+};
 
 // socket.io SETUP
-var socket = io.listen(app);
+var socket = io.listen(app, socketio_options);
 socket.on('connection', function(client){
 	// new client is here!
 	//console.dir(client.request.headers);
