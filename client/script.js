@@ -89,10 +89,7 @@ function getMessage( m )
 			break;
 			
 		case 'moveCard':
-			$("#" + data.id).animate({
-				left: data.position.left+"px",
-				top: data.position.top+"px" 
-			}, 500);
+                        moveCard($("#" + data.id), data.position);
 			break;
 			
 		case 'initCards':
@@ -101,7 +98,7 @@ function getMessage( m )
 		
 		case 'createCard':
 			//console.log(data);
-		   drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
+                        drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
 			break;
 			
 		case 'deleteCard':
@@ -170,9 +167,11 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	<img class="card-image" src="/images/' + colour + '-card.png">\
 	<div id="content:' + id + '" class="content stickertarget droppable">' + text + '</div>\
 	</div>';
-	$(h).appendTo('#board');
+
+        var card = $(h);
+	card.appendTo('#board');
 	
-	$( ".card" ).draggable(
+	card.draggable(
 		{ 
 			snap: false,
 			snapTolerance: 5,
@@ -182,7 +181,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	);
 	
 	//After a drag:
-	$( "#" + id ).bind( "dragstop", function(event, ui) {
+	card.bind( "dragstop", function(event, ui) {
+
 		var data = {
 			id: this.id,
 			position: ui.position,
@@ -192,7 +192,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		sendAction('moveCard', data);
 	});
 	
-	$( ".droppable" ).droppable(
+	card.droppable(
 		{ 
 			accept: '.sticker',
 			drop: function( event, ui ) {
@@ -210,13 +210,14 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	
 	var speed = Math.floor(Math.random() * 1000);
 	if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+
 	
-	$("#" + id).animate({
+	card.animate({
 		left: x + "px",
 		top: y + "px" 
 	}, speed);
 	
-	$("#" + id).hover( 
+	card.hover( 
 		function(){ 
 			$(this).addClass('hover');
 			$(this).children('.card-icon').fadeIn(10);
@@ -227,7 +228,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	 );
 	
-	$("#" + id).children('.card-icon').hover(
+	card.children('.card-icon').hover(
 		function(){
 			$(this).addClass('card-icon-hover');
 		},
@@ -236,7 +237,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	);
 	
-	$("#" + id).children('.delete-card-icon').click(
+	card.children('.delete-card-icon').click(
 		function(){
 			$("#" + id).remove();
 			//notify server of delete
@@ -244,7 +245,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	);
 	
-	$("#" + id).children('.content').editable( "/edit-card/" + id,
+	card.children('.content').editable( "/edit-card/" + id,
 		{
 			style   : 'inherit',
 			cssclass   : 'card-edit-form',
@@ -272,6 +273,13 @@ function onCardChange( text, result )
 	sendAction('editCard', { id: id, value: text });
 	
 	
+}
+
+function moveCard(card, position) {
+        card.animate({
+                left: position.left+"px",
+                top: position.top+"px" 
+        }, 500);
 }
 
 function addSticker ( cardId , stickerId ) 
@@ -579,8 +587,8 @@ function updateName ( sid, name )
 
 function boardResizeHappened(event, ui)
 {
-	var newsize = ui.size
-	
+	var newsize = ui.size	
+
 	sendAction( 'setBoardSize', newsize);
 }
 
@@ -590,6 +598,50 @@ function resizeBoard (size) {
 		width: size.width
 	} );
 }
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+function calcCardOffset() {
+        var offsets = {};
+        $(".card").each(function() {
+                var card = $(this);
+                $(".col").each(function(i) {
+                        var col = $(this);
+                        if(col.offset().left + col.outerWidth() > card.offset().left + card.outerWidth() || i === $(".col").size() - 1) {
+                                offsets[card.attr('id')] = {
+                                        col: col,
+                                        x: card.offset().left - col.offset().left
+                                } 
+                                return false;
+                        }
+                });
+        });
+        return offsets;
+}
+
+function adjustCard(offsets) {
+        $(".card").each(function() {
+                var card = $(this);
+                var offset = offsets[this.id];
+                if(offset) {
+                        var data = {
+                                id: this.id,
+                                position: {
+                                        left: offset.col.position().left + offset.x,
+                                        top: parseInt(card.css('top').slice(0,-2))
+                                },
+                                oldposition: {
+                                        left: parseInt(card.css('left').slice(0,-2)),
+                                        top: parseInt(card.css('top').slice(0,-2))
+                                }
+                        }; //use .css() instead of .position() because css' rotate
+                        console.log(data);
+                        moveCard(card, data.position);
+                        sendAction('moveCard', data);
+                }
+        });
+}
+
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -729,13 +781,21 @@ $( ".board-outline" ).resizable( {
 	minHeight: 400 ,
 	maxWidth: 3200,
 	maxHeight: 1800,
-	stop: function(event, ui) { 
-		boardResizeHappened(event, ui);
-	}
 } );
 
+//A new scope for precalculating
+(function() {
+        var offsets;
+        
+        $(".board-outline").bind("resizestart", function() {
+                offsets = calcCardOffset();
+        });
+        $(".board-outline").bind("resizestop", function(event, ui) {
+                boardResizeHappened(event, ui);
+                adjustCard(offsets);
+        });
+})();
 
-	
 });
 
 
