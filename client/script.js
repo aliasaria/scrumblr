@@ -192,7 +192,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		sendAction('moveCard', data);
 	});
 	
-	card.children(".content").droppable(
+	card.children(".droppable").droppable(
 		{ 
 			accept: '.sticker',
 			drop: function( event, ui ) {
