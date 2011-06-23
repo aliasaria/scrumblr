@@ -81,7 +81,7 @@ width: 16px; height: 16px;
 }
 
 .card-edit-form, .card-edit-form input, .card-edit-form textarea {
-	border:none;
+	border: none;
 	font-size:inherit;
 	font-weight:inherit;
 	background-color:inherit;
@@ -95,6 +95,8 @@ width: 16px; height: 16px;
 	overflow: hidden;
 	resize: none;
 	width: 100%;
+	color: #330066;
+	color: #666;
 	
 }
 

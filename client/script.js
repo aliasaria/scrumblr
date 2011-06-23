@@ -171,6 +171,17 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
         var card = $(h);
 	card.appendTo('#board');
 	
+	//@TODO
+	//Draggable has a bug which prevents blur event
+	//http://bugs.jqueryui.com/ticket/4261
+	//So we have to blur all the cards and editable areas when
+	//we click on a card
+	//The following doesn't work so we will do the bug
+	//fix recommended in the above bug report
+	// card.click( function() { 
+	// 	$(this).focus();
+	// } );
+	
 	card.draggable(
 		{ 
 			snap: false,

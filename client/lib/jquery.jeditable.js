@@ -285,16 +285,16 @@
                 } else if ('submit' == settings.onblur) {
                     input.blur(function(e) {
                         /* prevent double submit if submit was clicked */
-                        //t = setTimeout(function() {
+                        t = setTimeout(function() {
                             form.submit();
-                        //}, 200);
+                        }, 200);
                     });
 						//ali here: i hacked this in so that submit happens on mouseout too
-						input.mouseout(function(e) {
+						input.blur(function(e) {
                         /* prevent double submit if submit was clicked */
-                        //t = setTimeout(function() {
+                        t = setTimeout(function() {
                             form.submit();
-                        //}, 200);
+                        }, 200);
                     });
                 } else if ($.isFunction(settings.onblur)) {
                     input.blur(function(e) {
