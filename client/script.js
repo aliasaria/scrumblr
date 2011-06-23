@@ -609,7 +609,7 @@ function calcCardOffset() {
                         if(col.offset().left + col.outerWidth() > card.offset().left + card.outerWidth() || i === $(".col").size() - 1) {
                                 offsets[card.attr('id')] = {
                                         col: col,
-                                        x: card.offset().left - col.offset().left
+                                        x: ( (card.offset().left - col.offset().left) / col.outerWidth() )
                                 } 
                                 return false;
                         }
@@ -626,7 +626,7 @@ function adjustCard(offsets) {
                         var data = {
                                 id: this.id,
                                 position: {
-                                        left: offset.col.position().left + offset.x,
+                                        left: offset.col.position().left + (offset.x * offset.col.outerWidth()),
                                         top: parseInt(card.css('top').slice(0,-2))
                                 },
                                 oldposition: {
@@ -635,7 +635,9 @@ function adjustCard(offsets) {
                                 }
                         }; //use .css() instead of .position() because css' rotate
                         console.log(data);
-                        moveCard(card, data.position);
+                        //moveCard(card, data.position);
+						card.css('left',data.position.left);
+						card.css('top',data.position.top);
                         sendAction('moveCard', data);
                 }
         });
@@ -788,6 +790,9 @@ $( ".board-outline" ).resizable( {
         
         $(".board-outline").bind("resizestart", function() {
                 offsets = calcCardOffset();
+        });
+		$(".board-outline").bind("resize", function(event, ui) {
+                adjustCard(offsets);
         });
         $(".board-outline").bind("resizestop", function(event, ui) {
                 boardResizeHappened(event, ui);

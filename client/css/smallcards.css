@@ -46,12 +46,35 @@
 	display: block;
 	width: 79px; 
 	height: 45px;
-	margin: 3px 10px 0px 19px;
+	margin: 1px 10px 0px 19px;
 	
 	font-family: "Arial Rounded MT Bold" , arial, serif;
 	font-size: 10px;
-	letter-spacing: 0px;	
+	letter-spacing: 0px;
+	line-height: 9px;	
 	
+	xtext-shadow: 0px 0px 1px #444;
+	
+	opacity: 1;
+	
+	color: #333;
+	text-align: center;
+	padding-top: 8px;
+}
+
+
+.xcontent { 
+	overflow: hidden;
+	display: block;
+	width: 79px; 
+	height: 45px;
+	margin: 0px 10px 0px 19px;
+	
+	font-family: "Arial Rounded MT Bold", "Arial" , arial, serif;
+	xfont-size: 10px;
+	letter-spacing: 0px;
+	line-height: 8px;	
+
 	xtext-shadow: 0px 0px 1px #444;
 	
 	opacity: 1;
