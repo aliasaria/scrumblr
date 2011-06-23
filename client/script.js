@@ -629,29 +629,43 @@ function calcCardOffset() {
         return offsets;
 }
 
-function adjustCard(offsets) {
+
+//moves cards with a resize of the Board
+//doSync is false if you don't want to synchronize
+//with all the other users who are in this room
+function adjustCard(offsets, doSync) {
         $(".card").each(function() {
-                var card = $(this);
-                var offset = offsets[this.id];
-                if(offset) {
-                        var data = {
-                                id: this.id,
-                                position: {
-                                        left: offset.col.position().left + (offset.x * offset.col.outerWidth()),
-                                        top: parseInt(card.css('top').slice(0,-2))
-                                },
-                                oldposition: {
-                                        left: parseInt(card.css('left').slice(0,-2)),
-                                        top: parseInt(card.css('top').slice(0,-2))
-                                }
-                        }; //use .css() instead of .position() because css' rotate
-                        console.log(data);
-                        //moveCard(card, data.position);
-						card.css('left',data.position.left);
-						card.css('top',data.position.top);
-                        sendAction('moveCard', data);
-                }
-        });
+				var card = $(this);
+				var offset = offsets[this.id];
+				if(offset) {
+						var data = {
+								id: this.id,
+								position: {
+									left: offset.col.position().left + (offset.x * offset.col.outerWidth()),
+									top: parseInt(card.css('top').slice(0,-2))
+								},
+								oldposition: {
+									left: parseInt(card.css('left').slice(0,-2)),
+									top: parseInt(card.css('top').slice(0,-2))
+								}
+						}; //use .css() instead of .position() because css' rotate
+						//console.log(data);
+						if (!doSync)
+						{
+							card.css('left',data.position.left);
+							card.css('top',data.position.top);
+						}
+						else
+						{
+							//note that in this case, data.oldposition isn't accurate since
+							//many moves have happened since the last sync
+							//but that's okay becuase oldPosition isn't used right now
+							moveCard(card, data.position);
+							sendAction('moveCard', data);
+						}
+
+				}
+		});
 }
 
 //////////////////////////////////////////////////////////
@@ -803,11 +817,11 @@ $( ".board-outline" ).resizable( {
                 offsets = calcCardOffset();
         });
 		$(".board-outline").bind("resize", function(event, ui) {
-                adjustCard(offsets);
+                adjustCard(offsets, false);
         });
         $(".board-outline").bind("resizestop", function(event, ui) {
                 boardResizeHappened(event, ui);
-                adjustCard(offsets);
+                adjustCard(offsets, true);
         });
 })();
 
