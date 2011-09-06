@@ -134,7 +134,7 @@ function scrub( text ) {
 
 				joinRoom(client, message.data, function(clients) {
 
-						client.send( { action: 'roomAccept', data: '' } );
+						client.json.send( { action: 'roomAccept', data: '' } );
 
 				});
 
@@ -340,7 +340,7 @@ function initClient ( client )
 
 		db.getAllCards( room , function (cards) {
 
-			client.send(
+			client.json.send(
 				{
 					action: 'initCards',
 					data: cards
@@ -351,7 +351,7 @@ function initClient ( client )
 
 
 		db.getAllColumns ( room, function (columns) {
-			client.send(
+			client.json.send(
 				{
 					action: 'initColumns',
 					data: columns
@@ -364,7 +364,7 @@ function initClient ( client )
 
 			if (theme == null) theme = 'bigcards';
 
-			client.send(
+			client.json.send(
 				{
 					action: 'changeTheme',
 					data: theme
@@ -375,7 +375,7 @@ function initClient ( client )
 		db.getBoardSize( room, function(size) {
 
 			if (size != null) {
-				client.send(
+				client.json.send(
 					{
 						action: 'setBoardSize',
 						data: size
@@ -401,7 +401,7 @@ function initClient ( client )
 		}
 
 		console.log('initialusers: ' + roommates);
-		client.send(
+		client.json.send(
 			{
 				action: 'initialUsers',
 				data: roommates
