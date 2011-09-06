@@ -40,19 +40,9 @@ how to install and run on your own computer (linux/osx)
 -------------------------------------------------------
 
 - install redis v2.2.2
-- install node.js >= 0.4.1
+- install node.js >= 0.4.7
 - install npm
-- install these npm packages:
-	- async
-	- express
-	- jade
-	- redis-client
-	- redis
-	- sanitizer
-	- socket.io@0.6.16 (you need to install a 0.6.x version of socket.io until the code is updated to work with the 0.7.x version)
-	- simplesets
-	- connect-redis
-	- (and perhaps more which you will notice when you try to start it)
+- run `npm install`
 - now start redis ($ redis-server)
 - now start ($ node server.js 80) where "80" is the port you want it to run on. 
 
