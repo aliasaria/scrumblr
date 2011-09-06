@@ -5,9 +5,7 @@ var currentTheme = "bigcards";
 var boardInitialized = false;
 
 
-var socket = new io.Socket(  );
-socket.connect();
-
+var socket = io.connect();
 
 //an action has happened, send it to the
 //server
@@ -20,7 +18,7 @@ function sendAction(a, d)
 		data: d
 	}
 	
-	socket.send ( message );
+	socket.json.send ( message );
 }
 
 socket.on('connect', function(){ 
