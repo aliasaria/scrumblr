@@ -285,7 +285,7 @@ function scrub( text ) {
 
 				var msg = {};
 				msg.action = 'nameChangeAnnounce';
-				msg.data = { sid: client.sessionId, user_name: clean_message.data };
+				msg.data = { sid: client.id, user_name: clean_message.data };
 				broadcastToRoom( client, msg );
 				break;
 
@@ -390,11 +390,11 @@ function initClient ( client )
 		var j = 0;
 		for (i in roommates_clients)
 		{
-			if (roommates_clients[i].sessionId != client.sessionId)
+			if (roommates_clients[i].id != client.id)
 			{
 				roommates[j] = {
-					sid: roommates_clients[i].sessionId,
-					user_name:  sids_to_user_names[roommates_clients[i].sessionId]
+					sid: roommates_clients[i].id,
+					user_name:  sids_to_user_names[roommates_clients[i].id]
 					};
 				j++;
 			}
@@ -416,7 +416,7 @@ function joinRoom (client, room, successFunction)
 {
 	var msg = {};
 	msg.action = 'join-announce';
-	msg.data		= { sid: client.sessionId, user_name: client.user_name };
+	msg.data		= { sid: client.id, user_name: client.user_name };
 
 	rooms.add_to_room_and_announce(client, room, msg);
 	successFunction();
@@ -424,13 +424,13 @@ function joinRoom (client, room, successFunction)
 
 function leaveRoom (client)
 {
-	console.log (client.sessionId + ' just left');
+	console.log (client.id + ' just left');
 	var msg = {};
 	msg.action = 'leave-announce';
-	msg.data	= { sid: client.sessionId };
+	msg.data	= { sid: client.id };
 	rooms.remove_from_all_rooms_and_announce(client, msg);
 
-	delete sids_to_user_names[client.sessionId];
+	delete sids_to_user_names[client.id];
 }
 
 function broadcastToRoom ( client, message ) {
@@ -464,7 +464,7 @@ function roundRand( max )
 function getRoom( client , callback )
 {
 	room = rooms.get_room( client );
-	//console.log( 'client: ' + client.sessionId + " is in " + room);
+	//console.log( 'client: ' + client.id + " is in " + room);
 	callback(room);
 }
 
@@ -472,7 +472,7 @@ function getRoom( client , callback )
 function setUserName ( client, name )
 {
 	client.user_name = name;
-	sids_to_user_names[client.sessionId] = name;
+	sids_to_user_names[client.id] = name;
 	console.log('sids to user names: ');
 	console.dir(sids_to_user_names);
 }
