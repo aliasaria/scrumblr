@@ -1,5 +1,4 @@
 var	http = require('http'),
-		io = require('socket.io'), // for npm, otherwise use require('./path/to/socket.io')
 		express = require('express'),
 		connect = require('connect');
 
@@ -73,10 +72,18 @@ app.listen(process.argv[2] || 8124);
 var socketio_options = {
 	transports: ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']
 };
-
 // socket.io SETUP
-var socket = io.listen(app, socketio_options);
-socket.on('connection', function(client){
+var io = require('socket.io').listen(app);
+io.configure(function () {
+  io.set('transports', [
+      'websocket'
+    , 'flashsocket'
+    , 'htmlfile'
+//    , 'xhr-polling'
+    , 'jsonp-polling'
+  ]);
+});
+io.sockets.on('connection', function (client) {
 	// new client is here!
 	//console.dir(client.request.headers);
 		//
