@@ -12,6 +12,15 @@ body {
 	
 	xheight: 1400px;
 	xwidth: 2000px;
+	
+	
+	
+	user-select: none;
+	-o-user-select:none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	
 }
 
 #board {
