@@ -43,8 +43,8 @@ how to install and run on your own computer (linux/osx)
 - install node.js >= 0.4.7
 - install npm
 - run `npm install`
-- now start redis ($ redis-server)
-- now start ($ node server.js 80) where "80" is the port you want it to run on. 
+- run redis `redis-server`
+- run scrumblr `node server.js 80` where "80" is the port you want it to run on. 
 
 license
 -------
