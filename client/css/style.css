@@ -479,6 +479,10 @@ input:hover {
 	color: #333;
 }
 
+#marker {
+	position: absolute; bottom: 0; right: 70px;
+}
+
 
 
 
