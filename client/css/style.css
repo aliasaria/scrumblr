@@ -21,6 +21,8 @@ body {
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	
+	background-image: url('/css/bg/concrete_wall_2_2.png');
+	
 }
 
 #board {
@@ -55,8 +57,8 @@ body {
 	xmargin-left: auto;
 	xmargin-right: auto;
 	
-	-webkit-box-shadow: 1px 1px 2px #aaa;
-	-moz-box-shadow: 1px 1px 2px #aaa;
+	-webkit-box-shadow: 1px 3px 2px #aaa;
+	-moz-box-shadow: 1px 3px 2px #999;
 	
 	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
 }
