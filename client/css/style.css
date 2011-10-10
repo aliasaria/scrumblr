@@ -481,6 +481,7 @@ input:hover {
 
 #marker {
 	position: absolute; bottom: 0; right: 70px;
+	z-index: 1;
 }
 
 
