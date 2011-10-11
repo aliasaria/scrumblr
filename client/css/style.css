@@ -68,7 +68,7 @@ body {
 	height: 100%;
 	position: absolute;
 	display: inline;
-	opacity: .05;
+	opacity: 0.035;
 	background-image: url('scribbles2.png');
 }
 

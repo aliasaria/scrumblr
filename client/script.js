@@ -823,6 +823,14 @@ $( ".board-outline" ).resizable( {
         });
 })();
 
+
+
+//$('#marker').draggable();
+
+
+
+
+
 });
 
 
