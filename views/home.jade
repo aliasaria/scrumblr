@@ -28,7 +28,7 @@ body
 							a#go(onclick="return go();") &nbsp;go.
 						<br><br>
 						p.home example board:
-						p.home <a href="http://scrumblr.ca/demo">http://scrumblr.ca/demo</a>
+						p.home!= '<a href="http://' + locals.url + '/demo">' + locals.url + '/demo</a>'
 						<br><br><br>
 						p.home.small sourcecode at <a href="https://github.com/aliasaria/scrumblr">github</a>
 				

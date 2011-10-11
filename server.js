@@ -36,8 +36,11 @@ app.configure( function(){
 });
 
 app.get('/', function(req, res) {
+	console.log(req.header('host'));
+	url = req.header('host');
 	res.render('home.jade', {
-		 layout: false
+		 layout: false,
+		 locals: {url: url}
 	});
 });
 
