@@ -825,7 +825,19 @@ $( ".board-outline" ).resizable( {
 
 
 
-//$('#marker').draggable();
+$('#marker').draggable(
+	{
+		axis: 'x',
+		containment: 'parent'
+	}
+);
+
+$('#eraser').draggable(
+	{
+		axis: 'x',
+		containment: 'parent'
+	}
+);
 
 
 

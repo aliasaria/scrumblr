@@ -480,9 +480,15 @@ input:hover {
 }
 
 #marker {
+	position: absolute; bottom: 0; right: 200px;
+	z-index: 1;
+}
+
+#eraser {
 	position: absolute; bottom: 0; right: 70px;
 	z-index: 1;
 }
+
 
 
 
