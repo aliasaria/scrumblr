@@ -839,8 +839,8 @@ $('#eraser').draggable(
 	}
 );
 
-
-
+//disable image dragging
+window.ondragstart = function() { return false; } 
 
 
 });
