@@ -40,22 +40,14 @@ how to install and run on your own computer (linux/osx)
 -------------------------------------------------------
 
 - install redis v2.2.2
-- install node.js >= 0.4.1
-- install npm
-- install these npm packages:
-	- async
-	- express
-	- jade
-	- redis-client
-	- redis
-	- sanitizer
-	- socket.io
-	- simplesets
-	- connect-redis
-	- (and perhaps more which you will notice when you try to start it)
-- now start redis ($ redis-server)
-- now start ($ node server.js 80) where "80" is the port you want it to run on. 
-
+- install node.js >= 0.4.7
+- install npm 
+- cd to the scrumblr directory; you should see server.js and config.js and other files.
+- run `npm install`
+- If you get errors about express, you may need to change in package.json to have "express":  ">=2.4.x", 
+- run redis `redis-server`
+- run scrumblr `node server.js 80` where "80" is the port you have opened in your firewall and want scrumblr to run on. 
+- open a browser to `http://localhost:80` where "80" is the port you chose in the previous step.
 license
 -------
 

@@ -656,7 +656,8 @@ $.widget("ui.mouse", {
 			.bind('mousemove.'+this.widgetName, this._mouseMoveDelegate)
 			.bind('mouseup.'+this.widgetName, this._mouseUpDelegate);
 
-		event.preventDefault();
+		//ali: fixing this http://bugs.jqueryui.com/ticket/4261
+		//event.preventDefault();
 		event.originalEvent.mouseHandled = true;
 		return true;
 	},

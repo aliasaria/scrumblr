@@ -86,7 +86,7 @@ $.widget("ui.mouse", {
 			.bind('mousemove.'+this.widgetName, this._mouseMoveDelegate)
 			.bind('mouseup.'+this.widgetName, this._mouseUpDelegate);
 
-		event.preventDefault();
+		//event.preventDefault();
 		event.originalEvent.mouseHandled = true;
 		return true;
 	},

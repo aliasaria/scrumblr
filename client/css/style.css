@@ -12,6 +12,17 @@ body {
 	
 	xheight: 1400px;
 	xwidth: 2000px;
+	
+	
+	
+	user-select: none;
+	-o-user-select:none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	
+	background-image: url('/css/bg/concrete_wall_2_2.png');
+	
 }
 
 #board {
@@ -46,8 +57,8 @@ body {
 	xmargin-left: auto;
 	xmargin-right: auto;
 	
-	-webkit-box-shadow: 1px 1px 2px #aaa;
-	-moz-box-shadow: 1px 1px 2px #aaa;
+	-webkit-box-shadow: 1px 3px 2px #aaa;
+	-moz-box-shadow: 1px 3px 2px #999;
 	
 	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
 }
@@ -57,8 +68,8 @@ body {
 	height: 100%;
 	position: absolute;
 	display: inline;
-	opacity: .08;
-	background-image: url('nexum_whiteboard.jpg');
+	opacity: 0.035;
+	background-image: url('scribbles2.png');
 }
 
 
@@ -81,7 +92,7 @@ width: 16px; height: 16px;
 }
 
 .card-edit-form, .card-edit-form input, .card-edit-form textarea {
-	border:none;
+	border: none;
 	font-size:inherit;
 	font-weight:inherit;
 	background-color:inherit;
@@ -95,6 +106,8 @@ width: 16px; height: 16px;
 	overflow: hidden;
 	resize: none;
 	width: 100%;
+	color: #330066;
+	color: #666;
 	
 }
 
@@ -465,6 +478,17 @@ input:hover {
 .notice-bar a {
 	color: #333;
 }
+
+#marker {
+	position: absolute; bottom: 0; right: 200px;
+	z-index: 1;
+}
+
+#eraser {
+	position: absolute; bottom: 0; right: 70px;
+	z-index: 1;
+}
+
 
 
 

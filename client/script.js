@@ -5,9 +5,7 @@ var currentTheme = "bigcards";
 var boardInitialized = false;
 
 
-var socket = new io.Socket(  );
-socket.connect();
-
+var socket = io.connect();
 
 //an action has happened, send it to the
 //server
@@ -20,7 +18,7 @@ function sendAction(a, d)
 		data: d
 	}
 	
-	socket.send ( message );
+	socket.json.send ( message );
 }
 
 socket.on('connect', function(){ 
@@ -89,10 +87,7 @@ function getMessage( m )
 			break;
 			
 		case 'moveCard':
-			$("#" + data.id).animate({
-				left: data.position.left+"px",
-				top: data.position.top+"px" 
-			}, 500);
+                        moveCard($("#" + data.id), data.position);
 			break;
 			
 		case 'initCards':
@@ -101,7 +96,7 @@ function getMessage( m )
 		
 		case 'createCard':
 			//console.log(data);
-		   drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
+                        drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
 			break;
 			
 		case 'deleteCard':
@@ -170,9 +165,22 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	<img class="card-image" src="/images/' + colour + '-card.png">\
 	<div id="content:' + id + '" class="content stickertarget droppable">' + text + '</div>\
 	</div>';
-	$(h).appendTo('#board');
+
+        var card = $(h);
+	card.appendTo('#board');
 	
-	$( ".card" ).draggable(
+	//@TODO
+	//Draggable has a bug which prevents blur event
+	//http://bugs.jqueryui.com/ticket/4261
+	//So we have to blur all the cards and editable areas when
+	//we click on a card
+	//The following doesn't work so we will do the bug
+	//fix recommended in the above bug report
+	// card.click( function() { 
+	// 	$(this).focus();
+	// } );
+	
+	card.draggable(
 		{ 
 			snap: false,
 			snapTolerance: 5,
@@ -182,7 +190,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	);
 	
 	//After a drag:
-	$( "#" + id ).bind( "dragstop", function(event, ui) {
+	card.bind( "dragstop", function(event, ui) {
+
 		var data = {
 			id: this.id,
 			position: ui.position,
@@ -192,7 +201,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		sendAction('moveCard', data);
 	});
 	
-	$( ".droppable" ).droppable(
+	card.children(".droppable").droppable(
 		{ 
 			accept: '.sticker',
 			drop: function( event, ui ) {
@@ -202,7 +211,6 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 							addSticker( cardId, stickerId );
 							
 							var data = { cardId: cardId, stickerId: stickerId };
-							
 							sendAction('addSticker', data);
 						}
 	 	}
@@ -210,13 +218,14 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	
 	var speed = Math.floor(Math.random() * 1000);
 	if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+
 	
-	$("#" + id).animate({
+	card.animate({
 		left: x + "px",
 		top: y + "px" 
 	}, speed);
 	
-	$("#" + id).hover( 
+	card.hover( 
 		function(){ 
 			$(this).addClass('hover');
 			$(this).children('.card-icon').fadeIn(10);
@@ -227,7 +236,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	 );
 	
-	$("#" + id).children('.card-icon').hover(
+	card.children('.card-icon').hover(
 		function(){
 			$(this).addClass('card-icon-hover');
 		},
@@ -236,7 +245,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	);
 	
-	$("#" + id).children('.delete-card-icon').click(
+	card.children('.delete-card-icon').click(
 		function(){
 			$("#" + id).remove();
 			//notify server of delete
@@ -244,7 +253,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		}
 	);
 	
-	$("#" + id).children('.content').editable( "/edit-card/" + id,
+	card.children('.content').editable( "/edit-card/" + id,
 		{
 			style   : 'inherit',
 			cssclass   : 'card-edit-form',
@@ -272,6 +281,13 @@ function onCardChange( text, result )
 	sendAction('editCard', { id: id, value: text });
 	
 	
+}
+
+function moveCard(card, position) {
+        card.animate({
+                left: position.left+"px",
+                top: position.top+"px" 
+        }, 500);
 }
 
 function addSticker ( cardId , stickerId ) 
@@ -579,8 +595,8 @@ function updateName ( sid, name )
 
 function boardResizeHappened(event, ui)
 {
-	var newsize = ui.size
-	
+	var newsize = ui.size	
+
 	sendAction( 'setBoardSize', newsize);
 }
 
@@ -590,6 +606,66 @@ function resizeBoard (size) {
 		width: size.width
 	} );
 }
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+function calcCardOffset() {
+        var offsets = {};
+        $(".card").each(function() {
+                var card = $(this);
+                $(".col").each(function(i) {
+                        var col = $(this);
+                        if(col.offset().left + col.outerWidth() > card.offset().left + card.outerWidth() || i === $(".col").size() - 1) {
+                                offsets[card.attr('id')] = {
+                                        col: col,
+                                        x: ( (card.offset().left - col.offset().left) / col.outerWidth() )
+                                } 
+                                return false;
+                        }
+                });
+        });
+        return offsets;
+}
+
+
+//moves cards with a resize of the Board
+//doSync is false if you don't want to synchronize
+//with all the other users who are in this room
+function adjustCard(offsets, doSync) {
+        $(".card").each(function() {
+				var card = $(this);
+				var offset = offsets[this.id];
+				if(offset) {
+						var data = {
+								id: this.id,
+								position: {
+									left: offset.col.position().left + (offset.x * offset.col.outerWidth()),
+									top: parseInt(card.css('top').slice(0,-2))
+								},
+								oldposition: {
+									left: parseInt(card.css('left').slice(0,-2)),
+									top: parseInt(card.css('top').slice(0,-2))
+								}
+						}; //use .css() instead of .position() because css' rotate
+						//console.log(data);
+						if (!doSync)
+						{
+							card.css('left',data.position.left);
+							card.css('top',data.position.top);
+						}
+						else
+						{
+							//note that in this case, data.oldposition isn't accurate since
+							//many moves have happened since the last sync
+							//but that's okay becuase oldPosition isn't used right now
+							moveCard(card, data.position);
+							sendAction('moveCard', data);
+						}
+
+				}
+		});
+}
+
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -729,13 +805,44 @@ $( ".board-outline" ).resizable( {
 	minHeight: 400 ,
 	maxWidth: 3200,
 	maxHeight: 1800,
-	stop: function(event, ui) { 
-		boardResizeHappened(event, ui);
-	}
 } );
 
+//A new scope for precalculating
+(function() {
+        var offsets;
+        
+        $(".board-outline").bind("resizestart", function() {
+                offsets = calcCardOffset();
+        });
+		$(".board-outline").bind("resize", function(event, ui) {
+                adjustCard(offsets, false);
+        });
+        $(".board-outline").bind("resizestop", function(event, ui) {
+                boardResizeHappened(event, ui);
+                adjustCard(offsets, true);
+        });
+})();
 
-	
+
+
+$('#marker').draggable(
+	{
+		axis: 'x',
+		containment: 'parent'
+	}
+);
+
+$('#eraser').draggable(
+	{
+		axis: 'x',
+		containment: 'parent'
+	}
+);
+
+
+
+
+
 });
 
 
