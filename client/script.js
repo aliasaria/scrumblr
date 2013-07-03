@@ -3,7 +3,7 @@ var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
-
+var keyTrap = null;
 
 var socket = io.connect();
 
@@ -154,7 +154,9 @@ function getMessage( m )
 
 }
 
-
+$(document).bind('keyup', function(event) {
+	keyTrap = event.which;
+});
 
 function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 {
@@ -185,12 +187,25 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 			snap: false,
 			snapTolerance: 5,
 			containment: [0,0,2000,2000],
-			stack: ".card"
+			stack: ".card",
+			start: function (event, ui) {
+				keyTrap = null;
+			},
+			drag: function (event, ui) {
+				if (keyTrap == 27) {
+					ui.helper.css(ui.originalPosition);
+					return false;
+				}
+			}
 	 	}
 	);
-	
+
 	//After a drag:
 	card.bind( "dragstop", function(event, ui) {
+		if (keyTrap == 27) {
+			keyTrap = null;
+			return;
+		}
 
 		var data = {
 			id: this.id,
