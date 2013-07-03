@@ -246,10 +246,12 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	);
 	
 	card.children('.delete-card-icon').click(
-		function(){
-			$("#" + id).remove();
-			//notify server of delete
-			sendAction( 'deleteCard' , { 'id': id });
+		function(e){
+			if (e.shiftKey || confirm('Delete card?')) {
+				$("#" + id).remove();
+				//notify server of delete
+				sendAction( 'deleteCard' , { 'id': id });
+			}
 		}
 	);
 	
