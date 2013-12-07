@@ -39,12 +39,15 @@ my goal was to avoid buttons and ui (almost everything is edit in place or dragg
 how to install and run on your own computer (linux/osx)
 -------------------------------------------------------
 
-- install redis v2.2.2
-- install node.js >= 0.4.7
-- install npm
+- [install redis v2.2.2](http://redis.io/download)
+- [install node.js >= 0.4.7](http://nodejs.org/)
+- install npm (if you're running node.js [v0.6.3](https://github.com/joyent/node/commit/b159c6) or newer it's already installed!)
+- cd to the scrumblr directory; you should see server.js and config.js and other files.
 - run `npm install`
+- If you get errors about express, you may need to change in package.json to have "express":  ">=2.4.x", 
 - run redis `redis-server`
-- run scrumblr `node server.js 80` where "80" is the port you want it to run on. 
+- run scrumblr `node server.js 80` where "80" is the port you have opened in your firewall and want scrumblr to run on. 
+- open a browser to `http://localhost:80` where "80" is the port you chose in the previous step.
 
 license
 -------
