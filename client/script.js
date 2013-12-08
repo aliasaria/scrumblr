@@ -212,7 +212,12 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 							
 							var data = { cardId: cardId, stickerId: stickerId };
 							sendAction('addSticker', data);
-						}
+							
+							//remove hover state to everything on the board to prevent
+							//a jquery bug where it gets left around
+							$('.card-hover-draggable').removeClass('card-hover-draggable');
+						},
+			hoverClass: 'card-hover-draggable'
 	 	}
 	);
 	
