@@ -36,7 +36,7 @@ app.configure( function(){
 });
 
 app.get('/', function(req, res) {
-	console.log(req.header('host'));
+	//console.log(req.header('host'));
 	url = req.header('host');
 	res.render('home.jade', {
 		 layout: false,
@@ -123,7 +123,7 @@ function scrub( text ) {
 	
 	
 	client.on('message', function( message ){ 
-		console.log(message.action + " -- " + sys.inspect(message.data) );
+		//console.log(message.action + " -- " + sys.inspect(message.data) );
 
 		if (!message.action)	return;
 
@@ -317,7 +317,7 @@ function scrub( text ) {
 				break;
 
 			default:
-				console.log('unknown action');
+				//console.log('unknown action');
 				break;
 		}
 	});
@@ -403,7 +403,7 @@ function initClient ( client )
 			}
 		}
 
-		console.log('initialusers: ' + roommates);
+		//console.log('initialusers: ' + roommates);
 		client.json.send(
 			{
 				action: 'initialUsers',
@@ -427,7 +427,7 @@ function joinRoom (client, room, successFunction)
 
 function leaveRoom (client)
 {
-	console.log (client.id + ' just left');
+	//console.log (client.id + ' just left');
 	var msg = {};
 	msg.action = 'leave-announce';
 	msg.data	= { sid: client.id };
@@ -476,7 +476,7 @@ function setUserName ( client, name )
 {
 	client.user_name = name;
 	sids_to_user_names[client.id] = name;
-	console.log('sids to user names: ');
+	//console.log('sids to user names: ');
 	console.dir(sids_to_user_names);
 }
 
