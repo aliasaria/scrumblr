@@ -490,7 +490,11 @@ input:hover {
 }
 
 
-
+.card-hover-draggable {
+	xborder: 1px dashed blue;
+	box-shadow:inset 0 0 40px rgba(128, 128, 256,0.2);
+	background-color: rgba(128, 128, 256,0.1)
+}
 
 
 
