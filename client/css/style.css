@@ -165,12 +165,12 @@ h2 {
 	
 .bottom-icon {
 	padding: 5px;
-	opacity: .3;
+	opacity: .6;
 }
 
 .bottom-icon:hover {
 	padding: 5px;
-	opacity: .4;
+	opacity: 1;
 }
 
 #add-col {

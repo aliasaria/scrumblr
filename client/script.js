@@ -87,7 +87,7 @@ function getMessage( m )
 			break;
 			
 		case 'moveCard':
-                        moveCard($("#" + data.id), data.position);
+            moveCard($("#" + data.id), data.position);
 			break;
 			
 		case 'initCards':
@@ -96,9 +96,9 @@ function getMessage( m )
 		
 		case 'createCard':
 			//console.log(data);
-                        drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
+            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, null);
 			break;
-			
+
 		case 'deleteCard':
 			$("#" + data.id).fadeOut(500,
 				function() {$(this).remove();}
@@ -161,11 +161,16 @@ $(document).bind('keyup', function(event) {
 function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 {
 	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
-	
+
+    //var exp = /(jira\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var exp = /([A-Z].\-[0-9]{5})/ig;
+    var linksEnabled = text.replace(exp,"<a href=http://jira/browse/$1>$1</a>");
+    //linksEnabled = linksEnabled.replace("jira","http://jira/browse");
+
 	var h = '<div id="' + id + '" class="card ' + colour + ' draggable" style="-webkit-transform:rotate(' + rot + 'deg);">\
 	<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
 	<img class="card-image" src="/images/' + colour + '-card.png">\
-	<div id="content:' + id + '" class="content stickertarget droppable">' + text + '</div>\
+	<div id="content:' + id + '" class="content stickertarget droppable">' + linksEnabled + '</div>\
 	</div>';
 
         var card = $(h);
@@ -709,10 +714,59 @@ $(function() {
 			   rotation,
 			   randomCardColour());
 		});
-		
-		
-		
-		
+
+    $( "#create-card-story" )
+        .click(function() {
+            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                140, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                'green');
+        });
+
+    $( "#create-card-task" )
+        .click(function() {
+            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                140, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                'blue');
+        });
+
+    $( "#create-card-spike" )
+        .click(function() {
+            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                140, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                'white');
+        });
+
+    $( "#create-card-bug" )
+        .click(function() {
+            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                140, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                'yellow');
+        });
+
 	// Style changer
 	$("#smallify").click(function(){
 		if (currentTheme == "bigcards")
