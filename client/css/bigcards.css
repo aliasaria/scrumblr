@@ -1,11 +1,9 @@
-.card { 
+.card {
 	width: 230px;
 	height: 152px;
 	xpadding: 5px; float: left;
 	xmargin: 0 10px 10px 0;
 	font-size: .9em;
-	
-
 
 	overflow: hidden;
 	
@@ -30,6 +28,16 @@
 .green {
 }
 
+.postit {
+    width: 115px;
+    height: 76px;
+}
+
+.small {
+    width: 180px;
+    height: 102px;
+}
+
 .card-image {
 	position: absolute;
 	xtop: -10;
@@ -43,13 +51,13 @@
 .content { 
 	overflow: hidden;
 	display: block;
-	width: 158px; 
+	width: 158px;
 	height: 88px;
 	margin: 5px 23px 0px 34px;
-	
+
 	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
 	font-size: 18px;
-	letter-spacing: 0px;	
+	letter-spacing: 0px;
 	
 	xtext-shadow: 0px 0px 1px #444;
 	
@@ -66,4 +74,18 @@
 
 .stickertarget {
 	position: absolute;
+}
+
+.postit>.content {
+    width: 85px;
+    height: 50px;
+    margin: 5px 3px 5px 10px;
+}
+
+.small>.content {
+    width: 108px;
+    height: 50px;
+    margin: 5px 3px 20px 30px;
+    font-size: 15px;
+
 }

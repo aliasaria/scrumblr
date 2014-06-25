@@ -22,6 +22,7 @@
     "simplesets":   "1.1.x",
     "connect-redis":"1.0.x",
     "express":      "2.4.x",
-    "jade":         "0.14.x"
-  }
+    "jade":         "0.14.x",
+		"lodash": 			"1.3.x"
+	}
 }

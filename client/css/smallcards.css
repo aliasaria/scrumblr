@@ -4,8 +4,6 @@
 	xpadding: 5px; float: left;
 	xmargin: 0 10px 10px 0;
 	font-size: .9em;
-	
-
 
 	overflow: hidden;
 	
@@ -29,6 +27,16 @@
 }
 
 .green {
+}
+
+.postit {
+    width: 76px;
+    height: 40px;
+}
+
+.small {
+    width: 115px;
+    height: 76px;
 }
 
 .card-image {
@@ -82,4 +90,18 @@
 	color: #333;
 	text-align: center;
 	padding-top: 8px;
+}
+
+.postit>.content {
+    width: 56px;
+    height: 25px;
+    margin: 5px 3px 5px 10px;
+}
+
+.small>.content {
+    width: 78px;
+    height: 25px;
+    margin: 5px 3px 20px 30px;
+    font-size: 15px;
+
 }
