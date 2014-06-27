@@ -162,7 +162,7 @@ function drawNewCard(id, text, x, y, rot, style, sticker)
 {
 	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 
-	var ticketNumberRegex = new RegExp("([A-Z]+-[0-9]+)", 'ig');
+	var ticketNumberRegex = new RegExp("^([A-Z]+-[0-9]+)", 'ig');
   var linksEnabled = text.replace(ticketNumberRegex,"<a href=http://jira.corp.peer1.net/browse/$1>$1</a>");
 
 	var cardFileName = style.replace(/^.* /, '') + '-card.png';
