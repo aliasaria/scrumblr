@@ -6,3 +6,4 @@ rsync.sh
 *.log
 .monitor
 node_modules/
+CristalIntense
