@@ -407,7 +407,7 @@ h1.home {
 
 .home {
 	font-size: 30px;
-	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	font-family: sans-serif, serif;
 	color: #19ba98;
 	color: #222;
 	opacity: 1;
@@ -440,7 +440,7 @@ input.text {
     margin-bottom: 10px;
     border: none;
 	font-size: 30px;
-	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+    font-family: sans-serif, serif;
 	color: #5c9db4;
 	text-align: center;
 	border-bottom: dashed 3px #19ba98;
@@ -456,7 +456,7 @@ input:hover {
     margin-bottom: 10px;
     border: none;
 	font-size: 40px;
-	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	font-family: sans-serif, serif;
 	color: #19ba98;
 	color: black;
 	
