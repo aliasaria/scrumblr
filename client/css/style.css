@@ -173,6 +173,16 @@ h2 {
 	opacity: .4;
 }
 
+.bottom-card-icon {
+	padding: 0px;
+	opacity: .8;
+}
+
+.bottom-card-icon:hover {
+	padding: 0px;
+	opacity: 1;
+}
+
 #add-col {
 	position: absolute; right: 3px; top: 200px; display: none; opacity: .15;
 }
