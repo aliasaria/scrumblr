@@ -1,6 +1,5 @@
 var	http = require('http'),
-		express = require('express'),
-		connect = require('connect');
+		express = require('express');
 
 var 	sys = require('sys');
 

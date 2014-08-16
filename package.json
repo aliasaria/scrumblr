@@ -1,7 +1,7 @@
 {
   "name": "scrumblr",
   "description": "Web-based simulation of a physical agile sprint board that supports real-time collaboration.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "url": "http://github.com/aliasaria/scrumblr"
   },
@@ -14,13 +14,11 @@
     "node": "0.4.7"
   },
   "dependencies": {
-    "async":        "0.1.x",
-    "connect":      "1.7.x",
-    "redis":        "0.6.x",
-    "sanitizer":    "0.0.x",
+    "async":        "~0.9.0",
+    "redis":        "~0.12.1",
+    "sanitizer":    "~0.1.1",
     "socket.io":    "0.8.x",
-    "simplesets":   "1.1.x",
-    "connect-redis":"1.0.x",
+    "simplesets":   "~1.2.0",
     "express":      "2.4.x",
     "jade":         "0.14.x"
   }
