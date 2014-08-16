@@ -16,7 +16,6 @@
   "dependencies": {
     "async":        "0.1.x",
     "connect":      "1.7.x",
-    "redis-client": "0.3.x",
     "redis":        "0.6.x",
     "sanitizer":    "0.0.x",
     "socket.io":    "0.8.x",
