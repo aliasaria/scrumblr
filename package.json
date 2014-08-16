@@ -20,6 +20,6 @@
     "socket.io":    "0.8.x",
     "simplesets":   "~1.2.0",
     "express":      "2.4.x",
-    "jade":         "0.14.x"
+    "jade":         "~1.5.0"
   }
 }
