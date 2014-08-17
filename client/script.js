@@ -697,7 +697,7 @@ $(function() {
 	//setTimeout($.unblockUI, 2000); 
 
 
-	$( "#create-card" )
+	$( "#create-blue-card" )
 		.click(function() {
 			var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
 			uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
@@ -707,7 +707,46 @@ $(function() {
 				'',
 			 	58, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
 			   rotation,
-			   randomCardColour());
+			   'blue');
+		});
+	
+	$( "#create-green-card" )
+		.click(function() {
+			var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+			uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+			//alert(uniqueID);
+			createCard( 
+				'card' + uniqueID,
+				'',
+			 	58, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+			   rotation,
+			   'green');
+		});
+	
+	$( "#create-white-card" )
+		.click(function() {
+			var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+			uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+			//alert(uniqueID);
+			createCard( 
+				'card' + uniqueID,
+				'',
+			 	58, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+			   rotation,
+			   'white');
+		});
+	
+	$( "#create-yellow-card" )
+		.click(function() {
+			var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+			uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
+			//alert(uniqueID);
+			createCard( 
+				'card' + uniqueID,
+				'',
+			 	58, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
+			   rotation,
+			   'yellow');
 		});
 		
 		
