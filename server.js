@@ -1,19 +1,28 @@
-var	http = require('http'),
-		express = require('express');
-
-var 	sys = require('sys');
-
-var 	app = express.createServer();
-
+/**************
+ SYSTEM INCLUDES
+**************/
+var	http = require('http');
+var sys = require('sys');
 var	async = require('async');
+var sanitizer = require('sanitizer');
+var express = require('express');
 
+/**************
+ LOCAL INCLUDES
+**************/
 var	rooms	= require('./lib/rooms.js');
 var	data	= require('./lib/data.js').db;
 
-var 	sanitizer = require('sanitizer');
-
+/**************
+ GLOBALS
+**************/
 //Map of sids to user_names
 var sids_to_user_names = [];
+
+/**************
+ SETUP
+**************/
+var app = express();
 
 app.configure( function(){
 	app.use(express.static(__dirname + '/client'));
@@ -34,6 +43,12 @@ app.configure( function(){
 
 });
 
+app.listen(process.argv[2] || 8124);
+
+
+/**************
+ ROUTES
+**************/
 app.get('/', function(req, res) {
 	//console.log(req.header('host'));
 	url = req.header('host');
@@ -56,19 +71,10 @@ app.get('/:id', function(req, res){
 	});
 });
 
-//SETUP ROUTES
-app.post('/edit-card/:id', function(req, res){
-    //do nothing
-	res.send(req.body.value);
-});
 
-app.post('/edit-column', function(req, res) {
-	//do nothing
-	res.send(req.body.value);
-});
-
-app.listen(process.argv[2] || 8124);
-
+/**************
+ SOCKET.I0
+**************/
 //I limit the number of potential transports because xhr was causing trouble
 //with frequent disconnects
 var socketio_options = {
@@ -88,38 +94,24 @@ io.configure(function () {
   io.set('log level', 1); 
 });
 io.sockets.on('connection', function (client) {
-	// new client is here!
-	//console.dir(client.request.headers);
-		//
-		// var cookie_string = client.request.headers.cookie;
-		// var parsed_cookies = connect.utils.parseCookie(cookie_string);
-		// console.log('parsed:'); console.dir(parsed_cookies);
-		// var connect_sid = parsed_cookies['scrumscrum-sid'];
-		// if (connect_sid) {
-		//   session_store.get(connect_sid, function (error, session) {
-		// 	 console.log('cookie:');
-		//     console.dir(session);
-		//   });
-		// }
-
-//santizes text
-function scrub( text ) {
-	if (typeof text != "undefined" && text !== null)
-	{
-	
-		//clip the string if it is too long
-		if (text.length > 65535)
+	//santizes text
+	function scrub( text ) {
+		if (typeof text != "undefined" && text !== null)
 		{
-			text = text.substr(0,65535);
+		
+			//clip the string if it is too long
+			if (text.length > 65535)
+			{
+				text = text.substr(0,65535);
+			}
+		
+			return sanitizer.sanitize(text);
 		}
-	
-		return sanitizer.sanitize(text);
-	}
-	else
-	{
-		return null;
-	}
-}	
+		else
+		{
+			return null;
+		}
+	}	
 	
 	
 	
@@ -336,7 +328,9 @@ function scrub( text ) {
 
 
 
-
+/**************
+ FUNCTIONS
+**************/
 function initClient ( client )
 {
 	//console.log ('initClient Started');
@@ -505,6 +499,10 @@ function cleanAndInitializeDemoRoom()
 }
 //
 
+/**************
+ SETUP DATABASE ON FIRST RUN
+**************/
+// (runs only once on startup)
 var db = new data(function() {
 	cleanAndInitializeDemoRoom();
 });
