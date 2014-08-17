@@ -20,31 +20,15 @@ var	data	= require('./lib/data.js').db;
 var sids_to_user_names = [];
 
 /**************
- SETUP
+ SETUP EXPRESS
 **************/
 var app = express();
 
-app.configure( function(){
-	app.use(express.static(__dirname + '/client'));
-	app.use(express.bodyParser());
-	//app.use(express.cookieParser());
+app.use(express.static(__dirname + '/client'));
 
-	//Cookies are not really needed... but may be in the future?
-	app.use(express.cookieParser());
-	app.use(
-		express.session({
-			key: "scrumscrum-cookie",
-			secret: "kookoorikoo",
-//			store: session_store,
-			cookie: { path: '/', httpOnly: true, maxAge: 14400000 }
-		})
-	);
-
-
-});
-
-app.listen(process.argv[2] || 8124);
-
+var server = require('http').Server(app);
+server.listen(process.argv[2] || 8080);
+//app.listen(process.argv[2] || 8080);
 
 /**************
  ROUTES
@@ -53,21 +37,21 @@ app.get('/', function(req, res) {
 	//console.log(req.header('host'));
 	url = req.header('host');
 	res.render('home.jade', {
-		 layout: false,
-		 locals: {url: url}
+		 url: url
 	});
 });
 
+
 app.get('/demo', function(req, res) {
 	res.render('index.jade', {
-		locals: {pageTitle: 'scrumblr - demo', demo: true}
+			pageTitle: 'scrumblr - demo',
+			demo: true
 	});
 });
 
 app.get('/:id', function(req, res){
-
 	res.render('index.jade', {
-		locals: {pageTitle: ('scrumblr - ' + req.params.id) }
+		pageTitle: ('scrumblr - ' + req.params.id)
 	});
 });
 
@@ -75,24 +59,8 @@ app.get('/:id', function(req, res){
 /**************
  SOCKET.I0
 **************/
-//I limit the number of potential transports because xhr was causing trouble
-//with frequent disconnects
-var socketio_options = {
-	transports: ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']
-};
-// socket.io SETUP
-var io = require('socket.io').listen(app);
-io.configure(function () {
-  io.set('transports', [
-      'websocket'
-    , 'flashsocket'
-    , 'htmlfile'
-//    , 'xhr-polling'
-    , 'jsonp-polling'
-  ]);
+var io = require('socket.io')(server);
 
-  io.set('log level', 1); 
-});
 io.sockets.on('connection', function (client) {
 	//santizes text
 	function scrub( text ) {
