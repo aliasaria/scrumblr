@@ -27,8 +27,10 @@ var app = express();
 app.use(express.static(__dirname + '/client'));
 
 var server = require('http').Server(app);
-server.listen(process.argv[2] || 8080);
-//app.listen(process.argv[2] || 8080);
+var port = process.argv[2] || 8080;
+server.listen(port);
+
+console.log('Server running at http://127.0.0.1:' + port + '/');
 
 /**************
  ROUTES
