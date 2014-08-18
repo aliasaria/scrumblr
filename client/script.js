@@ -398,8 +398,6 @@ function drawNewColumn (columnName)
 		cls = "col first";
 	}
 	
-	console.log(totalcolumns);
-
 	$('#icon-col').before('<td class="' + cls + '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns+1) + '" class="editable">' + columnName + '</h2></td>');
 
 	$('.editable').editable(function(value, settings) { 
