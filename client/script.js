@@ -424,11 +424,23 @@ function onColumnChange( id, text )
 {
 	var names = Array();
 
-	//Get the names of all the columns right from the DOM (ignore what was sent in function)
+	//console.log(id + " " + text );
+
+	//Get the names of all the columns right from the DOM
 	$('.col').each(function() {
-		names.push(
-			$(this).text()
-		);
+
+		//get ID of current column we are traversing over
+		var thisID = $(this).children("h2").attr('id');
+
+		if (id == thisID)
+		{
+			names.push( text );
+		}
+		else
+		{
+			names.push( $(this).text() );	
+		}
+		
 	});
 	
 	updateColumns(names);
