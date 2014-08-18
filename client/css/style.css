@@ -165,12 +165,20 @@ h2 {
 	
 .bottom-icon {
 	padding: 5px;
-	opacity: .3;
+	opacity: .4;
 }
 
 .bottom-icon:hover {
 	padding: 5px;
+	opacity: .6;
+}
+
+.faded-icon {
 	opacity: .4;
+}
+
+.faded-icon:hover {
+	opacity: .6;
 }
 
 #add-col {
@@ -496,11 +504,17 @@ input:hover {
 	background-color: rgba(128, 128, 256,0.1)
 }
 
+.config {
+	position: fixed;
+	right: 18px;
+	top: 4px;
+}
 
-
-
-
-
+.trash {
+	position: fixed;
+	right: 18px;
+	bottom: 4px;
+}
 
 
 
