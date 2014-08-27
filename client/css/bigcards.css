@@ -31,6 +31,7 @@
 .postit {
     width: 115px;
     height: 76px;
+    z-index: 1000;
 }
 
 .small {
