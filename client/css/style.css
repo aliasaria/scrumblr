@@ -302,92 +302,44 @@ xopacity: .5;
 	padding-top: 2px; margin: 0;
 }
 
-#sticker-gold, #sticker-bluestar, #sticker-redstar, #sticker-silverstar {
-	position: relative;
-	top: 2px;
-	padding: 0; margin 0;
-}
-
-#sticker-nostar {
-	position: relative;
-	top: 3px;
-	opacity: .5;
-}
-
-#sticker-redstar {
-	top: 1px;
+.stickertarget {
+    background-repeat: no-repeat;
+    background-position: right bottom;
 }
 
 .sticker-red {
 	background-image: url('/images/stickers/process/32x32/sticker-red.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-blue {
 	background-image: url('/images/stickers/process/32x32/sticker-blue.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-yellow {
 	background-image: url('/images/stickers/process/32x32/sticker-yellow.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-green {
 	background-image: url('/images/stickers/process/32x32/sticker-green.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-gold {
 	background-image: url('/images/stickers/process/32x32/sticker-gold.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-bluestar {
 	background-image: url('/images/stickers/process/32x32/sticker-bluestar.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-silverstar {
 	background-image: url('/images/stickers/process/32x32/sticker-silverstar.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
 .sticker-redstar {
 	background-image: url('/images/stickers/process/32x32/sticker-redstar.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
 }
 
-.sticker-pink {
-	background-image: url('/images/stickers/process/32x32/sticker-pink.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
-}
-
-.sticker-orange {
-	background-image: url('/images/stickers/process/32x32/sticker-orange.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
-}
-
-.sticker-lightblue {
-	background-image: url('/images/stickers/process/32x32/sticker-lightblue.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
-}
-
-.sticker-purple {
-	background-image: url('/images/stickers/process/32x32/sticker-purple.png');
-	background-repeat: no-repeat;
-	background-position: right bottom;
+.sticker-none {
 }
 
 
