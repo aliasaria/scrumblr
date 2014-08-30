@@ -1,0 +1,10 @@
+--recursive
+--check-leaks
+--reporter spec
+--timeout 30000
+--require should
+--require test/keep
+--require test/helpers/common
+--require test/helpers/coverage
+--require test/helpers/enforcer
+--require test/helpers/middleware

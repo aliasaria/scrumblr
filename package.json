@@ -1,28 +1,39 @@
 {
-  "name": "scrumblr",
-  "description": "Web-based simulation of a physical agile sprint board that supports real-time collaboration.",
-  "version": "0.1.0",
-  "repository": {
-    "url": "http://github.com/aliasaria/scrumblr"
-  },
-  "author": "Ali Asaria",
-  "main": "server.js",
-  "directories": {
-    "lib": "lib/"
-  },
-  "engines": {
-    "node": "0.4.7"
-  },
-  "dependencies": {
-    "async":        "0.1.x",
-    "connect":      "1.7.x",
-    "redis":        "0.6.x",
-    "sanitizer":    "0.0.x",
-    "socket.io":    "0.8.x",
-    "simplesets":   "1.1.x",
-    "connect-redis":"1.0.x",
-    "express":      "2.4.x",
-    "jade":         "0.14.x",
-		"lodash": 			"1.3.x"
+	"name" : "scrumblr",
+	"description" : "Web-based simulation of a physical agile sprint board that supports real-time collaboration.",
+	"version" : "0.1.0",
+	"repository" : {
+		"url" : "http://github.com/aliasaria/scrumblr"
+	},
+	"author" : "Ali Asaria",
+	"main" : "server.js",
+	"directories" : {
+		"lib" : "lib/"
+	},
+	"engines" : {
+		"node" : "0.4.7"
+	},
+	"dependencies" : {
+		"async" : "0.1.x",
+		"connect" : "1.7.x",
+		"redis" : "0.6.x",
+		"sanitizer" : "0.0.x",
+		"socket.io" : "0.8.x",
+		"simplesets" : "1.1.x",
+		"connect-redis" : "1.0.x",
+		"express" : "2.4.x",
+		"jade" : "0.14.x",
+		"lodash" : "1.3.x"
+	},
+	"devDependencies" : {
+		"should" : ">=1.2.2",
+		"supertest" : ">=0.5.1",
+		"mocha" : ">=1.9.0",
+		"sinon" : ">=1.7.1",
+		"jshint" : ">=2.3.0",
+		"htmlparser" : ">0.0.0",
+		"soupselect": ">0.0.0",
+		"jsdom": ">0.0.0",
+		"cheerio": ">0.0.0"
 	}
 }
