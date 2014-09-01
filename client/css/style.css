@@ -298,8 +298,13 @@ xopacity: .5;
 }
 
 .sticker {
+<<<<<<< HEAD
 	padding-top:  0px;
 	padding-left: 2px;
+=======
+	xpadding-top:  3px;
+	xpadding-left: 2px;
+>>>>>>> 165a83e28357608b36daab0986a00ca7d9735b06
 	xz-index:10;
 	display: inline-block;
 	width: 11px;
