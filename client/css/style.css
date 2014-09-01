@@ -7,32 +7,32 @@ body {
 	color: #333;
 	background-color: #ddd;
 	xbackground-image: -webkit-gradient(radial, 265 118, 456, 147 0, 29, from(#DDDDDD), to(#f3f3f3));
-	
+
 	padding-left: 10px;
-	
+
 	xheight: 1400px;
 	xwidth: 2000px;
-	
-	
-	
+
+
+
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
-	
+
 	background-image: url('/css/bg/concrete_wall_2_2.png');
-	
+
 }
 
 #board {
 	position: relative;
 	background-color: #dcd5d1;
-	
+
 	height: 100%;
 	xwidth: 980px;
 	xborder: solid silver 8px;
-	
+
 	background-image: -webkit-gradient(
 	    linear,
 	    left top,
@@ -40,9 +40,9 @@ body {
 	    color-stop(0.49, rgb(214,210,206)),
 	    color-stop(0.84, rgb(196,191,182))
 	);
-	
+
 	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
-	
+
 	-webkit-box-shadow:inset 1px 1px 3px #999;
 	-moz-box-shadow:inset 1px 1px 3px #999;
 	box-shadow:inset 1px 1px 3px #999;
@@ -53,13 +53,13 @@ body {
 	display: block;
 	width: 996px;
 	height: 466px;
-	
+
 	xmargin-left: auto;
 	xmargin-right: auto;
-	
+
 	-webkit-box-shadow: 1px 3px 2px #aaa;
 	-moz-box-shadow: 1px 3px 2px #999;
-	
+
 	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
 }
 
@@ -88,7 +88,7 @@ width: 16px; height: 16px;
 }
 
 .card-icon-hover {
-	opacity: .9;	
+	opacity: .9;
 }
 
 .card-edit-form, .card-edit-form input, .card-edit-form textarea {
@@ -108,7 +108,7 @@ width: 16px; height: 16px;
 	width: 100%;
 	color: #330066;
 	color: #666;
-	
+
 }
 
 
@@ -140,7 +140,7 @@ width: 16px; height: 16px;
 	vertical-align: top;
 	height: 100%;
 	background-image: none;
-	
+
 }
 
 h1, h1 a {
@@ -157,12 +157,12 @@ h1, h1 a {
 	text-decoration: none;
 }
 
-h2 { 
+h2 {
 	font-family: 'Rock Salt', "Arial Rounded MT Bold", arial, serif;
 	color: #5c9db4;
 	font-size: 18px;
 	}
-	
+
 .bottom-icon {
 	padding: 5px;
 	opacity: .4;
@@ -223,7 +223,7 @@ h2 {
 	letter-spacing: 4px;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
-	
+
 }
 
 .names p {
@@ -241,45 +241,45 @@ h2 {
 }
 
 .names input {
-   padding: 0; //2px 8px 2px 2px;  
+   padding: 0; //2px 8px 2px 2px;
     border: none;
-    outline: 0;  
-    width: 100px;  
-    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+    outline: 0;
+    width: 100px;
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 
-	background: none; 
+	background: none;
 	border-radius: 10px;
 	color: #666;
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
-	font-size: 13px;	
+	font-size: 13px;
 	letter-spacing: 4px;
 	margin:0;
-	
+
 	position: relative;
 }
 
 .names input:hover {
-    padding: 2px 2px 2px 2px;  
+    padding: 2px 2px 2px 2px;
     xborder: solid 1px #E5E5E5;
-    outline: 0;  
-    width: 100px;  
-    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+    outline: 0;
+    width: 100px;
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
-xopacity: .5;  
+xopacity: .5;
 	background: none;
-    box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
-    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
-    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
 	border-radius: 10px;
 	color: #aaa;
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
-	font-size: 13px;	
+	font-size: 13px;
 	letter-spacing: 4px;
 	margin:0;
-	
+
 }
 
 .names .focused {
@@ -298,10 +298,13 @@ xopacity: .5;
 }
 
 .sticker {
-	padding-top:  3px;
-	padding-left: 2px;
+	xpadding-top:  3px;
+	xpadding-left: 2px;
 	xz-index:10;
-	display: inline;
+	display: inline-block;
+	width: 11px;
+	height: 11px;
+	background-repeat: no-repeat;
 }
 
 .stickers {
@@ -314,6 +317,34 @@ xopacity: .5;
 	position: relative;
 	top: 2px;
 	padding: 0; margin 0;
+}
+
+#sticker-red {
+	background-image: url('/images/stickers/sticker-red.png');
+}
+#sticker-blue {
+	background-image: url('/images/stickers/sticker-blue.png');
+}
+#sticker-yellow {
+	background-image: url('/images/stickers/sticker-yellow.png');
+}
+#sticker-green {
+	background-image: url('/images/stickers/sticker-green.png');
+}
+#sticker-pink {
+	background-image: url('/images/stickers/sticker-pink.png');
+}
+#sticker-lightblue {
+	background-image: url('/images/stickers/sticker-lightblue.png');
+}
+#sticker-orange {
+	background-image: url('/images/stickers/sticker-orange.png');
+}
+#sticker-purple {
+	background-image: url('/images/stickers/sticker-purple.png');
+}
+#nosticker {
+	background-image: url('/images/stickers/sticker-deletestar.png');
 }
 
 #sticker-nostar {
@@ -467,11 +498,11 @@ input:hover {
 	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
 	color: #19ba98;
 	color: black;
-	
+
 	xborder: solid 1px;
-	
-	
-	
+
+
+
 }
 
 .notice-bar {
@@ -551,4 +582,3 @@ input:hover {
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
 
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
-
