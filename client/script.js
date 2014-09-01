@@ -16,7 +16,7 @@ function sendAction(a, d)
 	var message = {
 		action: a,
 		data: d
-	}
+	};
 
 	socket.json.send ( message );
 }
@@ -29,7 +29,7 @@ socket.on('connect', function(){
 
 	//imediately join the room which will trigger the initializations
 	sendAction('joinRoom', path);
-})
+});
 
 socket.on('disconnect', function(){
 	blockUI("Server disconnected. Refresh page to try and reconnect...");
@@ -38,7 +38,7 @@ socket.on('disconnect', function(){
 
 socket.on('message', function(data){
 	getMessage(data);
-})
+});
 
 function unblockUI()
 {
@@ -58,7 +58,7 @@ function blockUI(message)
 			backgroundColor: '#000',
 			'-webkit-border-radius': '10px',
 			'-moz-border-radius': '10px',
-			opacity: .5,
+			opacity: 0.5,
 			color: '#fff',
 			fontSize: '20px'
 		}
@@ -244,8 +244,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 
 	var startPosition = $("#create-card").position();
 
-	card.css( 'top' , startPosition.top - card.height()*.5 );
-	card.css('left', startPosition.left - card.width() *.5 );
+	card.css( 'top' , startPosition.top - card.height() * 0.5 );
+	card.css('left', startPosition.left - card.width()  * 0.5 );
 
 	card.animate({
 		left: x + "px",
@@ -288,14 +288,13 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 		submit  : 'OK',
 		style   : 'inherit',
 		cssclass   : 'card-edit-form',
-		type      : 'textarea',
 		placeholder   : 'Double Click to Edit.',
 		onblur: 'submit',
 		event: 'dblclick', //event: 'mouseover'
 	});
 
 	//add applicable sticker
-	if (sticker != null)
+	if (sticker !== null)
 		$("#" + id).children('.content').addClass( sticker );
 }
 
@@ -373,7 +372,7 @@ function initCards( cardArray )
 
 	cards = cardArray;
 
-	for (i in cardArray)
+	for (var i in cardArray)
 	{
 		card = cardArray[i];
 
@@ -400,7 +399,7 @@ function initCards( cardArray )
 function drawNewColumn (columnName)
 {
 	var cls = "col";
-	if (totalcolumns == 0)
+	if (totalcolumns === 0)
 	{
 		cls = "col first";
 	}
@@ -518,7 +517,7 @@ function initColumns( columnArray )
 
 	$('.col').remove();
 
-	for (i in columnArray)
+	for (var i in columnArray)
 	{
 		column = columnArray[i];
 
@@ -546,7 +545,7 @@ function setCookie(c_name,value,exdays)
 {
 var exdate=new Date();
 exdate.setDate(exdate.getDate() + exdays);
-var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+var c_value=escape(value) + ((exdays===null) ? "" : "; expires="+exdate.toUTCString());
 document.cookie=c_name + "=" + c_value;
 }
 
@@ -575,7 +574,7 @@ function setName( name )
 
 function displayInitialUsers (users)
 {
-	for (i in users)
+	for (var i in users)
 	{
 		//console.log(users);
 		displayUserJoined(users[i].sid, users[i].user_name);
@@ -591,7 +590,7 @@ function displayUserJoined ( sid, user_name )
 		name = sid.substring(0,5);
 
 
-	$('#names-ul').append('<li id="user-' + sid + '">' + name + '</li>')
+	$('#names-ul').append('<li id="user-' + sid + '">' + name + '</li>');
 }
 
 function displayUserLeft ( sid )
@@ -622,7 +621,7 @@ function updateName ( sid, name )
 
 function boardResizeHappened(event, ui)
 {
-	var newsize = ui.size
+	var newsize = ui.size;
 
 	sendAction( 'setBoardSize', newsize);
 }
@@ -646,7 +645,7 @@ function calcCardOffset() {
 								offsets[card.attr('id')] = {
 										col: col,
 										x: ( (card.offset().left - col.offset().left) / col.outerWidth() )
-								}
+								};
 								return false;
 						}
 				});
@@ -698,7 +697,7 @@ function adjustCard(offsets, doSync) {
 
 $(function() {
 
-	if (boardInitialized == false)
+	if (boardInitialized === false)
 		blockUI('<img src="/images/ajax-loader.gif" width=43 height=11/>');
 
 	//setTimeout($.unblockUI, 2000);
@@ -795,7 +794,7 @@ $(function() {
 
    $("#yourname-input").blur(function()
    {
-		if ($(this).val() == "")
+		if ($(this).val() === "")
 		{
 			$(this).val('unknown');
 		}
@@ -867,7 +866,7 @@ $('#eraser').draggable(
 );
 
 //disable image dragging
-window.ondragstart = function() { return false; }
+window.ondragstart = function() { return false; };
 
 
 });
