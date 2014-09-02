@@ -168,7 +168,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 	<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
 	<img class="card-image" src="/images/' + colour + '-card.png">\
 	<div id="content:' + id + '" class="content stickertarget droppable">' +
-	text + '</div>\
+	text + '</div><span class="filler"></span>\
 	</div>';
 
 		var card = $(h);
@@ -295,7 +295,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed)
 
 	//add applicable sticker
 	if (sticker !== null)
-		$("#" + id).children('.content').addClass( sticker );
+		addSticker( id, sticker );
 }
 
 
@@ -314,21 +314,27 @@ function moveCard(card, position) {
 function addSticker ( cardId , stickerId )
 {
 
-	cardContent = $('#' + cardId).children('.content');
+	stickerContainer = $('#' + cardId + ' .filler');
 
-	cardContent.removeClass("sticker-red");
-	cardContent.removeClass("sticker-blue");
-	cardContent.removeClass("sticker-green");
-	cardContent.removeClass("sticker-yellow");
-	cardContent.removeClass("sticker-gold");
-	cardContent.removeClass("sticker-silverstar");
-	cardContent.removeClass("sticker-bluestar");
-	cardContent.removeClass("sticker-redstar");
-	cardContent.removeClass("sticker-orange");
-	cardContent.removeClass("sticker-pink");
-	cardContent.removeClass("sticker-purple");
-	cardContent.removeClass("sticker-lightblue");
-	cardContent.addClass( stickerId );
+	if (stickerId === "nosticker")
+	{
+		stickerContainer.html("");
+		return;
+	}
+
+
+	if ( Array.isArray( stickerId ) )
+	{
+		for (var i in stickerId)
+		{
+			stickerContainer.prepend('<img src="images/stickers/' + stickerId[i] + '.png">');
+		}
+	}
+	else
+	{
+		if ( stickerContainer.html().indexOf(stickerId) < 0 )
+			stickerContainer.prepend('<img src="images/stickers/' + stickerId + '.png">');
+	}
 
 }
 

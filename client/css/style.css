@@ -362,7 +362,7 @@ xopacity: .5;
 	top: 1px;
 }
 
-.sticker-red {
+/*.sticker-red {
 	background-image: url('/images/stickers/sticker-red.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
@@ -432,7 +432,7 @@ xopacity: .5;
 	background-image: url('/images/stickers/sticker-purple.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
-}
+}*/
 
 
 
@@ -540,6 +540,10 @@ input:hover {
 	background-color: rgba(128, 128, 256,0.1)
 }
 
+/*img ~ .card-hover-draggable {
+	-webkit-filter: hue-rotate(180deg);
+}*/
+
 .config {
 	position: fixed;
 	right: 18px;
@@ -557,7 +561,15 @@ input:hover {
 
 
 
-
+.filler {
+	xwidth: 100%;
+	xbackground-color: rgba(255,0,0,0.1);
+	xheight: 100%;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+	text-align: right;
+}
 
 
 
