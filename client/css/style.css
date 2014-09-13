@@ -57,8 +57,7 @@ body {
 	xmargin-left: auto;
 	xmargin-right: auto;
 
-	-webkit-box-shadow: 1px 3px 2px #aaa;
-	-moz-box-shadow: 1px 3px 2px #999;
+	box-shadow: 1px 3px 2px #aaa;
 
 	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
 }
@@ -261,7 +260,7 @@ h2 {
 }
 
 .names input:hover {
-    padding: 2px 2px 2px 2px;
+    xpadding: 2px 2px 2px 2px;
     xborder: solid 1px #E5E5E5;
     outline: 0;
     width: 100px;
@@ -270,8 +269,6 @@ h2 {
 xopacity: .5;
 	background: none;
     box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
-    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
-    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
 	border-radius: 10px;
 	color: #aaa;
 	text-align: right;
