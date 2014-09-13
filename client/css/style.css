@@ -552,6 +552,10 @@ input:hover {
 	-webkit-filter: hue-rotate(180deg);
 }*/
 
+img {
+	user-drag: none; -moz-user-select: none; -webkit-user-drag: none;
+}
+
 .config {
 	position: fixed;
 	right: 18px;

@@ -198,7 +198,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
                 ui.helper.css(ui.originalPosition);
                 return false;
             }
-        }
+        },
+		handle: "div.content"
     });
 
     //After a drag:
@@ -675,6 +676,11 @@ function adjustCard(offsets, doSync) {
 
 $(function() {
 
+
+	//disable image dragging
+	//window.ondragstart = function() { return false; };
+
+
     if (boardInitialized === false)
         blockUI('<img src="/images/ajax-loader.gif" width=43 height=11/>');
 
@@ -828,9 +834,6 @@ $(function() {
         axis: 'x',
         containment: 'parent'
     });
-
-    //disable image dragging
-    //window.ondragstart = function() { return false; };
 
 
 });
