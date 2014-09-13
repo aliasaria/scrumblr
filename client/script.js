@@ -549,25 +549,25 @@ function changeThemeTo( theme )
 
 function setCookie(c_name,value,exdays)
 {
-var exdate=new Date();
-exdate.setDate(exdate.getDate() + exdays);
-var c_value=escape(value) + ((exdays===null) ? "" : "; expires="+exdate.toUTCString());
-document.cookie=c_name + "=" + c_value;
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays===null) ? "" : "; expires="+exdate.toUTCString());
+	document.cookie=c_name + "=" + c_value;
 }
 
 function getCookie(c_name)
 {
-var i,x,y,ARRcookies=document.cookie.split(";");
-for (i=0;i<ARRcookies.length;i++)
-{
-  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-  x=x.replace(/^\s+|\s+$/g,"");
-  if (x==c_name)
+	var i,x,y,ARRcookies=document.cookie.split(";");
+	for (i=0;i<ARRcookies.length;i++)
 	{
-	return unescape(y);
+		x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		x=x.replace(/^\s+|\s+$/g,"");
+		if (x==c_name)
+		{
+			return unescape(y);
+		}
 	}
-  }
 }
 
 
@@ -642,21 +642,21 @@ function resizeBoard (size) {
 //////////////////////////////////////////////////////////
 
 function calcCardOffset() {
-		var offsets = {};
-		$(".card").each(function() {
-				var card = $(this);
-				$(".col").each(function(i) {
-						var col = $(this);
-						if(col.offset().left + col.outerWidth() > card.offset().left + card.outerWidth() || i === $(".col").size() - 1) {
-								offsets[card.attr('id')] = {
-										col: col,
-										x: ( (card.offset().left - col.offset().left) / col.outerWidth() )
-								};
-								return false;
-						}
-				});
+	var offsets = {};
+	$(".card").each(function() {
+		var card = $(this);
+		$(".col").each(function(i) {
+			var col = $(this);
+			if(col.offset().left + col.outerWidth() > card.offset().left + card.outerWidth() || i === $(".col").size() - 1) {
+				offsets[card.attr('id')] = {
+						col: col,
+						x: ( (card.offset().left - col.offset().left) / col.outerWidth() )
+				};
+				return false;
+			}
 		});
-		return offsets;
+	});
+	return offsets;
 }
 
 
@@ -664,38 +664,36 @@ function calcCardOffset() {
 //doSync is false if you don't want to synchronize
 //with all the other users who are in this room
 function adjustCard(offsets, doSync) {
-		$(".card").each(function() {
-				var card = $(this);
-				var offset = offsets[this.id];
-				if(offset) {
-						var data = {
-								id: this.id,
-								position: {
-									left: offset.col.position().left + (offset.x * offset.col.outerWidth()),
-									top: parseInt(card.css('top').slice(0,-2))
-								},
-								oldposition: {
-									left: parseInt(card.css('left').slice(0,-2)),
-									top: parseInt(card.css('top').slice(0,-2))
-								}
-						}; //use .css() instead of .position() because css' rotate
-						//console.log(data);
-						if (!doSync)
-						{
-							card.css('left',data.position.left);
-							card.css('top',data.position.top);
-						}
-						else
-						{
-							//note that in this case, data.oldposition isn't accurate since
-							//many moves have happened since the last sync
-							//but that's okay becuase oldPosition isn't used right now
-							moveCard(card, data.position);
-							sendAction('moveCard', data);
-						}
+    $(".card").each(function() {
+        var card = $(this);
+        var offset = offsets[this.id];
+        if (offset) {
+            var data = {
+                id: this.id,
+                position: {
+                    left: offset.col.position().left + (offset.x * offset.col
+                        .outerWidth()),
+                    top: parseInt(card.css('top').slice(0, -2))
+                },
+                oldposition: {
+                    left: parseInt(card.css('left').slice(0, -2)),
+                    top: parseInt(card.css('top').slice(0, -2))
+                }
+            }; //use .css() instead of .position() because css' rotate
+            //console.log(data);
+            if (!doSync) {
+                card.css('left', data.position.left);
+                card.css('top', data.position.top);
+            } else {
+                //note that in this case, data.oldposition isn't accurate since
+                //many moves have happened since the last sync
+                //but that's okay becuase oldPosition isn't used right now
+                moveCard(card, data.position);
+                sendAction('moveCard', data);
+            }
 
-				}
-		});
+        }
+    });
 }
 
 //////////////////////////////////////////////////////////
