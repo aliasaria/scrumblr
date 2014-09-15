@@ -34,6 +34,7 @@
 		"htmlparser" : ">0.0.0",
 		"soupselect": ">0.0.0",
 		"jsdom": ">0.0.0",
-		"cheerio": ">0.0.0"
+		"cheerio": ">0.0.0",
+		"socket.io-client": ">0.0.0"
 	}
 }

@@ -158,27 +158,32 @@ $(document).bind('keyup', function(event) {
 	keyTrap = event.which;
 });
 
-function drawNewCard(id, text, x, y, rot, style, sticker)
-{
-	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 
+function getCard(id, text, x, y, rot, style, sticker) {
 	var ticketNumberRegex = new RegExp("^([A-Z]+-[0-9]+)", 'ig');
-  var linksEnabled = text.replace(ticketNumberRegex,"<a href=http://jira.corp.peer1.net/browse/$1>$1</a>");
+	var linksEnabled = text.replace(ticketNumberRegex, "<a href=http://jira.corp.peer1.net/browse/$1>$1</a>");
 
-	var zIndex = Math.round(x + (y*10));
+	var zIndex = Math.round(x + (y * 10));
 	if ('postit' == style) zIndex += 10000;
 	var cardFileName = style.replace(/^.* /, '') + '-card.png';
 
 	var h = '<div id="' + id + '" ' +
-	'class="card ' + style + ' draggable clearfix" ' +
-	'style="-webkit-transform:rotate(' + rot + 'deg);z-index:' + zIndex + ';"> ' +
-	'<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />' +
-	'<img class="card-image" src="/images/' + cardFileName + '">' +
-	'<div id="content:' + id + '" class="content stickertarget droppable">' + linksEnabled + '</div>' +
-	'</div>';
+		'class="card ' + style + ' draggable clearfix" ' +
+		'style="-webkit-transform:rotate(' + rot + 'deg);z-index:' + zIndex + ';"> ' +
+		'<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />' +
+		'<img class="card-image" src="/images/' + cardFileName + '">' +
+		'<div id="content:' + id + '" class="content stickertarget droppable">' + linksEnabled + '</div>' +
+		'</div>';
 
-//	<div style="clear:both"></div>\
-  var card = $(h);
+	return h;
+}
+
+function drawNewCard(id, text, x, y, rot, style, sticker)
+{
+	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
+
+
+  var card = $(getCard(id, text, x, y, rot, style, sticker));
 	card.appendTo('#board');
 	
 	//@TODO
