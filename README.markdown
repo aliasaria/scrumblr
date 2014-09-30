@@ -46,7 +46,7 @@ how to install and run on your own computer (linux/osx)
 - run `npm install`
 - run redis `redis-server`
 - run scrumblr `node server.js 80` where "80" is the port you have opened in your firewall and want scrumblr to run on. 
-- open a browser to `http://<server>:<port>` where <server> is your server's url or IP address, and <port> is the port you chose in the previous step.
+- open a browser to `http://<server>:<port>` where `<server>` is your server's url or IP address, and `<port>` is the port you chose in the previous step.
 
 license
 -------
