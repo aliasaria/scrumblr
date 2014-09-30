@@ -68,24 +68,24 @@ io.sockets.on('connection', function (client) {
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
 		{
-		
+
 			//clip the string if it is too long
 			if (text.length > 65535)
 			{
 				text = text.substr(0,65535);
 			}
-		
+
 			return sanitizer.sanitize(text);
 		}
 		else
 		{
 			return null;
 		}
-	}	
-	
-	
-	
-	client.on('message', function( message ){ 
+	}
+
+
+
+	client.on('message', function( message ){
 		//console.log(message.action + " -- " + sys.inspect(message.data) );
 
 		if (!message.action)	return;
@@ -265,17 +265,17 @@ io.sockets.on('connection', function (client) {
 
 				broadcastToRoom( client, { action: 'addSticker', data: { cardId: cardId, stickerId: stickerId }});
 				break;
-				
+
 			case 'setBoardSize':
 
 				var size = {};
-				size.width = scrub(message.data.width);;
+				size.width = scrub(message.data.width);
 				size.height = scrub(message.data.height);
-				
+
 				getRoom(client, function(room) {
 					db.setBoardSize( room, size );
 				});
-				
+
 				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
 				break;
 
@@ -330,7 +330,7 @@ function initClient ( client )
 
 		db.getTheme( room, function(theme) {
 
-			if (theme == null) theme = 'bigcards';
+			if (theme === null) theme = 'bigcards';
 
 			client.json.send(
 				{
@@ -339,7 +339,7 @@ function initClient ( client )
 				}
 			);
 		});
-		
+
 		db.getBoardSize( room, function(size) {
 
 			if (size != null) {
@@ -356,7 +356,7 @@ function initClient ( client )
 		roommates = [];
 
 		var j = 0;
-		for (i in roommates_clients)
+		for (var i in roommates_clients)
 		{
 			if (roommates_clients[i].id != client.id)
 			{
@@ -374,7 +374,7 @@ function initClient ( client )
 				action: 'initialUsers',
 				data: roommates
 			}
-		)
+		);
 
 	});
 }
@@ -476,7 +476,3 @@ function cleanAndInitializeDemoRoom()
 var db = new data(function() {
 	cleanAndInitializeDemoRoom();
 });
-
-
-
-
