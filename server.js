@@ -33,13 +33,23 @@ server.listen(port);
 console.log('Server running at http://127.0.0.1:' + port + '/');
 
 /**************
+ SETUP Socket.IO
+**************/
+var io = require('socket.io')(server);
+
+/**************
  ROUTES
 **************/
 app.get('/', function(req, res) {
 	//console.log(req.header('host'));
 	url = req.header('host');
+
+	var connected = io.sockets.connected;
+	clientsCount = Object.keys(connected).length;
+
 	res.render('home.jade', {
-		 url: url
+		url: url,
+		connected: clientsCount
 	});
 });
 
@@ -61,8 +71,6 @@ app.get('/:id', function(req, res){
 /**************
  SOCKET.I0
 **************/
-var io = require('socket.io')(server);
-
 io.sockets.on('connection', function (client) {
 	//santizes text
 	function scrub( text ) {
