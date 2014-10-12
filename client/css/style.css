@@ -310,11 +310,6 @@ xopacity: .5;
 	padding-top: 2px; margin: 0;
 }
 
-#sticker-gold, #sticker-bluestar, #sticker-redstar, #sticker-silverstar {
-	position: relative;
-	top: 2px;
-	padding: 0; margin 0;
-}
 
 #sticker-red {
 	background-image: url('/images/stickers/sticker-red.png');
@@ -340,8 +335,17 @@ xopacity: .5;
 #sticker-purple {
 	background-image: url('/images/stickers/sticker-purple.png');
 }
+#sticker-gold {
+	background-image: url('/images/stickers/sticker-gold.png');
+}
 #sticker-silverstar {
 	background-image: url('/images/stickers/sticker-silverstar.png');
+}
+#sticker-bluestar {
+	background-image: url('/images/stickers/sticker-bluestar.png');
+}
+#sticker-redstar {
+	background-image: url('/images/stickers/sticker-redstar.png');
 }
 #addsticker {
 	background-image: url('/images/icons/iconic/raster/black/plus_8x8.png');
