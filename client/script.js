@@ -40,7 +40,7 @@ socket.on('message', function(data) {
 });
 
 function unblockUI() {
-    $.unblockUI();
+    $.unblockUI({fadeOut: 50});
 }
 
 function blockUI(message) {
@@ -58,7 +58,10 @@ function blockUI(message) {
             opacity: 0.5,
             color: '#fff',
             fontSize: '20px'
-        }
+        },
+
+        fadeOut: 0,
+        fadeIn: 10
     });
 }
 
@@ -385,7 +388,8 @@ function initCards(cardArray) {
             card.y,
             card.rot,
             card.colour,
-            card.sticker
+            card.sticker,
+            0
         );
     }
 
