@@ -43,7 +43,6 @@ body {
 
 	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
 
-	-webkit-box-shadow:inset 1px 1px 3px #999;
 	-moz-box-shadow:inset 1px 1px 3px #999;
 	box-shadow:inset 1px 1px 3px #999;
 }
