@@ -5,6 +5,7 @@ var	http = require('http');
 var sys = require('sys');
 var	async = require('async');
 var sanitizer = require('sanitizer');
+var compression = require('compression');
 var express = require('express');
 
 /**************
@@ -24,6 +25,7 @@ var sids_to_user_names = [];
 **************/
 var app = express();
 
+app.use(compression());
 app.use(express.static(__dirname + '/client'));
 
 var server = require('http').Server(app);
