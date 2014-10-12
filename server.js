@@ -96,6 +96,10 @@ io.sockets.on('connection', function (client) {
 	client.on('message', function( message ){
 		//console.log(message.action + " -- " + sys.inspect(message.data) );
 
+		var clean_data = {};
+		var clean_message = {};
+		var message_out = {};
+
 		if (!message.action)	return;
 
 		switch (message.action)
@@ -116,7 +120,7 @@ io.sockets.on('connection', function (client) {
 
 			case 'moveCard':
 				//report to all other browsers
-				var messageOut = {
+				message_out = {
 					action: message.action,
 					data: {
 						id: scrub(message.data.id),
@@ -128,20 +132,20 @@ io.sockets.on('connection', function (client) {
 				};
 
 
-				broadcastToRoom( client, messageOut );
+				broadcastToRoom( client, message_out );
 
 				// console.log("-----" + message.data.id);
 				// console.log(JSON.stringify(message.data));
 
 				getRoom(client, function(room) {
-					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top)
+					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top);
 				});
 
 				break;
 
 			case 'createCard':
 				data = message.data;
-				var clean_data = {};
+				clean_data = {};
 				clean_data.text = scrub(data.text);
 				clean_data.id = scrub(data.id);
 				clean_data.x = scrub(data.x);
@@ -153,7 +157,7 @@ io.sockets.on('connection', function (client) {
 					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
 				});
 
-				var message_out = {
+				message_out = {
 					action: 'createCard',
 					data: clean_data
 				};
@@ -164,7 +168,7 @@ io.sockets.on('connection', function (client) {
 
 			case 'editCard':
 
-				var clean_data = {};
+				clean_data = {};
 				clean_data.value = scrub(message.data.value);
 				clean_data.id = scrub(message.data.id);
 
@@ -173,7 +177,7 @@ io.sockets.on('connection', function (client) {
 					db.cardEdit( room , clean_data.id, clean_data.value );
 				});
 
-				var message_out = {
+				message_out = {
 					action: 'editCard',
 					data: clean_data
 				};
@@ -184,10 +188,10 @@ io.sockets.on('connection', function (client) {
 
 
 			case 'deleteCard':
-				var clean_message = {
+				clean_message = {
 					action: 'deleteCard',
 					data: { id: scrub(message.data.id) }
-				}
+				};
 
 				getRoom( client, function(room) {
 					db.deleteCard ( room, clean_message.data.id );
@@ -199,7 +203,7 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'createColumn':
-				var clean_message = { data: scrub(message.data) };
+				clean_message = { data: scrub(message.data) };
 
 				getRoom( client, function(room) {
 					db.createColumn( room, clean_message.data, function() {} );
@@ -225,7 +229,7 @@ io.sockets.on('connection', function (client) {
 
 				var clean_columns = [];
 
-				for (i in columns)
+				for (var i in columns)
 				{
 					clean_columns[i] = scrub( columns[i] );
 				}
@@ -238,7 +242,7 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'changeTheme':
-				var clean_message = {};
+				clean_message = {};
 				clean_message.data = scrub(message.data);
 
 				getRoom( client, function(room) {
@@ -251,7 +255,7 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'setUserName':
-				var clean_message = {};
+				clean_message = {};
 
 				clean_message.data = scrub(message.data);
 
@@ -350,7 +354,7 @@ function initClient ( client )
 
 		db.getBoardSize( room, function(size) {
 
-			if (size != null) {
+			if (size !== null) {
 				client.json.send(
 					{
 						action: 'setBoardSize',
