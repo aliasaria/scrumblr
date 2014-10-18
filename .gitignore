@@ -7,3 +7,4 @@ rsync.sh
 .monitor
 node_modules/
 CristalIntense
+tmp

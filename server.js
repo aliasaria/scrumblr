@@ -9,7 +9,7 @@ var async = require('async');
 var rooms = require('./lib/rooms.js');
 var data = require('./lib/data.js').db;
 
-var sanitizer = require('sanitizer');
+var scrubber = require('./lib/scrubber');
 
 //Map of sids to user_names
 var sids_to_user_names = [];
@@ -35,7 +35,7 @@ io.configure(function () {
 		, 'jsonp-polling'
 	]);
 
-	io.set('log level', 1);
+	io.set('log level', 9);
 });
 io.sockets.on('connection', function (client) {
 	// new client is here!
@@ -54,18 +54,7 @@ io.sockets.on('connection', function (client) {
 
 //santizes text
 	function scrub(text) {
-		if (typeof text != "undefined" && text !== null) {
-
-			//clip the string if it is too long
-			if (text.length > 65535) {
-				text = text.substr(0, 65535);
-			}
-
-			return sanitizer.sanitize(text);
-		}
-		else {
-			return null;
-		}
+		return scrubber.scrub(text);
 	}
 
 	client.on('message', function (message) {

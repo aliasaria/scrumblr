@@ -1,9 +1,9 @@
 {
 	"name" : "scrumblr",
-	"description" : "Web-based simulation of a physical agile sprint board that supports real-time collaboration.",
+	"description" : "Web-based simulation of a physical agile sprint board that supports real-time collaboration. Forked from http://github.com/aliasaria/scrumblr",
 	"version" : "0.1.0",
 	"repository" : {
-		"url" : "http://github.com/aliasaria/scrumblr"
+		"url" : "http://github.com/tabashir/scrumblr"
 	},
 	"author" : "Ali Asaria",
 	"main" : "server.js",
@@ -18,7 +18,7 @@
 		"connect" : "1.7.x",
 		"redis" : "0.6.x",
 		"sanitizer" : "0.0.x",
-		"socket.io" : "0.8.x",
+		"socket.io" : "0.9.16",
 		"simplesets" : "1.1.x",
 		"connect-redis" : "1.0.x",
 		"express" : "2.4.x",
@@ -35,6 +35,6 @@
 		"soupselect": ">0.0.0",
 		"jsdom": ">0.0.0",
 		"cheerio": ">0.0.0",
-		"socket.io-client": ">0.0.0"
+		"socket.io-client": "0.9.16"
 	}
 }
