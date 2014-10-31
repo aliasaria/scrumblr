@@ -1,48 +1,106 @@
 - if (locals.demo)
 	div.notice-bar this is a demo board. to make a private board, go to <a href="http://scrumblr.ca">scrumblr.ca</a>
 
-h1 <a href="http://scrumblr.ca">scrumblr</a> by <a href="http://aliasaria.ca">aliasaria</a>
-
-div.board-outline
-	div#board
-		div#board-doodles
-		image#marker(src='/images/marker.png')
-		image#eraser(src='/images/eraser.png')
+script.
+	(function($) {
+		$(document).ready(function() {
+			var mySlidebars = new $.slidebars();
+			$('#slideopen i').on('click', function() {
+				mySlidebars.slidebars.toggle('left');
+			});
+			$('.sb-slidebar').on('click', function() {
+				mySlidebars.slidebars.close();
+			});
+			$('#jiraSync').on('click', function() {
+				$.blockUI({ 
+					message: "Syncing with jira",
+					css: { 
+						border: 'none', 
+						padding: '15px', 
+						backgroundColor: '#000', 
+						'-webkit-border-radius': '10px', 
+						'-moz-border-radius': '10px', 
+						opacity: .5, 
+						color: '#fff',
+						fontSize: '20px'
+					}
+				});
+				
+				$.ajax("/jira/sprint/#{roomId}", {
+					success: function(data) {
+						$.unblockUI();
+						sendAction('initializeMe', null);
+					}
+				});
+			});
+			
+			$.ajax("/scrumblr/board/list", {
+					success: function(data) {
+						var listContainer = $("#menuBoardList");
+						for (var i = 0; i < data.length; i++) {
+							var boardKey = data[i];
+							listContainer.append($("<li><a href='" + boardKey + "'>" + boardKey + "</a></li>"));
+						}
+					}
+			});
+			
+		});
+	}) (jQuery);
 	
+div.sb-slidebar.sb-left
+	h1 &nbsp;<a href="http://scrumblr.ca">scrumblr</a> by <a href="http://aliasaria.ca">aliasaria</a><br/><br/>
+	
+	h1 &nbsp;&nbsp;&nbsp;Options:
+	ul.sb-menu
+		li <a id="jiraSync" href="#">Sync with Jira</a>
 		
-		table#board-table.board-table
-			tr
-				td#icon-col(width='1%')
-					image#add-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/plus_alt_32x32.png')
-					image#delete-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/minus_alt_32x32.png')
+	h1 &nbsp;&nbsp;&nbsp;List of boards:
+	ul#menuBoardList.sb-menu
 
-div.buttons
-	h1 large cards
-	image#create-card-story.bottom-icon(width="72", height="48", src="/images/green-card.png")
-	image#create-card-task.bottom-icon(width="72", height="48", src="/images/blue-card.png")
-	image#create-card-spike.bottom-icon(width="72", height="48", src="/images/white-card.png")
-	image#create-card-general.bottom-icon(width="72", height="48", src="/images/yellow-card.png")
-	image#create-card-bug.bottom-icon(width="72", height="48", src="/images/red-card.png")
-	h1 small cards
-	image#create-card-story-small.bottom-icon(width="48", height="36", src="/images/green-card.png")
-	image#create-card-task-small.bottom-icon(width="48", height="36", src="/images/blue-card.png")
-	image#create-card-spike-small.bottom-icon(width="48", height="36", src="/images/white-card.png")
-	image#create-card-general-small.bottom-icon(width="48", height="36", src="/images/yellow-card.png")
-	image#create-card-bug-small.bottom-icon(width="48", height="36", src="/images/red-card.png")
-	h1 post-it notes
-	image#create-card-postit.bottom-icon(width="24", height="24", src="/images/postit-card.png")
-	h1 controls
-	image#smallify.bottom-icon(width="23",height="23",src="/images/icons/cc/black/png/zoom_icon&24.png")
+div#sb-site
 
-include stickers
+	div#slideopen
+		i.fa.fa-reorder
 
-div.names
-	p connected:
-	//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
-	input#yourname-input
-	span.you-text\(you)
-	ul#names-ul
-
+	div.board-outline
+		div#board
+			div#board-doodles
+			image#marker(src='/images/marker.png')
+			image#eraser(src='/images/eraser.png')
+			
+			table#board-table.board-table
+				tr
+					td#icon-col(width='1%')
+						image#add-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/plus_alt_32x32.png')
+						image#delete-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/minus_alt_32x32.png')
+	
+	div.buttons
+		h1 large cards
+		image#create-card-story.bottom-icon(width="72", height="48", src="/images/green-card.png")
+		image#create-card-task.bottom-icon(width="72", height="48", src="/images/blue-card.png")
+		image#create-card-spike.bottom-icon(width="72", height="48", src="/images/white-card.png")
+		image#create-card-general.bottom-icon(width="72", height="48", src="/images/yellow-card.png")
+		image#create-card-bug.bottom-icon(width="72", height="48", src="/images/red-card.png")
+		h1 small cards
+		image#create-card-story-small.bottom-icon(width="48", height="36", src="/images/green-card.png")
+		image#create-card-task-small.bottom-icon(width="48", height="36", src="/images/blue-card.png")
+		image#create-card-spike-small.bottom-icon(width="48", height="36", src="/images/white-card.png")
+		image#create-card-general-small.bottom-icon(width="48", height="36", src="/images/yellow-card.png")
+		image#create-card-bug-small.bottom-icon(width="48", height="36", src="/images/red-card.png")
+		h1 post-it notes
+		image#create-card-postit.bottom-icon(width="24", height="24", src="/images/postit-card.png")
+		h1 controls
+		image#smallify.bottom-icon(width="23",height="23",src="/images/icons/cc/black/png/zoom_icon&24.png")
+	
+	include stickers
+	
+	div.names
+		p connected:
+		//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
+		input#yourname-input
+		span.you-text\(you)
+		ul#names-ul
+	
 
 //<div style="width: 980px; height: 450px; border: solid 2px; opacity:.1; margin-top: 100px"> this will be the backlog that only appears on drag or perhaps not at all</div>
 

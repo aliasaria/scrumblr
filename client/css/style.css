@@ -13,8 +13,6 @@ body {
 	xheight: 1400px;
 	xwidth: 2000px;
 	
-	
-	
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
@@ -22,7 +20,70 @@ body {
 	-webkit-user-select: none;
 	
 	background-image: url('/css/bg/concrete_wall_2_2.png');
-	
+}
+
+#sb-site {
+	margin-left: 10px !important;
+}
+
+#sb-site, .sb-site-container {
+	background-image: url('/css/bg/concrete_wall_2_2.png');
+}
+
+#slideopen {
+	font-size: 32px;
+	margin: 2px 8px;
+	color: #a5a5a5;
+}
+
+#slideopen i:hover {
+	color: #919191;
+	cursor: pointer;
+}
+
+div.sb-slidebar {
+	background-color: #fff;
+}
+
+.sb-menu {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+.sb-menu > li:first-child {
+	border-top: none;
+}
+
+.sb-menu > li:last-child {
+	border-bottom: none;
+}
+
+.sb-menu li {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border-top: 1px solid #f4f4f4;
+}
+
+.sb-menu li a {
+	width: 100%;
+	display: inline-block;
+	text-decoration: none;
+	padding: 1em;
+	color: #686868;	
+}
+
+.sb-menu li a:hover {
+	background-color: rgba(0, 0, 0, 0.02);
+}
+
+.sb-left .sb-menu li a {
+	border-left: 3px solid transparent;
+}
+
+.sb-left .sb-menu li a:hover {
+	border-left: 3px solid #e0e0e0;
 }
 
 #board {
@@ -49,6 +110,8 @@ body {
 }
 
 .board-outline {
+	float: none;
+	clear: both;
 	border: solid #ccc 8px;
 	display: block;
 	width: 996px;
@@ -448,8 +511,6 @@ input:hover {
 	box-shadow:inset 0 0 40px rgba(128, 128, 256,0.2);
 	background-color: rgba(128, 128, 256,0.1)
 }
-
-
 
 
 

@@ -45,14 +45,16 @@ app.get('/', function (req, res) {
 
 app.get('/demo', function (req, res) {
 	res.render('index.jade', {
-		locals : {pageTitle : 'scrumblr - demo', demo : true}
+		locals : {pageTitle : 'scrumblr - demo', demo : true},
+		roomId: req.params.id
 	});
 });
 
 app.get('/:id', function (req, res) {
 
 	res.render('index.jade', {
-		locals : {pageTitle : ('scrumblr - ' + req.params.id) }
+		locals : {pageTitle : ('scrumblr - ' + req.params.id) },
+		roomId: req.params.id
 	});
 });
 

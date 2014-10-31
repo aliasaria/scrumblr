@@ -166,7 +166,7 @@ function getCard(id, text, x, y, rot, style, sticker) {
 	var cardFileName = style.replace(/^.* /, '') + '-card.png';
 
 	var h = '<div id="' + id + '" ' +
-		'class="card ' + style + ' draggable clearfix" ' +
+		'class="card ' + style + ' clearfix" ' +
 		'style="-webkit-transform:rotate(' + rot + 'deg);z-index:' + zIndex + ';"> ' +
 		'<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />' +
 		'<img class="card-image" src="/images/' + cardFileName + '">' +
@@ -182,37 +182,11 @@ function drawNewCard(id, text, x, y, rot, style, sticker)
 
 
   var card = $(getCard(id, text, x, y, rot, style, sticker));
+  	
 	card.appendTo('#board');
 	
-	//@TODO
-	//Draggable has a bug which prevents blur event
-	//http://bugs.jqueryui.com/ticket/4261
-	//So we have to blur all the cards and editable areas when
-	//we click on a card
-	//The following doesn't work so we will do the bug
-	//fix recommended in the above bug report
-	// card.click( function() { 
-	// 	$(this).focus();
-	// } );
+	card.draggable({stack: "div"});
 	
-	card.draggable(
-		{ 
-			snap: false,
-			snapTolerance: 5,
-			containment: [0,0,2000,2000],
-			stack: ".card",
-			start: function (event, ui) {
-				keyTrap = null;
-			},
-			drag: function (event, ui) {
-				if (keyTrap == 27) {
-					ui.helper.css(ui.originalPosition);
-					return false;
-				}
-			}
-	 	}
-	);
-
 	//After a drag:
 	card.bind( "dragstop", function(event, ui) {
 		if (keyTrap == 27) {
@@ -893,7 +867,7 @@ $( ".board-outline" ).resizable( {
 	minWidth: 700,
 	minHeight: 400 ,
 	maxWidth: 3200,
-	maxHeight: 1800,
+	maxHeight: 3200,
 } );
 
 //A new scope for precalculating
@@ -928,8 +902,8 @@ $('#eraser').draggable(
 	}
 );
 
-//disable image dragging
-window.ondragstart = function() { return false; } 
+////disable image dragging
+//window.ondragstart = function() { return false; } 
 
 
 });
