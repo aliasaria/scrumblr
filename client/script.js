@@ -856,7 +856,8 @@ $(function() {
 
 
 
-$( ".sticker" ).draggable({ 
+$( ".sticker" ).draggable({
+	helper: 'clone',
 	revert: true,
 	zIndex: 1000
 });
