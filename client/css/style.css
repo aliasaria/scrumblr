@@ -24,6 +24,7 @@ body {
 
 #sb-site {
 	margin-left: 10px !important;
+	z-index: 0 !important;
 }
 
 #sb-site, .sb-site-container {
