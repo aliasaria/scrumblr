@@ -161,7 +161,7 @@ $(document).bind('keyup', function(event) {
 
 function getCard(id, text, x, y, rot, style, sticker) {
 
-	var zIndex = Math.round(x + (y * 10));
+	var zIndex = Math.round(x + (y * 10)) + 1000;
 	if ('postit' == style) zIndex += 10000;
 	var cardFileName = style.replace(/^.* /, '') + '-card.png';
 
@@ -185,7 +185,7 @@ function drawNewCard(id, text, x, y, rot, style, sticker)
   	
 	card.appendTo('#board');
 	
-	card.draggable({stack: "div"});
+	card.draggable({stack: ".card"});
 	
 	//After a drag:
 	card.bind( "dragstop", function(event, ui) {
