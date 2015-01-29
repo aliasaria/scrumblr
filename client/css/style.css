@@ -514,16 +514,74 @@ input:hover {
 }
 
 
+#cardSelectorButton {
+	position: fixed;
+	width: 52px;
+	line-height: 32px;
+	height: 32px;
+	top: 10px;
+	right: 16px;
+	z-index: 10000;
+	color: #aaaaaa;
+	background: white;
+	text-align: center;
+	font-size: 22px;
+	box-shadow: 3px 4px 18px -1px rgba(0, 0, 0, 0.3);
+}
 
+#cardSelector {
+	display: none;
+	position: fixed;
+	top: 48px;
+	right: 16px;
+	padding: 0px 8px 6px 2px;
+	z-index: 10000;
+	color: #7c7c7c;
+	background: white;
+	text-align: center;
+	box-shadow: 3px 4px 18px -1px rgba(0, 0, 0, 0.3);
+}
 
+#cardSelector h3 {
+	text-align: left;
+	margin: 16px 14px 0px 14px;
+	border-bottom: 1px solid #f0f0f0;
+	padding-bottom: 8px;
+}
 
+#largeCards {
+	margin: 0;
+	padding: 0;
+}
 
+#smallCards {
+	margin: 0;
+	padding: 0;
+}
 
+#cardSelector ul, #cardSelector li, #stickers ul {
+	list-style-type: none;	
+}
 
+#largeCards li {
+	width: 75px;
+	display: inline-block;
+}
 
+#smallCards li {
+	width: 75px;
+	display: inline-block;
+}
 
+#stickers {
+	margin-top: 10px;
+	padding: 0;	
+}
 
-
+#stickers li {
+	width: 40px;	
+	display: inline-block;
+}
 
 
 

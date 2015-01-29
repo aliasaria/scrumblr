@@ -178,13 +178,10 @@ function getCard(id, text, x, y, rot, style, sticker) {
 
 function drawNewCard(id, text, x, y, rot, style, sticker)
 {
-	//cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
-
 
   var card = $(getCard(id, text, x, y, rot, style, sticker));
   	
 	card.appendTo('#board');
-	
 	card.draggable({stack: ".card"});
 	
 	//After a drag:
@@ -226,7 +223,6 @@ function drawNewCard(id, text, x, y, rot, style, sticker)
 	var speed = Math.floor(Math.random() * 1000);
 	if (typeof(animationspeed) != 'undefined') speed = animationspeed;
 
-	
 	card.animate({
 		left: x + "px",
 		top: y + "px" 
@@ -676,13 +672,8 @@ function adjustCard(offsets, doSync) {
 function createUniqueCardWithStyle(styleName) {
 	var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
 	uniqueID = Math.round(Math.random()*99999999); //is this big enough to assure uniqueness?
-	//alert(uniqueID);
-	createCard(
-		'card' + uniqueID,
-		'',
-		58, $('div.board-outline').height(),// hack - not a great way to get the new card coordinates, but most consistant ATM
-		rotation,
-		styleName);
+
+	createCard('card' + uniqueID, '', 58, window.scrollY, rotation, styleName);
 }
 
 //////////////////////////////////////////////////////////
@@ -693,68 +684,53 @@ $(function() {
 	if (boardInitialized == false)
 		blockUI('<img src="/images/ajax-loader.gif" width=43 height=11/>');
 
-	//setTimeout($.unblockUI, 2000); 
+	$( "#create-card" ).click(function() {
+		createUniqueCardWithStyle(randomCardColour());
+	});
 
+    $( "#create-card-story" ).click(function() {
+    	createUniqueCardWithStyle('green');
+    });
 
-	$( "#create-card" )
-		.click(function() {
-			createUniqueCardWithStyle(randomCardColour());
-		});
+    $( "#create-card-task" ).click(function() {
+		createUniqueCardWithStyle('blue');
+    });
 
-    $( "#create-card-story" )
-        .click(function() {
-            createUniqueCardWithStyle('green');
-        });
+    $( "#create-card-spike" ).click(function() {
+		createUniqueCardWithStyle('white');
+	});
 
-    $( "#create-card-task" )
-        .click(function() {
-						createUniqueCardWithStyle('blue');
-        });
+    $( "#create-card-bug" ).click(function() {
+    	createUniqueCardWithStyle('red');
+    });
 
-    $( "#create-card-spike" )
-        .click(function() {
-						createUniqueCardWithStyle('white');
-        });
+	$( "#create-card-general" ).click(function() {
+		createUniqueCardWithStyle('yellow');
+	});
 
-    $( "#create-card-bug" )
-        .click(function() {
-						createUniqueCardWithStyle('red');
-        });
+	$( "#create-card-story-small" ).click(function() {
+		reateUniqueCardWithStyle('small green');
+	});
 
-		$( "#create-card-general" )
-			.click(function() {
-						createUniqueCardWithStyle('yellow');
-			});
+	$( "#create-card-task-small" ).click(function() {
+		createUniqueCardWithStyle('small blue');
+	});
 
-			$( "#create-card-story-small" )
-				.click(function() {
-					createUniqueCardWithStyle('small green');
-				});
+	$( "#create-card-spike-small" ).click(function() {
+		createUniqueCardWithStyle('small white');
+	});
 
-			$( "#create-card-task-small" )
-				.click(function() {
-					createUniqueCardWithStyle('small blue');
-				});
+	$( "#create-card-bug-small" ).click(function() {
+		createUniqueCardWithStyle('small red');
+	});
 
-			$( "#create-card-spike-small" )
-				.click(function() {
-					createUniqueCardWithStyle('small white');
-				});
+	$( "#create-card-general-small" ).click(function() {
+		createUniqueCardWithStyle('small yellow');
+	});
 
-			$( "#create-card-bug-small" )
-				.click(function() {
-					createUniqueCardWithStyle('small red');
-				});
-
-			$( "#create-card-general-small" )
-				.click(function() {
-					createUniqueCardWithStyle('small yellow');
-				});
-
-			$( "#create-card-postit" )
-				.click(function() {
-					createUniqueCardWithStyle('postit');
-				});
+	$( "#create-card-postit" ).click(function() {
+		createUniqueCardWithStyle('postit');
+	});
 
 	// Style changer
 	$("#smallify").click(function(){
@@ -903,8 +879,9 @@ $('#eraser').draggable(
 	}
 );
 
-////disable image dragging
-//window.ondragstart = function() { return false; } 
+$('#cardSelectorButton').click(function() {
+	$('#cardSelector').toggle();	
+})
 
 
 });
