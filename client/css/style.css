@@ -354,10 +354,11 @@ xopacity: .5;
 }
 
 .sticker {
-	padding-top:  3px;
-	padding-left: 2px;
-	xz-index:10;
-	display: inline;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 30px;
 }
 
 .stickers {
@@ -371,40 +372,68 @@ xopacity: .5;
     background-position: right bottom;
 }
 
-.sticker-red {
-	background-image: url('/images/stickers/process/32x32/sticker-red.png');
+.stickertarget:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 30px;
+    position: absolute;
+    bottom: 10px;
+    right: 0px;
 }
 
-.sticker-blue {
-	background-image: url('/images/stickers/process/32x32/sticker-blue.png');
+.sticker-red:before {
+	content: "\f057";
+    color: #ff2211;
 }
 
-.sticker-yellow {
-	background-image: url('/images/stickers/process/32x32/sticker-yellow.png');
+.sticker-blue:before {
+	content: "\f05a";
+    color: #22aaff;
 }
 
-.sticker-green {
-	background-image: url('/images/stickers/process/32x32/sticker-green.png');
+.sticker-yellow:before {
+    content: "\f071";
+    color: #f2e222;
 }
 
-.sticker-gold {
-	background-image: url('/images/stickers/process/32x32/sticker-gold.png');
+.stickertarget.sticker-yellow:before {
+    text-shadow: 0px 1px 6px rgba(0,0,0, 0.3);
 }
 
-.sticker-bluestar {
-	background-image: url('/images/stickers/process/32x32/sticker-bluestar.png');
+.sticker-green:before {
+	content: "\f058";
+    color: #14c085;
 }
 
-.sticker-silverstar {
-	background-image: url('/images/stickers/process/32x32/sticker-silverstar.png');
+.sticker-gold:before {
+	content: "\f1b0";
+    color: #caac17;
 }
 
-.sticker-redstar {
-	background-image: url('/images/stickers/process/32x32/sticker-redstar.png');
+.stickertarget.sticker-silverstar:before {
+    text-shadow: 0px 1px 6px rgba(0,0,0, 0.2);
 }
 
-.sticker-none {
-    background-image: url('/images/stickers/process/32x32/sticker-none.png');
+.sticker-bluestar:before {
+	content: "\f0e6";
+    color: #2FB8AC;
+}
+
+.sticker-silverstar:before {
+	content: "\f059";
+    color: #ECBE13;
+}
+
+.sticker-redstar:before {
+	content: "\f05e";
+    color: #ef2211;
+}
+
+.sticker-none:before {
+    content: "\f00d";
+    color: #454545;
 }
 
 
@@ -525,8 +554,16 @@ input:hover {
 	color: #aaaaaa;
 	background: white;
 	text-align: center;
-	font-size: 22px;
+	font-size: 16x;
 	box-shadow: 3px 4px 18px -1px rgba(0, 0, 0, 0.3);
+}
+
+#cardSelectorButton:hover {
+	box-shadow: 3px 4px 18px -1px rgba(0, 0, 0, 0.5);
+}
+
+#cardSelectorButton i {
+	vertical-align: middle;
 }
 
 #cardSelector {
@@ -559,7 +596,13 @@ input:hover {
 	padding: 0;
 }
 
-#cardSelector ul, #cardSelector li, #stickers ul {
+#postIt {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+#cardSelector ul, #cardSelector li, #stickers ul, #postIt ul {
 	list-style-type: none;	
 }
 
@@ -571,6 +614,12 @@ input:hover {
 #smallCards li {
 	width: 75px;
 	display: inline-block;
+}
+
+#postIt li {
+	width: 75px;
+	display: inline-block;
+	text-align: center;
 }
 
 #stickers {

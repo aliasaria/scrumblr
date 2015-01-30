@@ -709,7 +709,7 @@ $(function() {
 	});
 
 	$( "#create-card-story-small" ).click(function() {
-		reateUniqueCardWithStyle('small green');
+		createUniqueCardWithStyle('small green');
 	});
 
 	$( "#create-card-task-small" ).click(function() {
@@ -880,7 +880,9 @@ $('#eraser').draggable(
 );
 
 $('#cardSelectorButton').click(function() {
-	$('#cardSelector').toggle();	
+	$('#cardSelectorButton i').toggleClass("fa-plus");
+	$('#cardSelectorButton i').toggleClass("fa-minus");
+	$('#cardSelector').toggle();
 })
 
 
