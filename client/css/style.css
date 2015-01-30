@@ -379,8 +379,8 @@ xopacity: .5;
     text-decoration: inherit;
     font-size: 30px;
     position: absolute;
-    bottom: 2px;
-    right: 4px;
+    bottom: 0px;
+    right: 0px;
 }
 
 .sticker-red:before {
