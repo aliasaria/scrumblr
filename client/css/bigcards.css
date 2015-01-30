@@ -52,9 +52,9 @@
 .content { 
 	overflow: hidden;
 	display: block;
-	width: 158px;
+	width: 167px;
 	height: 88px;
-	margin: 5px 23px 0px 34px;
+	margin: 5px 23px 0px 31px;
 
 	font-family: sans-serif, serif;
 	font-size: 12px;
@@ -84,9 +84,9 @@
 }
 
 .small>.content {
-    width: 108px;
-    height: 50px;
-    margin: 5px 3px 20px 30px;
+    width: 130px;
+    height: 54px;
+    margin: 5px 16px 20px 24px;
     font-size: 15px;
 
 }
