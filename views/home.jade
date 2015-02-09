@@ -2,7 +2,7 @@ doctype html
 html(lang="en")
 	head
 		<!-- SCRIPTS -->
-		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<!-- FONTS -->
 		<link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
@@ -56,4 +56,5 @@ body
 
 	<script type="text/javascript">function go() {var value = document.forms[0].elements["name"].value; value = escape(value); window.location.href = value; return false;}</script>
 
-	<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-2069672-4']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>
+	- if (locals.ga)
+		<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', '#{gaAccount}']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>

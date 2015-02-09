@@ -12,15 +12,15 @@ block body
 	div.board-outline
 		div#board
 			div#board-doodles
-			image#marker(src='/images/marker.png')
-			image#eraser(src='/images/eraser.png')
+			image#marker(src='images/marker.png')
+			image#eraser(src='images/eraser.png')
 
 
 			table#board-table.board-table
 				tr
 					td#icon-col(width='1%')
-						image#add-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/plus_alt_32x32.png')
-						image#delete-col.col-icon(width='20', height='20', src='/images/icons/iconic/raster/black/minus_alt_32x32.png')
+						image#add-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/plus_alt_32x32.png')
+						image#delete-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/minus_alt_32x32.png')
 
 
 	div.buttons
@@ -65,4 +65,5 @@ block body
 
 	//<div style="width: 980px; height: 450px; border: solid 2px; opacity:.1; margin-top: 100px"> this will be the backlog that only appears on drag or perhaps not at all</div>
 
-	<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-2069672-4']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>
+	- if (locals.ga)
+		<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', '#{gaAccount}']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>
