@@ -69,17 +69,13 @@ router.get('/', function(req, res) {
 router.get('/demo', function(req, res) {
 	res.render('index.jade', {
 		pageTitle: 'scrumblr - demo',
-		demo: true,
-		ga: ga.enabled,
-		gaAccount: ga.account
+		demo: true
 	});
 });
 
 router.get('/:id', function(req, res){
 	res.render('index.jade', {
-		pageTitle: ('scrumblr - ' + req.params.id),
-		ga: ga.enabled,
-		gaAccount: ga.account
+		pageTitle: ('scrumblr - ' + req.params.id)
 	});
 });
 
