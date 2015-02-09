@@ -249,7 +249,7 @@ io.sockets.on('connection', function(client) {
 			break;
 
 		case 'addSticker':
-			var cardId = scrub(message.data.cardId);
+			var cardId = message.data.cardId;
 			var stickerId = scrub(message.data.stickerId);
 
 			getRoom(client, function(room) {
