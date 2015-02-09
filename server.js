@@ -140,7 +140,7 @@ io.sockets.on('connection', function(client) {
 
 			var clean_data = {};
 			clean_data.value = scrub(message.data.value);
-			clean_data.id = scrub(message.data.id);
+			clean_data.id = message.data.id;
 
 			// send update to database
 			getRoom(client, function(room) {
