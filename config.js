@@ -16,7 +16,7 @@ exports.server = {
 };
 
 exports.googleanalytics = {
-	enabled: argv['gaEnabled'] || true,
+	enabled: argv['gaEnabled'] || false,
 	account: argv['gaAccount'] || "UA-2069672-4"
 };
 
