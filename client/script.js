@@ -5,7 +5,8 @@ var currentTheme = "bigcards";
 var boardInitialized = false;
 var keyTrap = null;
 
-var socket = io.connect();
+var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
+var socket = io.connect({path: baseurl + "/socket.io"});
 
 //an action has happened, send it to the
 //server
@@ -23,11 +24,11 @@ function sendAction(a, d) {
 socket.on('connect', function() {
     //console.log('successful socket.io connect');
 
-    //let the path be the room name
-    var path = location.pathname;
+    //let the final part of the path be the room name
+    var room = location.pathname.substring(location.pathname.lastIndexOf('/'));
 
     //imediately join the room which will trigger the initializations
-    sendAction('joinRoom', path);
+    sendAction('joinRoom', room);
 });
 
 socket.on('disconnect', function() {
@@ -166,8 +167,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         ' draggable" style="-webkit-transform:rotate(' + rot +
         'deg);\
 	">\
-	<img src="/images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
-	<img class="card-image" src="/images/' +
+	<img src="images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
+	<img class="card-image" src="images/' +
         colour + '-card.png">\
 	<div id="content:' + id +
         '" class="content stickertarget droppable">' +
@@ -423,7 +424,7 @@ function drawNewColumn(columnName) {
         onblur: 'submit',
         width: '',
         height: '',
-        xindicator: '<img src="/images/ajax-loader.gif">',
+        xindicator: '<img src="images/ajax-loader.gif">',
         event: 'dblclick', //event: 'mouseover'
     });
 
@@ -525,7 +526,7 @@ function initColumns(columnArray) {
 
 function changeThemeTo(theme) {
     currentTheme = theme;
-    $("link[title=cardsize]").attr("href", "/css/" + theme + ".css");
+    $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
 }
 
 
@@ -686,7 +687,7 @@ $(function() {
 
 
     if (boardInitialized === false)
-        blockUI('<img src="/images/ajax-loader.gif" width=43 height=11/>');
+        blockUI('<img src="images/ajax-loader.gif" width=43 height=11/>');
 
     //setTimeout($.unblockUI, 2000);
 

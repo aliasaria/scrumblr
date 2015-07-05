@@ -7,6 +7,8 @@ var	async = require('async');
 var sanitizer = require('sanitizer');
 var compression = require('compression');
 var express = require('express');
+var conf = require('./config.js').server;
+var ga = require('./config.js').googleanalytics;
 
 /**************
  LOCAL INCLUDES
@@ -24,27 +26,35 @@ var sids_to_user_names = [];
  SETUP EXPRESS
 **************/
 var app = express();
+var router = express.Router();
 
 app.use(compression());
-app.use(express.static(__dirname + '/client'));
+app.use(conf.baseurl, router);
+
+app.locals.ga = ga.enabled;
+app.locals.gaAccount = ga.account;
+
+router.use(express.static(__dirname + '/client'));
 
 var server = require('http').Server(app);
-var port = process.argv[2] || 8080;
-server.listen(port);
+server.listen(conf.port);
 
-console.log('Server running at http://127.0.0.1:' + port + '/');
+console.log('Server running at http://127.0.0.1:' + conf.port + '/');
 
 /**************
  SETUP Socket.IO
 **************/
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, {
+	path: conf.baseurl == '/' ? '' : conf.baseurl + "/socket.io"
+});
+
 
 /**************
  ROUTES
 **************/
-app.get('/', function(req, res) {
+router.get('/', function(req, res) {
 	//console.log(req.header('host'));
-	url = req.header('host');
+	url = req.header('host') + req.baseUrl;
 
 	var connected = io.sockets.connected;
 	clientsCount = Object.keys(connected).length;
@@ -56,14 +66,14 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/demo', function(req, res) {
+router.get('/demo', function(req, res) {
 	res.render('index.jade', {
-			pageTitle: 'scrumblr - demo',
-			demo: true
+		pageTitle: 'scrumblr - demo',
+		demo: true
 	});
 });
 
-app.get('/:id', function(req, res){
+router.get('/:id', function(req, res){
 	res.render('index.jade', {
 		pageTitle: ('scrumblr - ' + req.params.id)
 	});
@@ -111,7 +121,6 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'joinRoom':
-
 				joinRoom(client, message.data, function(clients) {
 
 						client.json.send( { action: 'roomAccept', data: '' } );

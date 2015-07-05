@@ -21,7 +21,7 @@ body {
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 
-	background-image: url('/css/bg/concrete_wall_2_2.png');
+	background-image: url('bg/concrete_wall_2_2.png');
 
 }
 
@@ -127,7 +127,7 @@ width: 16px; height: 16px;
 	vertical-align: top;
 	height: 100%;
 	xopacity: 1;
-	background-image: url('/images/green-board-line.png');
+	background-image: url('../images/green-board-line.png');
 	background-repeat: repeat-y;
 	background-position: left top;
 }
@@ -311,43 +311,43 @@ xopacity: .5;
 
 
 #sticker-red {
-	background-image: url('/images/stickers/sticker-red.png');
+	background-image: url('../images/stickers/sticker-red.png');
 }
 #sticker-blue {
-	background-image: url('/images/stickers/sticker-blue.png');
+	background-image: url('../images/stickers/sticker-blue.png');
 }
 #sticker-yellow {
-	background-image: url('/images/stickers/sticker-yellow.png');
+	background-image: url('../images/stickers/sticker-yellow.png');
 }
 #sticker-green {
-	background-image: url('/images/stickers/sticker-green.png');
+	background-image: url('../images/stickers/sticker-green.png');
 }
 #sticker-pink {
-	background-image: url('/images/stickers/sticker-pink.png');
+	background-image: url('../images/stickers/sticker-pink.png');
 }
 #sticker-lightblue {
-	background-image: url('/images/stickers/sticker-lightblue.png');
+	background-image: url('../images/stickers/sticker-lightblue.png');
 }
 #sticker-orange {
-	background-image: url('/images/stickers/sticker-orange.png');
+	background-image: url('../images/stickers/sticker-orange.png');
 }
 #sticker-purple {
-	background-image: url('/images/stickers/sticker-purple.png');
+	background-image: url('../images/stickers/sticker-purple.png');
 }
 #sticker-gold {
-	background-image: url('/images/stickers/sticker-gold.png');
+	background-image: url('../images/stickers/sticker-gold.png');
 }
 #sticker-silverstar {
-	background-image: url('/images/stickers/sticker-silverstar.png');
+	background-image: url('../images/stickers/sticker-silverstar.png');
 }
 #sticker-bluestar {
-	background-image: url('/images/stickers/sticker-bluestar.png');
+	background-image: url('../images/stickers/sticker-bluestar.png');
 }
 #sticker-redstar {
-	background-image: url('/images/stickers/sticker-redstar.png');
+	background-image: url('../images/stickers/sticker-redstar.png');
 }
 #addsticker {
-	background-image: url('/images/icons/iconic/raster/black/plus_8x8.png');
+	background-image: url('../images/icons/iconic/raster/black/plus_8x8.png');
 	background-position: 2px 2px;
 	opacity: 0.3;
 
@@ -360,7 +360,7 @@ xopacity: .5;
 	opacity: 0.7;
 }
 #nosticker {
-	background-image: url('/images/stickers/sticker-deletestar.png');
+	background-image: url('../images/stickers/sticker-deletestar.png');
 }
 
 #sticker-nostar {
@@ -374,73 +374,73 @@ xopacity: .5;
 }
 
 /*.sticker-red {
-	background-image: url('/images/stickers/sticker-red.png');
+	background-image: url('../images/stickers/sticker-red.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-blue {
-	background-image: url('/images/stickers/sticker-blue.png');
+	background-image: url('../images/stickers/sticker-blue.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-yellow {
-	background-image: url('/images/stickers/sticker-yellow.png');
+	background-image: url('../images/stickers/sticker-yellow.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-green {
-	background-image: url('/images/stickers/sticker-green.png');
+	background-image: url('../images/stickers/sticker-green.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-gold {
-	background-image: url('/images/stickers/sticker-gold.png');
+	background-image: url('../images/stickers/sticker-gold.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-bluestar {
-	background-image: url('/images/stickers/sticker-bluestar.png');
+	background-image: url('../images/stickers/sticker-bluestar.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-silverstar {
-	background-image: url('/images/stickers/sticker-silverstar.png');
+	background-image: url('../images/stickers/sticker-silverstar.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-redstar {
-	background-image: url('/images/stickers/sticker-redstar.png');
+	background-image: url('../images/stickers/sticker-redstar.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-pink {
-	background-image: url('/images/stickers/sticker-pink.png');
+	background-image: url('../images/stickers/sticker-pink.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-orange {
-	background-image: url('/images/stickers/sticker-orange.png');
+	background-image: url('../images/stickers/sticker-orange.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-lightblue {
-	background-image: url('/images/stickers/sticker-lightblue.png');
+	background-image: url('../images/stickers/sticker-lightblue.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
 .sticker-purple {
-	background-image: url('/images/stickers/sticker-purple.png');
+	background-image: url('../images/stickers/sticker-purple.png');
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }*/
@@ -594,14 +594,14 @@ img {
 
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(images/ui-icons_222222_256x240.png); }
-.ui-widget-content .ui-icon {background-image: url(images/ui-icons_222222_256x240.png); }
-.ui-widget-header .ui-icon {background-image: url(images/ui-icons_222222_256x240.png); }
-.ui-state-default .ui-icon { background-image: url(images/ui-icons_888888_256x240.png); }
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
-.ui-state-active .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
-.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_2e83ff_256x240.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons_cd0a0a_256x240.png); }
+.ui-icon { width: 16px; height: 16px; background-image: url(../images/ui-icons_222222_256x240.png); }
+.ui-widget-content .ui-icon {background-image: url(../images/ui-icons_222222_256x240.png); }
+.ui-widget-header .ui-icon {background-image: url(../images/ui-icons_222222_256x240.png); }
+.ui-state-default .ui-icon { background-image: url(../images/ui-icons_888888_256x240.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../images/ui-icons_454545_256x240.png); }
+.ui-state-active .ui-icon {background-image: url(../images/ui-icons_454545_256x240.png); }
+.ui-state-highlight .ui-icon {background-image: url(../images/ui-icons_2e83ff_256x240.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../images/ui-icons_cd0a0a_256x240.png); }
 
 
 .ui-resizable { position: relative;}
