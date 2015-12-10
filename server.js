@@ -80,6 +80,93 @@ router.get('/:id', function(req, res){
 });
 
 
+/*************
+ API ROUTES
+**************/
+function generateResponse(res, room, card_id, condition, extra_responses) {
+	db.getCard(room, card_id, function(card) {
+		var response = (condition(card) ? {success: true} : {success: false});
+
+		for (var key in extra_responses) {
+			if (extra_responses.hasOwnProperty(key)) {
+				response[key] = extra_responses[key]
+			}
+		}
+
+		res.send(JSON.stringify(response));
+	});
+}
+
+// Gets a card based on its id
+// @param id, card_id
+// @return card
+router.get('/api/get', function(req, res) {
+	var room = sanitizer.sanitize('/' + req.query.id),
+		card_id = sanitizer.sanitize(req.query.card_id);
+
+	db.getCard(room, card_id, function(card) {
+		res.send(card);
+	});
+});
+
+// Gets all cards
+// @param id
+// @return cards
+router.get('/api/getall', function(req, res) {
+	var room = sanitizer.sanitize('/' + req.query.id);
+
+	db.getAllCards(room, function(cards) {
+		res.send(cards);
+	});
+});
+
+// Creates a new card
+// @param id, text
+// @return success, card_id
+router.post('/api/create', function(req, res) {
+	var room = sanitizer.sanitize('/' + req.query.id),
+		card_text = sanitizer.sanitize(req.query.text),
+		card_rotation = Math.random() * 10 - 5,
+		card_id = Math.round(Math.random() * 999999999);
+
+	createCard(room, card_id, card_text, 0, 500,
+				card_rotation, randomCardColour());
+
+	generateResponse(res, room, card_id, function(result) {
+		return result && result.text === card_text;
+	}, {card_id: card_id});
+});
+
+// Tries to edit an existing card
+// @param id, text, card_id
+// @return success
+router.post('/api/edit', function(req, res) {
+	var room = sanitizer.sanitize('/' + req.query.id),
+		card_text = sanitizer.sanitize(req.query.text),
+		card_id = sanitizer.sanitize(req.query.card_id);
+
+	db.cardEdit(room, card_id, card_text, function(arg) {
+		generateResponse(res, room, card_id, function(result) {
+			return result && result.text === card_text;
+		});
+	});
+});
+
+// Tries to delete an existing card
+// @param id, card_id
+// @param success
+router.post('/api/delete', function(req, res) {
+	var room = sanitizer.sanitize('/' + req.query.id),
+		card_id = sanitizer.sanitize(req.query.card_id);
+
+	db.deleteCard(room, card_id, function() {
+		generateResponse(res, room, card_id, function(result) {
+			return !result;
+		});
+	});
+});
+
+
 /**************
  SOCKET.I0
 **************/
@@ -426,6 +513,13 @@ function leaveRoom (client)
 
 function broadcastToRoom ( client, message ) {
 	rooms.broadcast_to_roommates(client, message);
+}
+
+function randomCardColour() {
+	var colours = ['yellow', 'green', 'blue', 'white'],
+		index = Math.floor(Math.random() * colours.length);
+
+    return colours[index];
 }
 
 //----------------CARD FUNCTIONS
