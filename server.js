@@ -154,7 +154,7 @@ router.post('/api/edit', function(req, res) {
 
 // Tries to delete an existing card
 // @param id, card_id
-// @param success
+// @return success
 router.post('/api/delete', function(req, res) {
 	var room = sanitizer.sanitize('/' + req.query.id),
 		card_id = sanitizer.sanitize(req.query.card_id);
