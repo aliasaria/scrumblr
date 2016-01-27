@@ -21,7 +21,6 @@ exports.googleanalytics = {
 };
 
 exports.database = {
-	sock: argv['sock'] || false,
 	type: 'redis',
 	prefix: '#scrumblr#',
 	redis: argv.redis || '127.0.0.1:6379'
