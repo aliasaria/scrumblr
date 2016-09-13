@@ -1,3 +1,4 @@
+// vim:set noexpandtab:
 /**************
  SYSTEM INCLUDES
 **************/
@@ -83,27 +84,26 @@ router.get('/:id', function(req, res){
 /**************
  SOCKET.I0
 **************/
-io.sockets.on('connection', function (client) {
-	//santizes text
-	function scrub( text ) {
-		if (typeof text != "undefined" && text !== null)
-		{
+//sanitizes text
+function scrub( text ) {
+	if (typeof text != "undefined" && text !== null)
+	{
 
-			//clip the string if it is too long
-			if (text.length > 65535)
-			{
-				text = text.substr(0,65535);
-			}
-
-			return sanitizer.sanitize(text);
-		}
-		else
+		//clip the string if it is too long
+		if (text.length > 65535)
 		{
-			return null;
+			text = text.substr(0,65535);
 		}
+
+		return sanitizer.sanitize(text);
 	}
+	else
+	{
+		return null;
+	}
+}
 
-
+io.sockets.on('connection', function (client) {
 
 	client.on('message', function( message ){
 		//console.log(message.action + " -- " + sys.inspect(message.data) );
@@ -302,6 +302,22 @@ io.sockets.on('connection', function (client) {
 				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
 				break;
 
+			case 'exportTxt':
+				exportBoard( 'txt', client, message.data );
+				break;
+
+			case 'exportCsv':
+				exportBoard( 'csv', client, message.data );
+				break;
+
+			case 'exportJson':
+				exportJson( client, message.data );
+				break;
+
+			case 'importJson':
+				importJson( client, message.data );
+				break;
+
 			default:
 				//console.log('unknown action');
 				break;
@@ -488,6 +504,206 @@ function cleanAndInitializeDemoRoom()
 		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
 		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
 		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+	});
+}
+
+// Export board in txt or csv
+function exportBoard( format, client, data )
+{
+	var result = new Array();
+	getRoom(client, function(room) {
+		db.getAllCards( room , function (cards) {
+			db.getAllColumns ( room, function (columns) {
+				var text = new Array();
+				var cols = {};
+				if (columns.length > 0) {
+					for (var i = 0; i < columns.length; i++) {
+						cols[columns[i]] = new Array();
+						for (var j = 0; j < cards.length; j++) {
+							if (i === 0) {
+								if (cards[j]['x'] < (i + 1) * data) {
+									cols[columns[i]].push(cards[j]);
+								}
+							} else if (i + 1 === columns.length) {
+								if (cards[j]['x'] >= i * data) {
+									cols[columns[i]].push(cards[j]);
+								}
+							} else if (cards[j]['x'] >= i * data && cards[j]['x'] < (i + 1) * data) {
+								cols[columns[i]].push(cards[j]);
+							}
+						}
+						cols[columns[i]].sort(function(a, b) {
+							if (a['y'] === b['y']) {
+								return (a['x'] - b['x']);
+							} else {
+								return a['y'] - b['y'];
+							}
+						});
+					}
+					if (format === 'txt') {
+						for (var i = 0; i < columns.length; i++) {
+							if (i === 0) {
+								text.push("# "+columns[i]);
+							} else {
+								text.push("\n# "+columns[i]);
+							}
+							for (var j = 0; j < cols[columns[i]].length; j++) {
+								text.push('- '+cols[columns[i]][j]['text']);
+							}
+						}
+					} else if (format === 'csv') {
+						var max = 0;
+						var line = new Array();
+						for (var i = 0; i < columns.length; i++) {
+							if (cols[columns[i]].length > max) {
+								max = cols[columns[i]].length;
+							}
+							line.push('"'+columns[i].replace(/"/g,'""')+'"');
+						}
+						text.push(line.join(','));
+						for (var j = 0; j < max; j++) {
+							line = new Array();
+							for (var i = 0; i < columns.length; i++) {
+								var val = (cols[columns[i]][j] !== undefined) ? cols[columns[i]][j]['text'].replace(/"/g,'""') : '';
+								line.push('"'+val+'"');
+							}
+							text.push(line.join(','));
+						}
+					}
+				} else {
+					for (var j = 0; j < cards.length; j++) {
+						if (format === 'txt') {
+							text.push('- '+cards[j]['text']);
+						} else if (format === 'csv') {
+							text.push('"'+cards[j]['text'].replace(/"/g,'""')+'"\n');
+						}
+					}
+				}
+				var result;
+				if (format === 'txt' || format === 'csv') {
+					result = text.join("\n");
+				} else if (format === 'json') {
+					result = JSON.stringify(cols);
+				}
+				client.json.send(
+					{
+						action: 'export',
+						data: {
+							filename: room.replace('/', '')+'.'+format,
+							text: result
+						}
+					}
+				);
+			});
+		});
+	});
+}
+
+// Export board in json, suitable for import
+function exportJson( client, data )
+{
+	var result = new Array();
+	getRoom(client, function(room) {
+		db.getAllCards( room , function (cards) {
+			db.getAllColumns ( room, function (columns) {
+				db.getTheme( room, function(theme) {
+					db.getBoardSize( room, function(size) {
+						if (theme === null) theme = 'bigcards';
+						if (size === null) size = { width: data.width, height: data.height };
+						result = JSON.stringify({
+							cards: cards,
+							columns: columns,
+							theme: theme,
+							size: size
+						});
+						client.json.send(
+							{
+								action: 'export',
+								data: {
+									filename: room.replace('/', '')+'.json',
+									text: result
+								}
+							}
+						);
+					});
+				});
+			});
+		});
+	});
+}
+
+// Import board from json
+function importJson( client, data )
+{
+	getRoom(client, function(room) {
+		db.clearRoom(room, function() {
+			db.getAllCards( room , function (cards) {
+				for (var i = 0; i < cards.length; i++) {
+					db.deleteCard ( room, cards[i].id );
+				}
+
+				cards      = data.cards;
+				var cards2 = new Array();
+				for (var i = 0; i < cards.length; i++) {
+					var card = cards[i];
+					if (card.id         !== undefined && card.colour !== undefined
+						&& card.rot     !== undefined && card.x      !== undefined
+						&& card.y       !== undefined && card.text   !== undefined
+						&& card.sticker !== undefined) {
+						var c = {
+							id:      card.id,
+							colour:  card.colour,
+							rot:     card.rot,
+							x:       card.x,
+							y:       card.y,
+							text:    scrub(card.text),
+							sticker: card.sticker
+						};
+						db.createCard(room, c.id, c);
+						cards2.push(c);
+					}
+				}
+				var msg = { action: 'initCards', data: cards2 };
+				broadcastToRoom(client, msg);
+				client.json.send(msg);
+			});
+
+			db.getAllColumns ( room, function (columns) {
+				for (var i = 0; i < columns.length; i++) {
+					db.deleteColumn(room);
+				}
+
+				columns      = data.columns;
+				var columns2 = new Array();
+				for (var i = 0; i < columns.length; i++) {
+					var column = scrub(columns[i]);
+					if (typeof(column) === 'string') {
+						db.createColumn(room, column);
+						columns2.push(column);
+					}
+				}
+				msg = { action: 'initColumns', data: columns2 };
+				broadcastToRoom(client, msg);
+				client.json.send(msg);
+			});
+
+			var size = data.size;
+			if (size.width !== undefined && size.height !== undefined) {
+				size = { width: scrub(size.width), height: scrub(size.height) };
+				db.setBoardSize( room, size );
+				msg = { action: 'setBoardSize', data: size };
+				broadcastToRoom(client, msg);
+				client.json.send(msg);
+			}
+
+			data.theme = scrub(data.theme);
+			if (data.theme === 'smallcards' || data.theme === 'bigcards') {
+				db.setTheme( room, data.theme );
+				msg = { action: 'changeTheme', data: data.theme };
+				broadcastToRoom(client, msg);
+				client.json.send(msg);
+			}
+		});
 	});
 }
 //

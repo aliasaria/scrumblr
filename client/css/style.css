@@ -617,3 +617,7 @@ img {
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
 
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+
+.export button, .import * {
+    margin-right: 15px;
+}
