@@ -302,6 +302,18 @@ io.sockets.on('connection', function (client) {
 				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
 				break;
 
+			case 'exportTxt':
+				exportBoard( 'txt', client, message.data );
+				break;
+
+			case 'exportCsv':
+				exportBoard( 'csv', client, message.data );
+				break;
+
+			case 'exportJson':
+				exportBoard( 'json', client, message.data );
+				break;
+
 			default:
 				//console.log('unknown action');
 				break;
@@ -488,6 +500,98 @@ function cleanAndInitializeDemoRoom()
 		createCard('/demo', 'card6', 'Hello this is a new card.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
 		createCard('/demo', 'card7', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
 		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
+	});
+}
+
+// Export board in txt, csv or json
+function exportBoard(format, client, data )
+{
+	var result = new Array();
+	getRoom(client, function(room) {
+		db.getAllCards( room , function (cards) {
+			db.getAllColumns ( room, function (columns) {
+				var text = new Array();
+				var cols = {};
+				if (columns.length > 0) {
+					for (var i = 0; i < columns.length; i++) {
+						cols[columns[i]] = new Array();
+						for (var j = 0; j < cards.length; j++) {
+							if (i === 0) {
+								if (cards[j]['x'] + 34 < (i + 1) * data) {
+									cols[columns[i]].push(cards[j]);
+								}
+							} else if (i + 1 === columns.length) {
+								if (cards[j]['x'] + 34 >= i * data) {
+									cols[columns[i]].push(cards[j]);
+								}
+							} else if (cards[j]['x'] + 34 >= i * data && cards[j]['x'] + 34 < (i + 1) * data) {
+								cols[columns[i]].push(cards[j]);
+							}
+						}
+						cols[columns[i]].sort(function(a, b) {
+							if (a['y'] === b['y']) {
+								return (a['x'] - b['x']);
+							} else {
+								return a['y'] - b['y'];
+							}
+						});
+					}
+					if (format === 'txt') {
+						for (var i = 0; i < columns.length; i++) {
+							if (i === 0) {
+								text.push("# "+columns[i]);
+							} else {
+								text.push("\n# "+columns[i]);
+							}
+							for (var j = 0; j < cols[columns[i]].length; j++) {
+								text.push('- '+cols[columns[i]][j]['text']);
+							}
+						}
+					} else if (format === 'csv') {
+						var max = 0;
+						var line = new Array();
+						for (var i = 0; i < columns.length; i++) {
+							if (cols[columns[i]].length > max) {
+								max = cols[columns[i]].length;
+							}
+							line.push('"'+columns[i].replace(/"/g,'""')+'"');
+						}
+						text.push(line.join(','));
+						for (var j = 0; j < max; j++) {
+							line = new Array();
+							for (var i = 0; i < columns.length; i++) {
+								var val = (cols[columns[i]][j] !== undefined) ? cols[columns[i]][j]['text'].replace(/"/g,'""') : '';
+								line.push('"'+val+'"');
+							}
+							text.push(line.join(','));
+						}
+					}
+				} else {
+					for (var j = 0; j < cards.length; j++) {
+						if (format === 'txt') {
+							text.push('- '+cards[j]['text']);
+						} else if (format === 'csv') {
+							text.push('"'+cards[j]['text'].replace(/"/g,'""')+'"\n');
+						}
+					}
+				}
+				var result;
+				if (format === 'txt' || format === 'csv') {
+					result = text.join("\n");
+				} else if (format === 'json') {
+					result = JSON.stringify(cols);
+				}
+				client.json.send(
+					{
+						action: 'export',
+						data: {
+							filename: room.replace('/', '')+'.'+format,
+							text: result
+						}
+					}
+				);
+			});
+		});
 	});
 }
 //
