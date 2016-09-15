@@ -8,6 +8,8 @@ var keyTrap = null;
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
 var socket = io.connect({path: baseurl + "/socket.io"});
 
+moment.locale(navigator.language || navigator.languages[0]);
+
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {
@@ -149,6 +151,21 @@ function getMessage(m) {
 
         case 'export':
             download(message.data.filename, message.data.text);
+            break;
+
+        case 'addRevision':
+            addRevision(message.data);
+            break;
+
+        case 'deleteRevision':
+            $('#revision-'+message.data).remove();
+            break;
+
+        case 'initRevisions':
+            $('#revisions-list').empty();
+            for (var i = 0; i < message.data.length; i++) {
+                addRevision(message.data[i]);
+            }
             break;
 
         default:
@@ -700,6 +717,33 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
+function addRevision(timestamp) {
+    var li = $('<li id="revision-'+timestamp+'"></li>');
+    var s1 = $('<span></span>');
+    var s2 = $('<img src="../images/stickers/sticker-deletestar.png" alt="delete revision">');
+    if (typeof(timestamp) === 'string') {
+        timestamp = parseInt(timestamp);
+    }
+    s1.text(moment(timestamp).format('LLLL'));
+
+    li.append(s1);
+    li.append(s2);
+    $('#revisions-list').append(li);
+
+    s1.click(function() {
+        socket.json.send({
+            action: 'exportRevision',
+            data: timestamp
+        });
+    });
+    s2.click(function() {
+        socket.json.send({
+            action: 'deleteRevision',
+            data: timestamp
+        });
+    });
+}
+
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -902,5 +946,15 @@ $(function() {
             });
         };
         fr.readAsBinaryString(f);
+    })
+
+    $('#create-revision').click(function() {
+        socket.json.send({
+            action: 'createRevision',
+            data: {
+                width: $('.board-outline').css('width').replace('px', ''),
+                height: $('.board-outline').css('height').replace('px', '')
+            }
+        });
     })
 });

@@ -318,6 +318,18 @@ io.sockets.on('connection', function (client) {
 				importJson( client, message.data );
 				break;
 
+			case 'createRevision':
+				createRevision( client, message.data );
+				break;
+
+			case 'deleteRevision':
+				deleteRevision( client, message.data );
+				break;
+
+			case 'exportRevision':
+				exportRevision( client, message.data );
+				break;
+
 			default:
 				//console.log('unknown action');
 				break;
@@ -366,6 +378,15 @@ function initClient ( client )
 			);
 		});
 
+
+		db.getRevisions( room, function (revisions) {
+			client.json.send(
+				{
+					action: 'initRevisions',
+					data: (revisions !== null) ? Object.keys(revisions) : new Array()
+				}
+			);
+		});
 
 		db.getTheme( room, function(theme) {
 
@@ -708,6 +729,78 @@ function importJson( client, data )
 }
 //
 
+function createRevision( client, data )
+{
+	var result = new Array();
+	getRoom(client, function(room) {
+		db.getAllCards( room , function (cards) {
+			db.getAllColumns ( room, function (columns) {
+				db.getTheme( room, function(theme) {
+					db.getBoardSize( room, function(size) {
+						if (theme === null) theme = 'bigcards';
+						if (size === null) size = { width: data.width, height: data.height };
+						result = {
+							cards: cards,
+							columns: columns,
+							theme: theme,
+							size: size
+						};
+						var timestamp = Date.now();
+						db.getRevisions( room, function(revisions) {
+							if (revisions === null) revisions = {};
+							revisions[timestamp+''] = result;
+							db.setRevisions( room, revisions );
+							msg = { action: 'addRevision', data: timestamp };
+							broadcastToRoom(client, msg);
+							client.json.send(msg);
+						});
+					});
+				});
+			});
+		});
+	});
+}
+
+function deleteRevision( client, timestamp )
+{
+	getRoom(client, function(room) {
+		db.getRevisions( room, function(revisions) {
+			if (revisions !== null && revisions[timestamp+''] !== undefined) {
+				delete revisions[timestamp+''];
+				db.setRevisions( room, revisions );
+			}
+			msg = { action: 'deleteRevision', data: timestamp };
+			broadcastToRoom(client, msg);
+			client.json.send(msg);
+		});
+	});
+}
+
+function exportRevision ( client, timestamp )
+{
+	getRoom(client, function(room) {
+		db.getRevisions( room, function(revisions) {
+			if (revisions !== null && revisions[timestamp+''] !== undefined) {
+				client.json.send(
+					{
+						action: 'export',
+						data: {
+							filename: room.replace('/', '')+'-'+timestamp+'.json',
+							text: JSON.stringify(revisions[timestamp+''])
+						}
+					}
+				);
+			} else {
+				client.json.send(
+					{
+						action: 'message',
+						data: 'Unable to find revision '+timestamp+'.'
+					}
+				);
+			}
+		});
+	});
+}
 /**************
  SETUP DATABASE ON FIRST RUN
 **************/
