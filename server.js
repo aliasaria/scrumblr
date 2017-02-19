@@ -575,17 +575,25 @@ function exportBoard( format, client, data )
 					} else if (format === 'csv') {
 						var max = 0;
 						var line = new Array();
+						var patt_vuln = new RegExp("^[=+\-@]");
 						for (var i = 0; i < columns.length; i++) {
 							if (cols[columns[i]].length > max) {
 								max = cols[columns[i]].length;
 							}
-							line.push('"'+columns[i].replace(/"/g,'""')+'"');
+							var val = columns[i].replace(/"/g,'""');
+							if (patt_vuln.test(val)) { // prevent CSV Formula Injection
+								var val = "'"+val;
+							}
+							line.push('"'+val+'"');
 						}
 						text.push(line.join(','));
 						for (var j = 0; j < max; j++) {
 							line = new Array();
 							for (var i = 0; i < columns.length; i++) {
 								var val = (cols[columns[i]][j] !== undefined) ? cols[columns[i]][j]['text'].replace(/"/g,'""') : '';
+								if (patt_vuln.test(val)) { // prevent CSV Formula Injection
+									var val = "'"+val;
+								}
 								line.push('"'+val+'"');
 							}
 							text.push(line.join(','));
