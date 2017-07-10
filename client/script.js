@@ -8,6 +8,8 @@ var keyTrap = null;
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
 var socket = io.connect({path: baseurl + "/socket.io"});
 
+marked.setOptions({sanitize: true});
+
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {
