@@ -20,12 +20,9 @@ exports.googleanalytics = {
 	account: argv['gaAccount'] || "UA-2069672-4"
 };
 
-var redis_conf = argv.redis || '127.0.0.1:6379';
 exports.database = {
-	sock: argv['sock'] || false,
 	type: 'redis',
 	prefix: '#scrumblr#',
-	host: redis_conf.split(':')[0] || '127.0.0.1',
-	port: redis_conf.split(':')[1] || 6379
+	redis: argv.redis || '127.0.0.1:6379'
 };
 
