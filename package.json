@@ -21,7 +21,7 @@
     "redis": "^2.4.2",
     "sanitizer": "~0.1.1",
     "simplesets": "~1.2.0",
-    "socket.io": "1.x",
+    "socket.io": "^2.1.0",
     "yargs": "~2.3.0"
   }
 }

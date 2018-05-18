@@ -6,3 +6,4 @@ rsync.sh
 node_modules/
 *.rdb
 *.out
+.vscode

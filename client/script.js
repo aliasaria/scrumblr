@@ -37,6 +37,7 @@ socket.on('disconnect', function() {
 });
 
 socket.on('message', function(data) {
+    console.log(data)
     getMessage(data);
 });
 
@@ -68,7 +69,7 @@ function blockUI(message) {
 
 //respond to an action event
 function getMessage(m) {
-    var message = m; //JSON.parse(m);
+    var message = m; //JSON.parse(m)
     var action = message.action;
     var data = message.data;
 

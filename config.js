@@ -23,6 +23,6 @@ exports.googleanalytics = {
 exports.database = {
 	type: 'redis',
 	prefix: '#scrumblr#',
-	redis: argv.redis || '127.0.0.1:6379'
+	redis: argv.redis || 'redis://192.168.1.208:6379'
 };
 

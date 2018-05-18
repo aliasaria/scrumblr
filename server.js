@@ -13,7 +13,6 @@ var ga = require('./config.js').googleanalytics;
 /**************
  LOCAL INCLUDES
 **************/
-var	rooms	= require('./lib/rooms.js');
 var	data	= require('./lib/data.js').db;
 
 /**************
@@ -27,9 +26,11 @@ var sids_to_user_names = [];
 **************/
 var app = express();
 var router = express.Router();
+var bodyParser = require('body-parser');
 
 app.use(compression());
 app.use(conf.baseurl, router);
+app.use(bodyParser.json());
 
 app.locals.ga = ga.enabled;
 app.locals.gaAccount = ga.account;
@@ -48,6 +49,7 @@ var io = require('socket.io')(server, {
 	path: conf.baseurl == '/' ? '' : conf.baseurl + "/socket.io"
 });
 
+const defaultNamespace = io.of('/');
 
 /**************
  ROUTES
@@ -79,22 +81,35 @@ router.get('/:id', function(req, res){
 	});
 });
 
+app.post('/:id/card', async function(req, res) {
+	const clean_data = req.body
+	const room = `/${req.params.id}`
+	
+	createCard(room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
+
+	message_out = {
+		action: 'createCard',
+		data: clean_data
+	};
+
+	io.to(room).send(message_out)
+	res.send(200, {status: 'ok'})
+})
+
 
 /**************
  SOCKET.I0
 **************/
-io.sockets.on('connection', function (client) {
+defaultNamespace.on('connection', function (client) {
 	//santizes text
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
 		{
-
 			//clip the string if it is too long
 			if (text.length > 65535)
 			{
 				text = text.substr(0,65535);
 			}
-
 			return sanitizer.sanitize(text);
 		}
 		else
@@ -103,17 +118,14 @@ io.sockets.on('connection', function (client) {
 		}
 	}
 
-
-
 	client.on('message', function( message ){
-		//console.log(message.action + " -- " + sys.inspect(message.data) );
-
 		var clean_data = {};
 		var clean_message = {};
 		var message_out = {};
 
 		if (!message.action)	return;
 
+		const room = Object.keys(client.rooms).filter(room => room.startsWith('/'))[0]
 		switch (message.action)
 		{
 			case 'initializeMe':
@@ -121,12 +133,9 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'joinRoom':
-				joinRoom(client, message.data, function(clients) {
-
-						client.json.send( { action: 'roomAccept', data: '' } );
-
-				});
-
+				client.join(message.data, (err) => {
+					client.json.send( { action: 'roomAccept', data: '' } );
+				})
 				break;
 
 			case 'moveCard':
@@ -142,16 +151,8 @@ io.sockets.on('connection', function (client) {
 					}
 				};
 
-
-				broadcastToRoom( client, message_out );
-
-				// console.log("-----" + message.data.id);
-				// console.log(JSON.stringify(message.data));
-
-				getRoom(client, function(room) {
-					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top);
-				});
-
+				client.to(room).send(message_out)
+				db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top);
 				break;
 
 			case 'createCard':
@@ -163,143 +164,93 @@ io.sockets.on('connection', function (client) {
 				clean_data.y = scrub(data.y);
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
-
-				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
-				});
-
+				createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
 				message_out = {
 					action: 'createCard',
 					data: clean_data
 				};
 
-				//report to all other browsers
-				broadcastToRoom( client, message_out );
+				client.to(room).emit('message', message_out)
 				break;
 
 			case 'editCard':
-
 				clean_data = {};
 				clean_data.value = scrub(message.data.value);
 				clean_data.id = scrub(message.data.id);
-
-				//send update to database
-				getRoom(client, function(room) {
-					db.cardEdit( room , clean_data.id, clean_data.value );
-				});
-
+				db.cardEdit( room , clean_data.id, clean_data.value );
 				message_out = {
 					action: 'editCard',
 					data: clean_data
 				};
 
-				broadcastToRoom(client, message_out);
-
+				client.to(room).send(message_out)
 				break;
-
 
 			case 'deleteCard':
 				clean_message = {
 					action: 'deleteCard',
 					data: { id: scrub(message.data.id) }
 				};
-
-				getRoom( client, function(room) {
-					db.deleteCard ( room, clean_message.data.id );
-				});
-
-				//report to all other browsers
-				broadcastToRoom( client, clean_message );
-
+				db.deleteCard ( room, clean_message.data.id );
+				client.to(room).send(clean_message)
 				break;
 
 			case 'createColumn':
 				clean_message = { data: scrub(message.data) };
-
-				getRoom( client, function(room) {
-					db.createColumn( room, clean_message.data, function() {} );
-				});
-
-				broadcastToRoom( client, clean_message );
-
+				db.createColumn( room, clean_message.data, function() {} );
+				client.to(room).send(message_out)
 				break;
 
 			case 'deleteColumn':
-				getRoom( client, function(room) {
-					db.deleteColumn(room);
-				});
-				broadcastToRoom( client, { action: 'deleteColumn' } );
-
+				db.deleteColumn(room);
+				client.to(room).send({ action: 'deleteColumn' })
 				break;
 
 			case 'updateColumns':
 				var columns = message.data;
-
 				if (!(columns instanceof Array))
 					break;
-
 				var clean_columns = [];
-
 				for (var i in columns)
 				{
 					clean_columns[i] = scrub( columns[i] );
 				}
-				getRoom( client, function(room) {
-					db.setColumns( room, clean_columns );
-				});
-
-				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
-
+				db.setColumns( room, clean_columns );
+				client.to(room).send( { action: 'updateColumns', data: clean_columns })
 				break;
 
 			case 'changeTheme':
 				clean_message = {};
 				clean_message.data = scrub(message.data);
-
-				getRoom( client, function(room) {
-					db.setTheme( room, clean_message.data );
-				});
-
+				db.setTheme( room, clean_message.data );
 				clean_message.action = 'changeTheme';
-
-				broadcastToRoom( client, clean_message );
+				client.to(room).send(clean_message)
 				break;
 
 			case 'setUserName':
 				clean_message = {};
-
 				clean_message.data = scrub(message.data);
-
 				setUserName(client, clean_message.data);
 
 				var msg = {};
 				msg.action = 'nameChangeAnnounce';
 				msg.data = { sid: client.id, user_name: clean_message.data };
-				broadcastToRoom( client, msg );
+				client.to(room).send(msg)
 				break;
 
 			case 'addSticker':
 				var cardId = scrub(message.data.cardId);
 				var stickerId = scrub(message.data.stickerId);
-
-				getRoom(client, function(room) {
-					db.addSticker( room , cardId, stickerId );
-				});
-
-				broadcastToRoom( client, { action: 'addSticker', data: { cardId: cardId, stickerId: stickerId }});
+				db.addSticker( room , cardId, stickerId );
+				client.to(room).send({ action: 'addSticker', data: { cardId: cardId, stickerId: stickerId }});
 				break;
 
 			case 'setBoardSize':
-
 				var size = {};
 				size.width = scrub(message.data.width);
 				size.height = scrub(message.data.height);
-
-				getRoom(client, function(room) {
-					db.setBoardSize( room, size );
-				});
-
-				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
+				db.setBoardSize( room, size );
+				client.to(room).send({ action: 'setBoardSize', data: size } );
 				break;
 
 			default:
@@ -311,14 +262,9 @@ io.sockets.on('connection', function (client) {
 	client.on('disconnect', function() {
 			leaveRoom(client);
 	});
-
   //tell all others that someone has connected
   //client.broadcast('someone has connected');
 });
-
-
-
-
 
 
 /**************
@@ -327,10 +273,8 @@ io.sockets.on('connection', function (client) {
 function initClient ( client )
 {
 	//console.log ('initClient Started');
-	getRoom(client, function(room) {
-
+	const room = Object.keys(client.rooms).filter(room => room.startsWith('/'))[0]
 		db.getAllCards( room , function (cards) {
-
 			client.json.send(
 				{
 					action: 'initCards',
@@ -339,7 +283,6 @@ function initClient ( client )
 			);
 
 		});
-
 
 		db.getAllColumns ( room, function (columns) {
 			client.json.send(
@@ -350,9 +293,7 @@ function initClient ( client )
 			);
 		});
 
-
 		db.getTheme( room, function(theme) {
-
 			if (theme === null) theme = 'bigcards';
 
 			client.json.send(
@@ -364,7 +305,6 @@ function initClient ( client )
 		});
 
 		db.getBoardSize( room, function(size) {
-
 			if (size !== null) {
 				client.json.send(
 					{
@@ -374,32 +314,7 @@ function initClient ( client )
 				);
 			}
 		});
-
-		roommates_clients = rooms.room_clients(room);
-		roommates = [];
-
-		var j = 0;
-		for (var i in roommates_clients)
-		{
-			if (roommates_clients[i].id != client.id)
-			{
-				roommates[j] = {
-					sid: roommates_clients[i].id,
-					user_name:  sids_to_user_names[roommates_clients[i].id]
-					};
-				j++;
-			}
-		}
-
-		//console.log('initialusers: ' + roommates);
-		client.json.send(
-			{
-				action: 'initialUsers',
-				data: roommates
-			}
-		);
-
-	});
+		// send all users in a room to the client
 }
 
 
@@ -407,25 +322,19 @@ function joinRoom (client, room, successFunction)
 {
 	var msg = {};
 	msg.action = 'join-announce';
-	msg.data		= { sid: client.id, user_name: client.user_name };
-
+	msg.data = { sid: client.id, user_name: client.user_name };
 	rooms.add_to_room_and_announce(client, room, msg);
 	successFunction();
 }
 
 function leaveRoom (client)
 {
-	//console.log (client.id + ' just left');
 	var msg = {};
 	msg.action = 'leave-announce';
-	msg.data	= { sid: client.id };
-	rooms.remove_from_all_rooms_and_announce(client, msg);
+	msg.data = { sid: client.id };
+	// TODO - implement leaving a room - rooms.remove_from_all_rooms_and_announce(client, msg);
 
 	delete sids_to_user_names[client.id];
-}
-
-function broadcastToRoom ( client, message ) {
-	rooms.broadcast_to_roommates(client, message);
 }
 
 //----------------CARD FUNCTIONS
@@ -446,17 +355,6 @@ function createCard( room, id, text, x, y, rot, colour ) {
 function roundRand( max )
 {
 	return Math.floor(Math.random() * max);
-}
-
-
-
-//------------ROOM STUFF
-// Get Room name for the given Session ID
-function getRoom( client , callback )
-{
-	room = rooms.get_room( client );
-	//console.log( 'client: ' + client.id + " is in " + room);
-	callback(room);
 }
 
 
