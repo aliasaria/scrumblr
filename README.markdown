@@ -1,6 +1,11 @@
 scrumblr
 ========
 
+update 11/2018 - [mannyhuerta](https://www.github.com/mannyhuerta)
+
+UI:
+  - added ability to export card texts to a csv file.
+
 update 7/2018 - [mannyhuerta](https://www.github.com/mannyhuerta)
 ----------
 scrumblr has been ported to ReactJS.  this is in effort to make scrumblr more maintainable and easier to enhance using up to date, supported components. here's more changes:

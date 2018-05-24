@@ -11,6 +11,7 @@
     "lib": "lib/"
   },
   "scripts": {
+    "postinstall": "cd react-ui && npm i",
     "build:ui": "cd react-ui && npm run build"
   },
   "engines": {
@@ -21,7 +22,9 @@
     "bluebird": "^3.5.1",
     "compression": "^1.1.0",
     "express": "4.x",
+    "isomorphic-fetch": "^2.2.1",
     "jade": "~1.5.0",
+    "react-csv": "^1.0.18",
     "redis": "^2.8.0",
     "sanitizer": "~0.1.1",
     "simplesets": "~1.2.0",

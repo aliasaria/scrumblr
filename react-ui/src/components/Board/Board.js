@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { ResizableBox } from 'react-resizable';
+import { CSVLink } from "react-csv";
 import { RIEInput } from '../REIK'
 import TransitionGroup from 'react-transition-group/TransitionGroup'
 import plus from './images/icons/iconic/raster/black/plus_alt_32x32.png'
@@ -12,8 +13,6 @@ import './css/style.css';
 import './css/bigcards.css'
 import github from '../../images/github.png'
 
-
-
 class Board extends Component {
     constructor(props) {
         super(props)
@@ -21,11 +20,12 @@ class Board extends Component {
         const boardid = match.url
         this.state = {
             boardid,
-            iconsVisible: false
+            iconsVisible: false,
+            download: false
         }
+        this.download = this.download.bind(this)
     }
     componentDidMount() {
-        console.log('cdm')
         const { scrumblr } = this.props.stores
         scrumblr.joinRoom(this.state.boardid)
     }
@@ -47,6 +47,11 @@ class Board extends Component {
         const zindex = scrumblr.boards[boardid].moves
         const card = scrumblr.addCard(boardid, color, 'Double Click to Edit', 29, -489, rotation, [], null, zindex + 1)
         card.create()
+    }
+
+    handleStart(event, data) {
+        this.setState({ startSize: data.size })
+
     }
 
     handleStop(event, data) {
@@ -73,6 +78,22 @@ class Board extends Component {
         const scrumblr = this.props.stores.scrumblr
         scrumblr.setUserName(data.text)(boardid)
     }
+    onResize(e, data) {
+        const scrumblr = this.props.stores.scrumblr
+        const boardid = this.props.match.url
+        const board = scrumblr.boards[boardid]
+        const cards = scrumblr.cards
+        const moveXPct = e.movementX / (data.size.width)
+        const moveX = moveXPct
+        board.cards.forEach(card => {
+            cards[card].move(cards[card].x + (cards[card].x * moveXPct), cards[card].y - e.movementY)
+        })
+    }
+
+    download() {
+        this.setState({ download: !this.state.download })
+        return true
+    }
 
     render() {
         const boardid = this.props.match.url
@@ -80,12 +101,14 @@ class Board extends Component {
         const board = scrumblr.boards[boardid]
         const cards = scrumblr.cards
         const users = scrumblr.users
-        return board ?
+        const cardIds = scrumblr.boards[this.state.boardid] ? scrumblr.boards[this.state.boardid].cards ? scrumblr.boards[this.state.boardid].cards : [] : []
+        const exportedCards = cardIds.map(id => ({ id, text: cards[id].text }))
 
+        return board ?
             <TransitionGroup>
                 <div className='layoutRoot'>
                     <div className='github'><a className='github' href={process.env.REACT_APP_GITHUB_URL ? process.env.REACT_APP_GITHUB_URL : 'https://github.com/mannyhuerta/scrumblr'}><img src={github} height="20px" width="20px" />&nbsp;github</a></div>
-                    <ResizableBox className='board-outline' onResizeStop={this.handleStop.bind(this)} width={parseInt(board.width)} height={parseInt(board.height)}>
+                    <ResizableBox className='board-outline' onResize={this.onResize.bind(this)} onResizeStop={this.handleStop.bind(this)} onResizeStart={this.handleStart.bind(this)} width={parseInt(board.width)} height={parseInt(board.height)}>
                         <div id='board'>
                             <div id='board-doodles' />
 
@@ -114,12 +137,17 @@ class Board extends Component {
                             </table>
 
                         </div>
-                        {/* <span className='text'>{'<ResizableBox>, same as above.'}</span> */}
                     </ResizableBox>
 
                     <div className='buttons'>
                         <i id='create-card' className='fa fa-plus-circle fa-2x bottom-icon' onClick={() => { this.createCard(boardid) }} />
                         <i id='smallify' className='fa fa-expand fa-2x bottom-icon' />
+                        {exportedCards.length > 0 &&
+                            this.state.download &&
+                            <CSVLink onClick={() => { this.download(); return true }} data={exportedCards}><i id='download' className='fa fa-download fa-2x bottom-icon download-ready' /></CSVLink>
+                        }
+                        {exportedCards.length > 0 && !this.state.download && <i id='download' className='fa fa-download fa-2x bottom-icon download-notready' onClick={this.download} />}
+
                     </div>
                     <div className='stickers'>
                         <Sticker color='red' canDrag />

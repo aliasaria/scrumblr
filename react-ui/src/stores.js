@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 const uuidv4 = require('uuid/v4');
 
 const URL = `${window.location.origin}`
-const SOCKET_IO_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : URL
+const SOCKET_IO_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8081' : URL
 
 const socket = io(SOCKET_IO_URL, {
     path: '/socket.io'
@@ -11,6 +11,7 @@ const socket = io(SOCKET_IO_URL, {
 
 socket.on('connect', function () {
     server.connected = true
+    server.authenticated = false
 })
 
 socket.on('disconnect', function () {
@@ -18,7 +19,6 @@ socket.on('disconnect', function () {
 })
 
 socket.on('message', function (msg) {
-
     if (msg.action) {
         switch (msg.action) {
             case 'roomAccept':
@@ -26,9 +26,6 @@ socket.on('message', function (msg) {
                     if (user)
                         scrumblr.setUserName(user.user_name ? user.user_name : user.sid, user.sid)
                 })
-                const username = localStorage.getItem('username')
-                if (username)
-                    scrumblr.setUserName(username, socket.id)(msg.room)
                 scrumblr.addBoard(msg.room, new Board(msg.room, 600, 1000, [], msg.users ? msg.users.map(user => user.sid) : []))
                 sendAction('initializeMe', { room: msg.room });
                 break;
@@ -91,6 +88,13 @@ socket.on('message', function (msg) {
             case 'changeTheme':
                 console.log('changeTheme not implemented')
                 break;
+            case 'cardStartEditing':
+                scrumblr.cards[msg.data.cardId].editing = true
+                scrumblr.cards[msg.data.cardId].editingBy = scrumblr.users[msg.data.sid] ? scrumblr.users[msg.data.sid].name : msg.data.sid
+                break;
+            case 'cardEndEditing':
+                scrumblr.cards[msg.data.cardId].editing = false
+                break;
             default:
                 console.log('invalid action: ' + msg.action)
         }
@@ -116,8 +120,6 @@ class ScrumblrStore {
     setUserName(name, sid) {
         const id = sid ? sid : socket.id
         this.users[id] = new User(id, name)
-        if (!sid)
-            localStorage.setItem('username', name)
         return (room) => { sendAction('setUserName', { name: name, room: room }) }
     }
     getYourName() {
@@ -184,7 +186,7 @@ class Board {
     moves = 10
 
     updateSize(height, width) {
-        sendAction('setBoardSize', { room: this.id, height: height, width: width })
+        return () => { sendAction('setBoardSize', { room: this.id, height: height, width: width }) }
     }
     addColumn(text) {
         this.columns.push(new Column(text))
@@ -296,15 +298,11 @@ class Card {
         }
         return () => { sendAction('editCard', data) }
     }
-    startEditing(sid) {
-        this.editing = true
-        this.editingBy = sid
-        return () => { sendAction('startEditingCard', { board: this.board, card: this.id, editor: sid }) }
+    startEditing() {
+        sendAction('startEditingCard', { room: this.board, cardId: this.id })
     }
     endEditing() {
-        this.editing = false
-        this.editingBy = null
-        return () => { sendAction('endEditingCard', { board: this.board, card: this.id }) }
+        sendAction('endEditingCard', { room: this.board, cardId: this.id })
     }
     addSticker(id) {
         if (id === 'nosticker')
@@ -336,7 +334,9 @@ decorate(Card, {
     sticker: observable,
     prevX: observable,
     prevY: observable,
-    zindex: observable
+    zindex: observable,
+    editing: observable,
+    editingBy: observable
 })
 
 class User {
@@ -349,8 +349,13 @@ class User {
 }
 
 class Server {
+    constructor() {
+    }
     connected
     URL
+    authenticated
+    redirectUri
+    code
 }
 decorate(Server, {
     connected: observable,

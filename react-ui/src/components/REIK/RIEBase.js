@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 const debug = require('debug')('RIEBase');
 
 export default class RIEBase extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        if (!this.props.propName) throw "RTFM: missing 'propName' prop";
-        if (!this.props.change) throw "RTFM: missing 'change' prop";
-        if (typeof this.props.value == 'undefined') throw "RTFM: missing 'value' prop";
+        if (!this.props.propName) throw new Error("RTFM: missing 'propName' prop");
+        if (!this.props.change) throw new Error("RTFM: missing 'change' prop");
+        if (typeof this.props.value == 'undefined') throw new Error("RTFM: missing 'value' prop");
 
         this.state = {
             editing: this.props.editing,
@@ -20,8 +20,8 @@ export default class RIEBase extends React.Component {
     }
 
     static propTypes = {
-		value: PropTypes.any.isRequired,
-		defaultValue: PropTypes.any,
+        value: PropTypes.any.isRequired,
+        defaultValue: PropTypes.any,
         change: PropTypes.func.isRequired,
         propName: PropTypes.string.isRequired,
         editProps: PropTypes.object,
@@ -45,31 +45,31 @@ export default class RIEBase extends React.Component {
     };
 
     static defaultProps = {
-		shouldStartEditOnDoubleClick: false,
-		defaultValue: 'CLICK TO EDIT',
-	};
+        shouldStartEditOnDoubleClick: false,
+        defaultValue: 'CLICK TO EDIT',
+    };
 
-	getValue = (oldValue = this.props.value) => {
-		const value = (!oldValue && this.props.defaultValue !== undefined) ?
-			typeof this.props.defaultValue === 'function' ?
-				this.props.defaultValue(oldValue) :
-				this.props.defaultValue :
-			oldValue;
+    getValue = (oldValue = this.props.value) => {
+        const value = (!oldValue && this.props.defaultValue !== undefined) ?
+            typeof this.props.defaultValue === 'function' ?
+                this.props.defaultValue(oldValue) :
+                this.props.defaultValue :
+            oldValue;
 
-		return value;
-	};
+        return value;
+    };
 
     doValidations = (value) => {
         debug(`doValidations(${value})`)
-		let isValid;
+        let isValid;
 
-        if(this.props.validate)
+        if (this.props.validate)
             isValid = this.props.validate(value);
-		else if (this.validate)
-			isValid = this.validate(value);
-		else return true
+        else if (this.validate)
+            isValid = this.validate(value);
+        else return true
 
-		this.setState({invalid: !isValid});
+        this.setState({ invalid: !isValid });
 
         return isValid;
     };
@@ -91,22 +91,22 @@ export default class RIEBase extends React.Component {
         debug(`componentWillReceiveProps(${nextProps})`)
         const isNewValue = this.props.value !== nextProps.value
         if (isNewValue && !(nextProps.shouldRemainWhileInvalid && this.state.invalid)) {
-            this.setState({loading: false, editing: false, invalid: false, newValue: null});
+            this.setState({ loading: false, editing: false, invalid: false, newValue: null });
         }
 
         if (nextProps.editing !== this.state.editing) {
-            this.setState({editing: nextProps.editing});
+            this.setState({ editing: nextProps.editing });
         }
     };
 
     commit = (value) => {
-		debug(`commit(${value})`)
+        debug(`commit(${value})`)
 
-        if(!this.state.invalid) {
-			const newValue = this.getValue(value);
+        if (!this.state.invalid) {
+            const newValue = this.getValue(value);
             let newProp = {};
             newProp[this.props.propName] = newValue;
-            this.setState({loading: true, newValue});
+            this.setState({ loading: true, newValue });
             this.props.change(newProp);
         }
     };
@@ -123,8 +123,8 @@ export default class RIEBase extends React.Component {
     };
 
     render = () => {
-		debug(`render()`)
-		const value = this.getValue();
+        debug(`render()`)
+        const value = this.getValue();
 
         return <span {...this.props.defaultProps} tabindex="0" className={this.makeClassString()} onClick={this.elementClick}>{value}</span>;
     };

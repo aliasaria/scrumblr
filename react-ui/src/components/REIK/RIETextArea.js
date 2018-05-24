@@ -33,13 +33,15 @@ export default class RIETextArea extends RIEStatefulBase {
             if (index < lines.length - 1)
                 contents.push(<br key={index} />);
         });
-
-        const editingHandlers = !this.props.shouldStartEditOnDoubleClick ? {
-            onFocus: this.startEditing,
-            onClick: this.startEditing,
-        } : {
-                onDoubleClick: this.startEditing,
-            };
+        let editingHandlers
+        if (!this.props.disabled) {
+            editingHandlers = !this.props.shouldStartEditOnDoubleClick ? {
+                onFocus: this.startEditing,
+                onClick: this.startEditing,
+            } : {
+                    onDoubleClick: this.startEditing,
+                };
+        }
 
         return (
             <span

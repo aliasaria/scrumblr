@@ -10,6 +10,7 @@
     "babel-eslint": "^8.2.5",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
+    "query-string": "^6.2.0",
     "react": "^16.4.1",
     "react-addons-css-transition-group": "^15.6.2",
     "react-dnd": "^5.0.0",
@@ -28,9 +29,15 @@
     "react-scripts": "1.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=8080 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

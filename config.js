@@ -13,7 +13,7 @@ var argv = require('yargs')
 const REDIS_CONNECTION = argv.redis ? argv.redis : 'redis://localhost:6379'
 
 exports.server = {
-	port: argv.port || 8080,
+	port: argv.port || 8081,
 	baseurl: argv.baseurl || '/'
 };
 

@@ -140,7 +140,7 @@ defaultNamespace.on('connection', async function (client) {
 		}
 	}
 
-	client.on('message', function (message) {
+	client.on('message', async function (message) {
 		console.log(message)
 		var clean_data = {};
 		var clean_message = {};
@@ -148,7 +148,6 @@ defaultNamespace.on('connection', async function (client) {
 
 		if (!message.action) return;
 
-		//const room = Object.keys(client.rooms).filter(room => room.startsWith('/'))[0]
 		switch (message.action) {
 			case 'initializeMe':
 				initClient(client, message.data.room);
@@ -317,10 +316,28 @@ defaultNamespace.on('connection', async function (client) {
 						zindex: message.data.zindex
 					}
 				})
+				break;
+			case 'startEditingCard':
+				client.to(message.data.room).send({
+					action: 'cardStartEditing',
+					data: {
+						room: message.data.room, cardId: message.data.cardId, sid: client.id
+					}
+				})
+				break;
+			case 'endEditingCard':
+				client.to(message.data.room).send({
+					action: 'cardEndEditing',
+					data: {
+						room: message.data.room, cardId: message.data.cardId, sid: client.id
+					}
+				})
+				break;
 			default:
 				//console.log('unknown action');
 				break;
 		}
+
 	});
 
 	client.on('disconnect', function () {
@@ -394,13 +411,17 @@ async function initClient(client, room) {
 
 
 function leaveRoom(client) {
-
-	const referer = client.request.headers.referer.split('/')
-	const room = `/${referer[referer.length - 1]}`
-	var msg = {};
-	msg.action = 'leave-announce';
-	msg.data = { sid: client.id, room: room };
-	client.to(room).emit('message', msg)
+	try {
+		const [, r] = client.request.headers.referer.match(/https?:\/\/[\w\.:\d]+\/(\w+)/)
+		const room = `/${r}`
+		var msg = {};
+		msg.action = 'leave-announce';
+		msg.data = { sid: client.id, room: room };
+		client.to(room).emit('message', msg)
+	}
+	catch (err) {
+		console.log(err)
+	}
 }
 
 //----------------CARD FUNCTIONS

@@ -11,10 +11,12 @@ export default class RIEStatefulBase extends RIEBase {
 
     startEditing = () => {
         debug('startEditing')
-        this.props.beforeStart ? this.props.beforeStart() : null;
+        if (this.props.beforeStart)
+            this.props.beforeStart()
         if (this.props.isDisabled) return;
         this.setState({ editing: true });
-        this.props.afterStart ? this.props.afterStart() : null;
+        if (this.props.afterStart)
+            this.props.afterStart()
     };
 
     componentWillReciveProps(nextProps) {
@@ -25,7 +27,8 @@ export default class RIEStatefulBase extends RIEBase {
 
     finishEditing = () => {
         debug('finishEditing')
-        this.props.beforeFinish ? this.props.beforeFinish() : null;
+        if (this.props.beforeFinish)
+            this.props.beforeFinish()
 
         let newValue = ReactDOM.findDOMNode(this.refs.input).value;
         const valid = this.doValidations(newValue);
@@ -37,7 +40,8 @@ export default class RIEStatefulBase extends RIEBase {
         else
             this.cancelEditing();
 
-        this.props.afterFinish ? this.props.afterFinish() : null;
+        if (this.props.afterFinish)
+            this.props.afterFinish()
     };
 
     cancelEditing = () => {
