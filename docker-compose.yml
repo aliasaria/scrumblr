@@ -4,6 +4,10 @@ services:
     image: scrumblr:${version}
     build:
       context: ./
+      args:
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+        - no_proxy=${no_proxy}
     environment:
       - http_proxy=${http_proxy}
       - https_proxy=${https_proxy}
