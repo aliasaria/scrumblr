@@ -21,13 +21,13 @@ API:
 
 what is it
 ----------
-[scrumblr](http://scrumblr.ca) is a web-based simulation of a physical agile kanban board that supports real-time collaboration. it is built using node.js, websockets (using socket.io), CSS3, and ~~jquery~~ React.JS. i hope you like it.
+[scrumblr](http://scrumblr.io) is a web-based simulation of a physical agile kanban board that supports real-time collaboration. it is built using node.js, websockets (using socket.io), CSS3, and ~~jquery~~ React.JS. i hope you like it.
 
 ![Wellca Board](http://scrumblr.ca/images/screenshot.png)
 
 you can play with a demo here:
 
-- [scrumblr.ca/demo](http://scrumblr.ca/demo)
+- [scrumblr.io/demo](http://scrumblr.io/demo)
 
 And view a video here:
 
@@ -36,7 +36,7 @@ And view a video here:
 use scrumblr
 ------------
 
-if you'd like to use scrumblr go to [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
+if you'd like to use scrumblr go to [scrumblr.io](http://scrumblr.io). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.io/thisisoursecretboard23423242*
 
 alternatively, you can follow the instructions below to setup scrumblr yourself. it is very simple -- it just uses redis and node.js.
 
