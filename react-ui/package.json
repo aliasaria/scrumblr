@@ -1,0 +1,36 @@
+{
+  "name": "react-ui",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+    "url": "http://github.com/mannyhuerta/scrumblr"
+  },
+  "author": "Manny Huerta",
+  "dependencies": {
+    "babel-eslint": "^8.2.5",
+    "mobx": "^5.0.3",
+    "mobx-react": "^5.2.3",
+    "react": "^16.4.1",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-dnd": "^5.0.0",
+    "react-dnd-html5-backend": "^5.0.1",
+    "react-dom": "^16.4.1",
+    "react-draggable": "^3.0.5",
+    "react-resizable": "^1.7.5",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-transition-group": "^2.4.0",
+    "socket.io-client": "^2.1.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@attently/riek": "^2.0.1",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

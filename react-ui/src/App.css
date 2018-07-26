@@ -1,0 +1,23 @@
+body {
+	font-family: 'Helvetica Neue Light', arial, serif;
+	font-size: 13px;
+	color: #333;
+	background-color: #ddd;
+	xbackground-image: -webkit-gradient(radial, 265 118, 456, 147 0, 29, from(#DDDDDD), to(#f3f3f3));
+
+	padding-left: 10px;
+
+	xheight: 1400px;
+	xwidth: 2000px;
+
+
+
+	user-select: none;
+	-o-user-select:none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+
+	background-image: url('images/concrete_wall_2_2.png');
+
+}

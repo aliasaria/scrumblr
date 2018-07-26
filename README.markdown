@@ -1,9 +1,27 @@
 scrumblr
 ========
 
+update 7/2018 - [mannyhuerta](https://www.github.com/mannyhuerta)
+----------
+scrumblr has been ported to ReactJS.  this is in effort to make scrumblr more maintainable and easier to enhance using up to date, supported components. here's more changes:
+
+UI:
+- ported to ReactJS v16
+- mobX for state management
+- react-dnd for dragging and dropping
+- react-draggable for plain dragging
+- react-resizable for resizing the board
+- react-router for routing
+- REIK for in-line editing
+
+API:
+- socket.io upgraded to v2 (native rooms)
+- added socket.io redis adaptor for scaling
+
+
 what is it
 ----------
-[scrumblr](http://scrumblr.ca) is a web-based simulation of a physical agile kanban board that supports real-time collaboration. it is built using node.js, websockets (using socket.io), CSS3, and jquery. i hope you like it.
+[scrumblr](http://scrumblr.ca) is a web-based simulation of a physical agile kanban board that supports real-time collaboration. it is built using node.js, websockets (using socket.io), CSS3, and ~~jquery~~ React.JS. i hope you like it.
 
 ![Wellca Board](http://scrumblr.ca/images/screenshot.png)
 

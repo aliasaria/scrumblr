@@ -6,7 +6,7 @@ var boardInitialized = false;
 var keyTrap = null;
 
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
-var socket = io.connect({path: baseurl + "/socket.io"});
+var socket = io.connect({ path: baseurl + "/socket.io" });
 
 //an action has happened, send it to the
 //server
@@ -21,7 +21,7 @@ function sendAction(a, d) {
     socket.json.send(message);
 }
 
-socket.on('connect', function() {
+socket.on('connect', function () {
     //console.log('successful socket.io connect');
 
     //let the final part of the path be the room name
@@ -31,18 +31,18 @@ socket.on('connect', function() {
     sendAction('joinRoom', room);
 });
 
-socket.on('disconnect', function() {
+socket.on('disconnect', function () {
     blockUI("Server disconnected. Refresh page to try and reconnect...");
     //$('.blockOverlay').click($.unblockUI);
 });
 
-socket.on('message', function(data) {
+socket.on('message', function (data) {
     console.log(data)
     getMessage(data);
 });
 
 function unblockUI() {
-    $.unblockUI({fadeOut: 50});
+    $.unblockUI({ fadeOut: 50 });
 }
 
 function blockUI(message) {
@@ -102,7 +102,7 @@ function getMessage(m) {
 
         case 'deleteCard':
             $("#" + data.id).fadeOut(500,
-                function() {
+                function () {
                     $(this).remove();
                 }
             );
@@ -157,7 +157,7 @@ function getMessage(m) {
 
 }
 
-$(document).bind('keyup', function(event) {
+$(document).bind('keyup', function (event) {
     keyTrap = event.which;
 });
 
@@ -195,20 +195,20 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         snapTolerance: 5,
         containment: [0, 0, 2000, 2000],
         stack: ".card",
-        start: function(event, ui) {
+        start: function (event, ui) {
             keyTrap = null;
         },
-        drag: function(event, ui) {
+        drag: function (event, ui) {
             if (keyTrap == 27) {
                 ui.helper.css(ui.originalPosition);
                 return false;
             }
         },
-		handle: "div.content"
+        handle: "div.content"
     });
 
     //After a drag:
-    card.bind("dragstop", function(event, ui) {
+    card.bind("dragstop", function (event, ui) {
         if (keyTrap == 27) {
             keyTrap = null;
             return;
@@ -225,7 +225,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
 
     card.children(".droppable").droppable({
         accept: '.sticker',
-        drop: function(event, ui) {
+        drop: function (event, ui) {
             var stickerId = ui.draggable.attr("id");
             var cardId = $(this).parent().attr('id');
 
@@ -245,7 +245,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     });
 
     var speed = Math.floor(Math.random() * 1000);
-    if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+    if (typeof (animationspeed) != 'undefined') speed = animationspeed;
 
     var startPosition = $("#create-card").position();
 
@@ -258,27 +258,27 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     }, speed);
 
     card.hover(
-        function() {
+        function () {
             $(this).addClass('hover');
             $(this).children('.card-icon').fadeIn(10);
         },
-        function() {
+        function () {
             $(this).removeClass('hover');
             $(this).children('.card-icon').fadeOut(150);
         }
     );
 
     card.children('.card-icon').hover(
-        function() {
+        function () {
             $(this).addClass('card-icon-hover');
         },
-        function() {
+        function () {
             $(this).removeClass('card-icon-hover');
         }
     );
 
     card.children('.delete-card-icon').click(
-        function() {
+        function () {
             $("#" + id).remove();
             //notify server of delete
             sendAction('deleteCard', {
@@ -287,18 +287,18 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         }
     );
 
-    card.children('.content').editable(function(value, settings) {
+    card.children('.content').editable(function (value, settings) {
         onCardChange(id, value);
         return (value);
     }, {
-        type: 'textarea',
-        submit: 'OK',
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        placeholder: 'Double Click to Edit.',
-        onblur: 'submit',
-        event: 'dblclick', //event: 'mouseover'
-    });
+            type: 'textarea',
+            submit: 'OK',
+            style: 'inherit',
+            cssclass: 'card-edit-form',
+            placeholder: 'Double Click to Edit.',
+            onblur: 'submit',
+            event: 'dblclick', //event: 'mouseover'
+        });
 
     //add applicable sticker
     if (sticker !== null)
@@ -414,20 +414,20 @@ function drawNewColumn(columnName) {
         '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
         '" class="editable">' + columnName + '</h2></td>');
 
-    $('.editable').editable(function(value, settings) {
+    $('.editable').editable(function (value, settings) {
         onColumnChange(this.id, value);
         return (value);
     }, {
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        type: 'textarea',
-        placeholder: 'New',
-        onblur: 'submit',
-        width: '',
-        height: '',
-        xindicator: '<img src="images/ajax-loader.gif">',
-        event: 'dblclick', //event: 'mouseover'
-    });
+            style: 'inherit',
+            cssclass: 'card-edit-form',
+            type: 'textarea',
+            placeholder: 'New',
+            onblur: 'submit',
+            width: '',
+            height: '',
+            xindicator: '<img src="images/ajax-loader.gif">',
+            event: 'dblclick', //event: 'mouseover'
+        });
 
     $('.col:last').fadeIn(1500);
 
@@ -440,7 +440,7 @@ function onColumnChange(id, text) {
     //console.log(id + " " + text );
 
     //Get the names of all the columns right from the DOM
-    $('.col').each(function() {
+    $('.col').each(function () {
 
         //get ID of current column we are traversing over
         var thisID = $(this).children("h2").attr('id');
@@ -460,7 +460,7 @@ function displayRemoveColumn() {
     if (totalcolumns <= 0) return false;
 
     $('.col:last').fadeOut(150,
-        function() {
+        function () {
             $(this).remove();
         }
     );
@@ -565,10 +565,11 @@ function setName(name) {
 }
 
 function displayInitialUsers(users) {
-    for (var i in users) {
-        //console.log(users);
-        displayUserJoined(users[i].sid, users[i].user_name);
-    }
+    if (users)
+        for (var i in users) {
+            if (users[i])
+                displayUserJoined(users[i].sid, users[i].user_name);
+        }
 }
 
 function displayUserJoined(sid, user_name) {
@@ -576,7 +577,7 @@ function displayUserJoined(sid, user_name) {
     if (user_name)
         name = user_name;
     else
-        name = sid.substring(0, 5);
+        name = sid ? sid.substring(0, 5) : 'unknown';
 
 
     $('#names-ul').append('<li id="user-' + sid + '">' + name + '</li>');
@@ -591,7 +592,7 @@ function displayUserLeft(sid) {
 
     var id = '#user-' + sid.toString();
 
-    $('#names-ul').children(id).fadeOut(1000, function() {
+    $('#names-ul').children(id).fadeOut(1000, function () {
         $(this).remove();
     });
 }
@@ -623,9 +624,9 @@ function resizeBoard(size) {
 
 function calcCardOffset() {
     var offsets = {};
-    $(".card").each(function() {
+    $(".card").each(function () {
         var card = $(this);
-        $(".col").each(function(i) {
+        $(".col").each(function (i) {
             var col = $(this);
             if (col.offset().left + col.outerWidth() > card.offset().left +
                 card.outerWidth() || i === $(".col").size() - 1) {
@@ -645,7 +646,7 @@ function calcCardOffset() {
 //doSync is false if you don't want to synchronize
 //with all the other users who are in this room
 function adjustCard(offsets, doSync) {
-    $(".card").each(function() {
+    $(".card").each(function () {
         var card = $(this);
         var offset = offsets[this.id];
         if (offset) {
@@ -680,11 +681,11 @@ function adjustCard(offsets, doSync) {
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
-$(function() {
+$(function () {
 
 
-	//disable image dragging
-	//window.ondragstart = function() { return false; };
+    //disable image dragging
+    //window.ondragstart = function() { return false; };
 
 
     if (boardInitialized === false)
@@ -694,7 +695,7 @@ $(function() {
 
 
     $("#create-card")
-        .click(function() {
+        .click(function () {
             var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
             uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
             //alert(uniqueID);
@@ -709,7 +710,7 @@ $(function() {
 
 
     // Style changer
-    $("#smallify").click(function() {
+    $("#smallify").click(function () {
         if (currentTheme == "bigcards") {
             changeThemeTo('smallcards');
         } else if (currentTheme == "smallcards") {
@@ -730,23 +731,23 @@ $(function() {
 
 
     $('#icon-col').hover(
-        function() {
+        function () {
             $('.col-icon').fadeIn(10);
         },
-        function() {
+        function () {
             $('.col-icon').fadeOut(150);
         }
     );
 
     $('#add-col').click(
-        function() {
+        function () {
             createColumn('New');
             return false;
         }
     );
 
     $('#delete-col').click(
-        function() {
+        function () {
             deleteColumn();
             return false;
         }
@@ -767,7 +768,7 @@ $(function() {
 
 
 
-    $("#yourname-input").focus(function() {
+    $("#yourname-input").focus(function () {
         if ($(this).val() == 'unknown') {
             $(this).val("");
         }
@@ -776,7 +777,7 @@ $(function() {
 
     });
 
-    $("#yourname-input").blur(function() {
+    $("#yourname-input").blur(function () {
         if ($(this).val() === "") {
             $(this).val('unknown');
         }
@@ -790,7 +791,7 @@ $(function() {
 
     $("#yourname-li").hide();
 
-    $("#yourname-input").keypress(function(e) {
+    $("#yourname-input").keypress(function (e) {
         code = (e.keyCode ? e.keyCode : e.which);
         if (code == 10 || code == 13) {
             $(this).blur();
@@ -814,16 +815,16 @@ $(function() {
     });
 
     //A new scope for precalculating
-    (function() {
+    (function () {
         var offsets;
 
-        $(".board-outline").bind("resizestart", function() {
+        $(".board-outline").bind("resizestart", function () {
             offsets = calcCardOffset();
         });
-        $(".board-outline").bind("resize", function(event, ui) {
+        $(".board-outline").bind("resize", function (event, ui) {
             adjustCard(offsets, false);
         });
-        $(".board-outline").bind("resizestop", function(event, ui) {
+        $(".board-outline").bind("resizestop", function (event, ui) {
             boardResizeHappened(event, ui);
             adjustCard(offsets, true);
         });
