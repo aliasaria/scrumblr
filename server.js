@@ -119,6 +119,10 @@ io.sockets.on('connection', function (client) {
 			case 'initializeMe':
 				initClient(client);
 				break;
+				
+			case 'passwordValidated':
+				initUser(client);
+				break;
 
 			case 'joinRoom':
 				joinRoom(client, message.data, function(clients) {
@@ -127,6 +131,23 @@ io.sockets.on('connection', function (client) {
 
 				});
 
+				break;
+				
+			case 'clearPassword':
+				getRoom( client, function(room) {
+					db.clearPassword(room, null);
+				});
+				break;
+				
+			case 'setPassword':
+			
+				if (message.data === null || message.data.length == 0) {
+					break;
+				}
+			
+				getRoom( client, function(room) {
+					db.setPassword(room, message.data);
+				});
 				break;
 
 			case 'moveCard':
@@ -178,7 +199,6 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'editCard':
-
 				clean_data = {};
 				clean_data.value = scrub(message.data.value);
 				clean_data.id = scrub(message.data.id);
@@ -264,6 +284,20 @@ io.sockets.on('connection', function (client) {
 
 				broadcastToRoom( client, clean_message );
 				break;
+				
+			case 'changeFont':
+				clean_message = {};
+				clean_message.data = message.data;
+			
+				getRoom( client, function(room) {
+					db.setFont( room, message.data );
+				});
+				
+				clean_message.action = 'changeFont';
+				
+				broadcastToRoom( client, clean_message );
+				break;
+				
 
 			case 'setUserName':
 				clean_message = {};
@@ -290,7 +324,6 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			case 'setBoardSize':
-
 				var size = {};
 				size.width = scrub(message.data.width);
 				size.height = scrub(message.data.height);
@@ -303,7 +336,7 @@ io.sockets.on('connection', function (client) {
 				break;
 
 			default:
-				//console.log('unknown action');
+				// console.log('unknown action');
 				break;
 		}
 	});
@@ -326,30 +359,20 @@ io.sockets.on('connection', function (client) {
 **************/
 function initClient ( client )
 {
-	//console.log ('initClient Started');
 	getRoom(client, function(room) {
+		
+		
+		db.getFont( room, function(font) {
 
-		db.getAllCards( room , function (cards) {
-
+			if (font === null) font = {font: 'Covered By Your Grace', size: 12};
+			
 			client.json.send(
 				{
-					action: 'initCards',
-					data: cards
-				}
-			);
-
-		});
-
-
-		db.getAllColumns ( room, function (columns) {
-			client.json.send(
-				{
-					action: 'initColumns',
-					data: columns
+					action: 'changeFont',
+					data: font
 				}
 			);
 		});
-
 
 		db.getTheme( room, function(theme) {
 
@@ -374,6 +397,48 @@ function initClient ( client )
 				);
 			}
 		});
+		
+		db.getAllColumns ( room, function (columns) {
+				
+			client.json.send(
+				{
+					action: 'initColumns',	
+					data: columns
+				}
+			);
+		});
+		
+		db.getPassword( room, function(passwrd) {
+			
+			if (passwrd !== null) {
+				client.json.send (
+					{
+						action: 'requirePassword',
+						data: passwrd
+					}
+				);
+				return;
+			}
+			
+			initUser(client);
+		});
+	});
+}
+
+function initUser(client) {
+	
+	getRoom(client, function(room) {
+				
+		db.getAllCards( room , function (cards) {
+
+			client.json.send(
+				{
+					action: 'initCards',
+					data: cards
+				}
+			);
+
+		});
 
 		roommates_clients = rooms.room_clients(room);
 		roommates = [];
@@ -391,14 +456,12 @@ function initClient ( client )
 			}
 		}
 
-		//console.log('initialusers: ' + roommates);
 		client.json.send(
 			{
 				action: 'initialUsers',
 				data: roommates
 			}
 		);
-
 	});
 }
 
@@ -470,6 +533,7 @@ function setUserName ( client, name )
 
 function cleanAndInitializeDemoRoom()
 {
+	console.log('Initializing demo room');
 	// DUMMY DATA
 	db.clearRoom('/demo', function() {
 		db.createColumn( '/demo', 'Not Started' );
@@ -498,4 +562,4 @@ function cleanAndInitializeDemoRoom()
 // (runs only once on startup)
 var db = new data(function() {
 	cleanAndInitializeDemoRoom();
-});
+})
