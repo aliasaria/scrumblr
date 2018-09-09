@@ -89,6 +89,11 @@ function getMessage(m) {
             moveCard($("#" + data.id), data.position);
             break;
 
+        case 'changeCardColour':
+            card = $('#' + data.id + ' .card-image');
+            card.attr("src","images/" + data.colour + "-card.png");
+            break;
+
         case 'initCards':
             initCards(data);
             break;
@@ -227,6 +232,22 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         drop: function(event, ui) {
             var stickerId = ui.draggable.attr("id");
             var cardId = $(this).parent().attr('id');
+
+            if (stickerId.substr(stickerId.length - 4) === "card") {
+                var colour = stickerId.substr(0, stickerId.length - 5);
+                var action = "changeCardColour";
+                var data = {
+                   id: cardId,
+                   colour: colour
+                };
+                
+                sendAction(action, data);
+                var card = $('#' + data.id + ' .card-image');
+                card.attr("src","images/" + colour + "-card.png");
+                
+                return;
+            }
+            
 
             addSticker(cardId, stickerId);
 
@@ -702,7 +723,7 @@ $(function() {
                 '',
                 58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
                 rotation,
-                randomCardColour());
+                'white');
         });
 
 

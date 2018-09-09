@@ -154,6 +154,27 @@ io.sockets.on('connection', function (client) {
 
 				break;
 
+			case 'changeCardColour':
+				
+				// console.log("-----" + message.data.id);
+				// console.log(JSON.stringify(message.data));
+				
+				message_out = {
+					action: message.action,
+					data: {
+						id: scrub(message.data.id),
+						colour: scrub(message.data.colour)
+						}
+					};
+
+				broadcastToRoom( client, message_out );
+
+				getRoom(client, function(room) {
+					db.cardSetColour( room , message.data.id, message.data.colour);
+				});
+
+				break;
+
 			case 'createCard':
 				data = message.data;
 				clean_data = {};

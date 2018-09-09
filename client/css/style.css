@@ -310,6 +310,19 @@ xopacity: .5;
 }
 
 
+#white-card {
+	background-image: url('../images/stickers/card-white.png');
+}
+#yellow-card {
+	background-image: url('../images/stickers/card-yellow.png');
+}
+#green-card {
+	background-image: url('../images/stickers/card-green.png');
+}
+#blue-card {
+	background-image: url('../images/stickers/card-blue.png');
+}
+
 #sticker-red {
 	background-image: url('../images/stickers/sticker-red.png');
 }
