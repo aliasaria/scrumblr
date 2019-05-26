@@ -286,18 +286,35 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         }
     );
 
-    card.children('.content').editable(function(value, settings) {
-        onCardChange(id, value);
-        return (value);
-    }, {
-        type: 'textarea',
-        submit: 'OK',
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        placeholder: 'Double Click to Edit.',
-        onblur: 'submit',
-        event: 'dblclick', //event: 'mouseover'
-    });
+    //to edit note, single click on mobile and double click on PC
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	card.children('.content').editable(function(value, settings) {
+        	onCardChange(id, value);
+	        return (value);
+	}, {
+		type: 'textarea',
+	        submit: 'OK',
+	        style: 'inherit',
+	        cssclass: 'card-edit-form',
+	        placeholder: 'Click to Edit.',
+	        onblur: 'submit',
+		event: 'click',
+	    });	
+    }
+    else {
+	card.children('.content').editable(function(value, settings) {
+                onCardChange(id, value);
+                return (value);
+            }, {
+                type: 'textarea',
+                submit: 'OK',
+                style: 'inherit',
+                cssclass: 'card-edit-form',
+                placeholder: 'Double Click to Edit.',
+                onblur: 'submit',
+                event: 'dblclick', 
+            }); 
+    }
 
     //add applicable sticker
     if (sticker !== null)
