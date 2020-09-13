@@ -1,6 +1,6 @@
 exports.database = {
 	type: 'mongodb',
-	connUrl: 'mongodb+srv://paullam:gkkxUUv6zbUEZKp1@cluster0.o8qql.mongodb.net/scrumblr?retryWrites=true&w=majority'
+	connUrl: 'mongodb://localhost:27017/scrumblr'
 };
 
 var argv = require('yargs')
