@@ -526,7 +526,7 @@ function initColumns(columnArray) {
 
 function changeThemeTo(theme) {
     currentTheme = theme;
-    $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
+    $("link[title=cardsize]").attr("href", "css/" + theme ? theme : "bigCards" + ".css");
 }
 
 
@@ -613,8 +613,8 @@ function boardResizeHappened(event, ui) {
 
 function resizeBoard(size) {
     $(".board-outline").animate({
-        height: size.height,
-        width: size.width
+        height: size? size.height: 768,
+        width: size? size.width : 1024
     });
 }
 //////////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
  SYSTEM INCLUDES
 **************/
 var	http = require('http');
-var sys = require('sys');
+var util = require('util');
 var	async = require('async');
 var sanitizer = require('sanitizer');
 var compression = require('compression');
@@ -106,7 +106,7 @@ io.sockets.on('connection', function (client) {
 
 
 	client.on('message', function( message ){
-		//console.log(message.action + " -- " + sys.inspect(message.data) );
+		//console.log(message.action + " -- " + util.inspect(message.data) );
 
 		var clean_data = {};
 		var clean_message = {};
