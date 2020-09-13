@@ -18,6 +18,7 @@
     "compression": "^1.1.0",
     "express": "4.x",
     "jade": "~1.5.0",
+    "mongodb": "^3.6.2",
     "redis": "^2.4.2",
     "sanitizer": "~0.1.1",
     "simplesets": "~1.2.0",
