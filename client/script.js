@@ -842,3 +842,7 @@ $(function() {
 
 
 });
+
+function saveSession() {
+    alert("Functionality coming soon")
+}
