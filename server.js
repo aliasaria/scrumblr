@@ -68,19 +68,33 @@ router.get('/', function(req, res) {
 });
 
 router.get('/register', function(req, res) {
-	//console.log(req.header('host'));
-	url = req.header('host') + req.baseUrl;
+	res.render('register.jade', {});
+});
 
-	res.render('register.jade', {
-		url: url
+router.get('/profile/:username', function(req, res) {
+	let username = req.params.username;
+	db.getUser(username,function(user){
+		let data = user ? user : {} ;
+		res.render('profile.jade', {data:data});
 	});
+	
 });
 
 router.post('/doRegister', function(req, res){
-	let roomname = req.body.roomname;
 	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
 	let db = new data(function() {
-		db.checkAndCreateUser(user);
+		db.checkIfUserExists(user, function(isExists) {
+			if(isExists) {
+				res.redirect('/register?userExists=true');
+			}
+			else {
+				db.createUser(user, function() {
+					console.log(user);
+					res.redirect('/profile/'+user.username);
+				});
+				
+			}
+		});
 	});
 });
 
