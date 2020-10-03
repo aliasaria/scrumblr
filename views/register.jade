@@ -1,0 +1,15 @@
+doctype html
+html(lang='en')
+  head
+    title Register Scrumblr+
+  body
+    h1 Register Scrumblr+
+      form(method='post' action='/doRegister')
+        p
+          input(name='displayName' type='text' placeholder='your display name, e.g. Tommy, Darth Vador, etc.')
+        p
+          input(name='username' type='text' placeholder='username')
+        p
+          input(name='password' type='password' placeholder='password')
+        p
+          input(type='submit')
