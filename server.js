@@ -26,6 +26,8 @@ var sids_to_user_names = [];
  SETUP EXPRESS
 **************/
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
 var router = express.Router();
 
 app.use(compression());
@@ -65,6 +67,36 @@ router.get('/', function(req, res) {
 	});
 });
 
+router.get('/register', function(req, res) {
+	res.render('register.jade', {});
+});
+
+router.get('/profile/:username', function(req, res) {
+	let username = req.params.username;
+	db.getUser(username,function(user){
+		let data = user ? user : {} ;
+		res.render('profile.jade', {data:data});
+	});
+	
+});
+
+router.post('/doRegister', function(req, res){
+	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
+	let db = new data(function() {
+		db.checkIfUserExists(user, function(isExists) {
+			if(isExists) {
+				res.redirect('/register?userExists=true');
+			}
+			else {
+				db.createUser(user, function() {
+					console.log(user);
+					res.redirect('/profile/'+user.username);
+				});
+				
+			}
+		});
+	});
+});
 
 router.get('/demo', function(req, res) {
 	res.render('index.jade', {
@@ -478,7 +510,6 @@ function cleanAndInitializeDemoRoom()
 		db.createColumn( '/demo', 'Review' );
 		db.createColumn( '/demo', 'Complete' );
 
-
 		createCard('/demo', 'card1', 'Hello this is fun', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'yellow');
 		createCard('/demo', 'card2', 'Hello this is a new story.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'white');
 		createCard('/demo', 'card3', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'blue');
@@ -490,6 +521,7 @@ function cleanAndInitializeDemoRoom()
 		createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
 	});
 }
+
 //
 
 /**************
@@ -497,5 +529,5 @@ function cleanAndInitializeDemoRoom()
 **************/
 // (runs only once on startup)
 var db = new data(function() {
-	cleanAndInitializeDemoRoom();
+	//cleanAndInitializeDemoRoom();
 });
