@@ -26,6 +26,8 @@ var sids_to_user_names = [];
  SETUP EXPRESS
 **************/
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
 var router = express.Router();
 
 app.use(compression());
@@ -53,7 +55,7 @@ var io = require('socket.io')(server, {
  ROUTES
 **************/
 router.get('/', function(req, res) {
-	//console.log(req.header('host'));
+	console.log(req.header('host'));
 	url = req.header('host') + req.baseUrl;
 
 	var connected = io.sockets.connected;
@@ -65,6 +67,36 @@ router.get('/', function(req, res) {
 	});
 });
 
+router.get('/register', function(req, res) {
+	res.render('register.jade', {});
+});
+
+router.get('/profile/:username', function(req, res) {
+	let username = req.params.username;
+	db.getUser(username,function(user){
+		let data = user ? user : {} ;
+		res.render('profile.jade', {data:data});
+	});
+	
+});
+
+router.post('/doRegister', function(req, res){
+	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
+	let db = new data(function() {
+		db.checkIfUserExists(user, function(isExists) {
+			if(isExists) {
+				res.redirect('/register?userExists=true');
+			}
+			else {
+				db.createUser(user, function() {
+					console.log(user);
+					res.redirect('/profile/'+user.username);
+				});
+				
+			}
+		});
+	});
+});
 
 router.get('/demo', function(req, res) {
 	res.render('index.jade', {
@@ -84,7 +116,7 @@ router.get('/:id', function(req, res){
  SOCKET.I0
 **************/
 io.sockets.on('connection', function (client) {
-	//santizes text
+	//sanitizes text
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
 		{
@@ -106,7 +138,7 @@ io.sockets.on('connection', function (client) {
 
 
 	client.on('message', function( message ){
-		//console.log(message.action + " -- " + util.inspect(message.data) );
+		console.log(message.action + " -- " + util.inspect(message.data) );
 
 		var clean_data = {};
 		var clean_message = {};
@@ -163,9 +195,11 @@ io.sockets.on('connection', function (client) {
 				clean_data.y = scrub(data.y);
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
+				clean_data.stickerId = scrub(data.stickerId);
+
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
 				});
 
 				message_out = {
@@ -197,6 +231,30 @@ io.sockets.on('connection', function (client) {
 
 				break;
 
+			case 'updateCard':
+				data = message.data;
+				clean_data = {};
+				clean_data.text = scrub(data.text);
+				clean_data.id = scrub(data.id);
+				clean_data.x = scrub(data.x);
+				clean_data.y = scrub(data.y);
+				clean_data.rot = scrub(data.rot);
+				clean_data.colour = scrub(data.colour);
+				clean_data.stickerId = scrub(data.stickerId);
+
+
+				getRoom(client, function(room) {
+					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
+				});
+
+				message_out = {
+					action: 'updateCard',
+					data: clean_data
+				};
+
+				//report to all other browsers
+				broadcastToRoom( client, message_out );
+				break;
 
 			case 'deleteCard':
 				clean_message = {
@@ -326,7 +384,7 @@ io.sockets.on('connection', function (client) {
 **************/
 function initClient ( client )
 {
-	//console.log ('initClient Started');
+	console.log ('initClient Started');
 	getRoom(client, function(room) {
 
 		db.getAllCards( room , function (cards) {
@@ -391,7 +449,7 @@ function initClient ( client )
 			}
 		}
 
-		//console.log('initialusers: ' + roommates);
+		console.log('initialusers: ' + roommates);
 		client.json.send(
 			{
 				action: 'initialUsers',
@@ -426,7 +484,7 @@ function joinRoom (client, room, successFunction)
 
 function leaveRoom (client)
 {
-	//console.log (client.id + ' just left');
+	console.log (client.id + ' just left');
 	var msg = {};
 	msg.action = 'leave-announce';
 	msg.data	= { sid: client.id };
@@ -452,12 +510,12 @@ const WorkStatus = {
     DONE: 2
 }
 
-function createCard( room, id, text, x, y, rot, colour ) {
+function createCard( room, id, text, x, y, rot, colour, stickerId ) {
 	var remainhrs = {
 		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
 		rhrs: 100
 	}
-	
+
 	var card = {
 		id: id,
 		userid: 0,
@@ -472,11 +530,25 @@ function createCard( room, id, text, x, y, rot, colour ) {
 		status: WorkStatus.TODO,
 		priority: WorkPriority.LOW,
 		createtime: new Date().format("yyyy-MM-dd hh:mm:ss"),
-		sticker: null
+		sticker: stickerId
 	};
 
 	db.createCard(room, id, card);
 	db.createRemainhrs(room, id, remainhrs);
+}
+
+function updateCard( room, id, text, x, y, rot, colour, stickerId ) {
+	var card = {
+		id: id,
+		colour: colour,
+		rot: rot,
+		x: x,
+		y: y,
+		text: text,
+		sticker: stickerId
+	};
+
+	db.cardUpdate(room, id, card);
 }
 
 function roundRand( max )
@@ -616,7 +688,7 @@ function getBurndownchart(cards)
 function getRoom( client , callback )
 {
 	room = rooms.get_room( client );
-	//console.log( 'client: ' + client.id + " is in " + room);
+	console.log( 'client: ' + client.id + " is in " + room);
 	callback(room);
 }
 
@@ -625,7 +697,7 @@ function setUserName ( client, name )
 {
 	client.user_name = name;
 	sids_to_user_names[client.id] = name;
-	//console.log('sids to user names: ');
+	console.log('sids to user names: ');
 	console.dir(sids_to_user_names);
 }
 
@@ -651,6 +723,7 @@ function cleanAndInitializeDemoRoom()
 		//createCard('/demo', 'card8', '.', roundRand(600), roundRand(300), Math.random() * 10 - 5, 'green');
 	});
 }
+
 //
 
 /**************
@@ -658,5 +731,5 @@ function cleanAndInitializeDemoRoom()
 **************/
 // (runs only once on startup)
 var db = new data(function() {
-	cleanAndInitializeDemoRoom();
+	//cleanAndInitializeDemoRoom();
 });
