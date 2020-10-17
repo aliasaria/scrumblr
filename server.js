@@ -55,7 +55,7 @@ var io = require('socket.io')(server, {
  ROUTES
 **************/
 router.get('/', function(req, res) {
-	//console.log(req.header('host'));
+	console.log(req.header('host'));
 	url = req.header('host') + req.baseUrl;
 
 	var connected = io.sockets.connected;
@@ -116,7 +116,7 @@ router.get('/:id', function(req, res){
  SOCKET.I0
 **************/
 io.sockets.on('connection', function (client) {
-	//santizes text
+	//sanitizes text
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
 		{
@@ -138,7 +138,7 @@ io.sockets.on('connection', function (client) {
 
 
 	client.on('message', function( message ){
-		//console.log(message.action + " -- " + util.inspect(message.data) );
+		console.log(message.action + " -- " + util.inspect(message.data) );
 
 		var clean_data = {};
 		var clean_message = {};
@@ -195,9 +195,11 @@ io.sockets.on('connection', function (client) {
 				clean_data.y = scrub(data.y);
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
+				clean_data.stickerId = scrub(data.stickerId);
+
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
 				});
 
 				message_out = {
@@ -229,6 +231,30 @@ io.sockets.on('connection', function (client) {
 
 				break;
 
+			case 'updateCard':
+				data = message.data;
+				clean_data = {};
+				clean_data.text = scrub(data.text);
+				clean_data.id = scrub(data.id);
+				clean_data.x = scrub(data.x);
+				clean_data.y = scrub(data.y);
+				clean_data.rot = scrub(data.rot);
+				clean_data.colour = scrub(data.colour);
+				clean_data.stickerId = scrub(data.stickerId);
+
+
+				getRoom(client, function(room) {
+					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
+				});
+
+				message_out = {
+					action: 'updateCard',
+					data: clean_data
+				};
+
+				//report to all other browsers
+				broadcastToRoom( client, message_out );
+				break;
 
 			case 'deleteCard':
 				clean_message = {
@@ -358,7 +384,7 @@ io.sockets.on('connection', function (client) {
 **************/
 function initClient ( client )
 {
-	//console.log ('initClient Started');
+	console.log ('initClient Started');
 	getRoom(client, function(room) {
 
 		db.getAllCards( room , function (cards) {
@@ -423,7 +449,7 @@ function initClient ( client )
 			}
 		}
 
-		//console.log('initialusers: ' + roommates);
+		console.log('initialusers: ' + roommates);
 		client.json.send(
 			{
 				action: 'initialUsers',
@@ -447,7 +473,7 @@ function joinRoom (client, room, successFunction)
 
 function leaveRoom (client)
 {
-	//console.log (client.id + ' just left');
+	console.log (client.id + ' just left');
 	var msg = {};
 	msg.action = 'leave-announce';
 	msg.data	= { sid: client.id };
@@ -461,7 +487,7 @@ function broadcastToRoom ( client, message ) {
 }
 
 //----------------CARD FUNCTIONS
-function createCard( room, id, text, x, y, rot, colour ) {
+function createCard( room, id, text, x, y, rot, colour, stickerId ) {
 	var card = {
 		id: id,
 		colour: colour,
@@ -469,10 +495,24 @@ function createCard( room, id, text, x, y, rot, colour ) {
 		x: x,
 		y: y,
 		text: text,
-		sticker: null
+		sticker: stickerId
 	};
 
 	db.createCard(room, id, card);
+}
+
+function updateCard( room, id, text, x, y, rot, colour, stickerId ) {
+	var card = {
+		id: id,
+		colour: colour,
+		rot: rot,
+		x: x,
+		y: y,
+		text: text,
+		sticker: stickerId
+	};
+
+	db.cardUpdate(room, id, card);
 }
 
 function roundRand( max )
@@ -487,7 +527,7 @@ function roundRand( max )
 function getRoom( client , callback )
 {
 	room = rooms.get_room( client );
-	//console.log( 'client: ' + client.id + " is in " + room);
+	console.log( 'client: ' + client.id + " is in " + room);
 	callback(room);
 }
 
@@ -496,7 +536,7 @@ function setUserName ( client, name )
 {
 	client.user_name = name;
 	sids_to_user_names[client.id] = name;
-	//console.log('sids to user names: ');
+	console.log('sids to user names: ');
 	console.dir(sids_to_user_names);
 }
 

@@ -4,6 +4,7 @@ var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
 var keyTrap = null;
+var cardId;
 
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
 var socket = io.connect({path: baseurl + "/socket.io"});
@@ -22,7 +23,7 @@ function sendAction(a, d) {
 }
 
 socket.on('connect', function() {
-    //console.log('successful socket.io connect');
+    console.log('successful socket.io connect');
 
     //let the final part of the path be the room name
     var room = location.pathname.substring(location.pathname.lastIndexOf('/'));
@@ -72,7 +73,7 @@ function getMessage(m) {
     var action = message.action;
     var data = message.data;
 
-    //console.log('<-- ' + action);
+    console.log('<-- ' + action);
 
     switch (action) {
         case 'roomAccept':
@@ -94,9 +95,8 @@ function getMessage(m) {
             break;
 
         case 'createCard':
-            //console.log(data);
-            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour,
-                null);
+            console.log(data);
+            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, data.stickerId);
             break;
 
         case 'deleteCard':
@@ -111,6 +111,19 @@ function getMessage(m) {
             $("#" + data.id).children('.content:first').text(data.value);
             break;
 
+        case "updateCard":
+            cards[data.id].text = data.text;
+            cards[data.id].colour = data.colour;
+            cards[data.id].sticker = data.stickerId;
+
+            $("#" +data.id).children('.content:first').text(data.text);
+            $('#' + data.id + ' .card-image').remove();
+            $('#' + data.id ).prepend('<img class="card-image" src="images/' +
+                data.colour + '-card.png">');
+            $('#' + data.id + ' .filler').empty();
+            $('#' + data.id + ' .filler').prepend('<img src="images/stickers/' + data.stickerId +
+                '.png">');
+            break;
         case 'initColumns':
             initColumns(data);
             break;
@@ -161,7 +174,7 @@ $(document).bind('keyup', function(event) {
 });
 
 function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
-    //cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
+    cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour, sticker: sticker};
 
     var h = '<div id="' + id + '" class="card ' + colour +
         ' draggable" style="-webkit-transform:rotate(' + rot +
@@ -171,7 +184,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
 	<img class="card-image" src="images/' +
         colour + '-card.png">\
 	<div id="content:' + id +
-        '" class="content stickertarget droppable">' +
+        '" class="content stickertarget droppable" >' +
         text + '</div><span class="filler"></span>\
 	</div>';
 
@@ -188,6 +201,80 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     // card.click( function() {
     // 	$(this).focus();
     // } );
+
+
+    var detail_dialog, detail_form;
+
+    detail_dialog = $( "#Detail-dialog-form" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Update": updateCard,
+            Cancel: function() {
+                detail_dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+            detail_form[ 0 ].reset();
+            // allFields.removeClass( "ui-state-error" );
+        }
+    });
+
+    detail_form = detail_dialog.find( "form" ).on( "submit", function( event ) {
+        event.preventDefault();
+        // addIssue();
+    });
+
+    function updateCard() {
+        updateCardUI();
+
+        var action = "updateCard";
+
+        var data = {
+            id: cardId,
+            text: cards[cardId].text,
+            x: cards[cardId].x,
+            y: cards[cardId].y,
+            rot: cards[cardId].rot,
+            colour: cards[cardId].colour,
+            stickerId: cards[cardId].sticker
+        };
+
+        sendAction(action, data);
+    }
+
+    function updateCardUI() {
+        var detail_issue_type = $("#Detail_issue_type").val(),
+            detail_summary = $("#Detail_summary").val(),
+            // detail_assignee = $("#Detail_assignee").val(),
+            detail_priority = $("#Detail_priority").val();
+
+        cards[cardId].text = detail_summary;
+        cards[cardId].colour = transferTypeToColor(detail_issue_type);
+        cards[cardId].sticker = transferPriorityToStickerId(detail_priority);
+
+        $("#" + cardId).children('.content:first').text(cards[cardId].text);
+        $('#' + cardId + ' .card-image').remove();
+        $('#' + cardId).prepend('<img class="card-image" src="images/' +
+            cards[cardId].colour + '-card.png">');
+        $('#' + cardId + ' .filler').empty();
+        $('#' + cardId + ' .filler').prepend('<img src="images/stickers/' + cards[cardId].sticker +
+            '.png">');
+
+        detail_dialog.dialog("close");
+    }
+
+    card.dblclick(
+        function(){
+            detail_dialog.dialog( "open" );
+            $("#Detail_summary").val(cards[id].text);
+            $("#Detail_priority").val(transferStickerIdToPriority(cards[id].sticker));
+            $("#Detail_issue_type").val(transferColorToType(cards[id].colour));
+            cardId = id;
+        }
+    );
 
     card.draggable({
         snap: false,
@@ -285,23 +372,25 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
             });
         }
     );
-
-    card.children('.content').editable(function(value, settings) {
-        onCardChange(id, value);
-        return (value);
-    }, {
-        type: 'textarea',
-        submit: 'OK',
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        placeholder: 'Double Click to Edit.',
-        onblur: 'submit',
-        event: 'dblclick', //event: 'mouseover'
-    });
+    // disenable content edit function
+    // card.children('.content').editable(function(value, settings) {
+    //     onCardChange(id, value);
+    //     return (value);
+    // }, {
+    //     type: 'textarea',
+    //     submit: 'OK',
+    //     style: 'inherit',
+    //     cssclass: 'card-edit-form',
+    //     placeholder: 'Double Click to Edit.',
+    //     onblur: 'submit',
+    //     event: 'dblclick', //event: 'mouseover'
+    // });
 
     //add applicable sticker
     if (sticker !== null)
         addSticker(id, sticker);
+
+    // console.log(card);
 }
 
 
@@ -346,8 +435,8 @@ function addSticker(cardId, stickerId) {
 //----------------------------------
 // cards
 //----------------------------------
-function createCard(id, text, x, y, rot, colour) {
-    drawNewCard(id, text, x, y, rot, colour, null);
+function createCard(id, text, x, y, rot, colour, stickerId) {
+    drawNewCard(id, text, x, y, rot, colour, stickerId);
 
     var action = "createCard";
 
@@ -357,7 +446,8 @@ function createCard(id, text, x, y, rot, colour) {
         x: x,
         y: y,
         rot: rot,
-        colour: colour
+        colour: colour,
+        stickerId: stickerId
     };
 
     sendAction(action, data);
@@ -676,6 +766,78 @@ function adjustCard(offsets, doSync) {
     });
 }
 
+function transferTypeToColor(issue_type){
+    var color;
+    switch (issue_type) {
+        case "Story":
+            color = "white";
+            break;
+        case "Task":
+            color = "blue";
+            break;
+        case "Bug":
+            color = "yellow";
+            break;
+    }
+    return color;
+}
+function transferPriorityToStickerId(priority){
+    var stickerId;
+    switch (priority) {
+        case "Highest":
+            stickerId = "sticker-red";
+            break;
+        case "High":
+            stickerId = "sticker-orange";
+            break;
+        case "Medium":
+            stickerId = "sticker-lightblue";
+            break;
+        case "Low":
+            stickerId = "sticker-purple";
+            break;
+        case "Lowest":
+            stickerId = "sticker-green";
+            break;
+    }
+    return stickerId;
+}
+function transferStickerIdToPriority(sticker){
+    var priority;
+    switch (sticker) {
+        case "sticker-red":
+            priority = "Highest";
+            break;
+        case "sticker-orange":
+            priority = "High";
+            break;
+        case "sticker-lightblue":
+            priority = "Medium";
+            break;
+        case "sticker-purple":
+            priority = "Low";
+            break;
+        case "sticker-green":
+            priority = "Lowest";
+            break;
+    }
+    return priority;
+}
+function transferColorToType(colour){
+    var issue_type;
+    switch (colour) {
+        case "white":
+            issue_type = "Story";
+            break;
+        case "blue":
+            issue_type = "Task";
+            break;
+        case "yellow":
+            issue_type = "Bug";
+            break;
+    }
+    return issue_type;
+}
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -691,19 +853,65 @@ $(function() {
 
     //setTimeout($.unblockUI, 2000);
 
-
+    // todo redesign UI
     $("#create-card")
         .click(function() {
-            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
-            uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
-            //alert(uniqueID);
-            createCard(
-                'card' + uniqueID,
-                '',
-                58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
-                rotation,
-                randomCardColour());
+            // var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            // uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
+            // //alert(uniqueID);
+            // createCard(
+            //     'card' + uniqueID,
+            //     '',
+            //     58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
+            //     rotation,
+            //     randomCardColour());
+
+            dialog.dialog( "open" );
         });
+    var dialog, form;
+    var issue_type = $( "#issue_type" ),
+        summary = $( "#summary" ),
+        assignee = $( "#assignee" ),
+        priority = $("#priority"),
+        allFields = $( [] ).add( issue_type ).add( summary ).add( assignee );
+
+
+    dialog = $( "#Creation-dialog-form" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Create an issue": addIssue,
+            Cancel: function() {
+                dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+            form[ 0 ].reset();
+            // allFields.removeClass( "ui-state-error" );
+        }
+    });
+
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+        event.preventDefault();
+        addIssue();
+    });
+
+    function addIssue() {
+        var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+        uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
+        //alert(uniqueID);
+        createCard(
+            'card' + uniqueID,
+            summary.val(),
+            58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
+            rotation,
+            transferTypeToColor(issue_type.val()),
+            transferPriorityToStickerId(priority.val()));
+        dialog.dialog( "close" );
+
+    }
 
 
 
@@ -842,3 +1050,5 @@ $(function() {
 
 
 });
+
+
