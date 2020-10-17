@@ -457,6 +457,18 @@ function initClient ( client )
 			}
 		);
 
+		//showburndownchart;
+		db.getAllCards(room, function(cards){
+		
+			var data = getBurndownchart(cards)
+			client.json.send(
+				{
+					action: 'showburndownchart',
+					data: data
+				}
+			);
+		 })
+
 	});
 }
 
@@ -487,18 +499,43 @@ function broadcastToRoom ( client, message ) {
 }
 
 //----------------CARD FUNCTIONS
+const WorkPriority = {
+    LOW: 0,
+    MEDIUM: 1,
+    HIGH: 2
+}
+
+const WorkStatus = {
+    TODO: 0,
+    INPROGRESS: 1,
+    DONE: 2
+}
+
 function createCard( room, id, text, x, y, rot, colour, stickerId ) {
+	var remainhrs = {
+		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
+		rhrs: 100
+	}
+	
 	var card = {
 		id: id,
+		userid: 0,
 		colour: colour,
 		rot: rot,
 		x: x,
 		y: y,
+		summary: text,
 		text: text,
+		sprintno: 1,
+		rhrs: 100,
+		status: WorkStatus.TODO,
+		priority: WorkPriority.LOW,
+		createtime: new Date().format("yyyy-MM-dd hh:mm:ss"),
 		sticker: stickerId
 	};
 
 	db.createCard(room, id, card);
+	db.createRemainhrs(room, id, remainhrs);
 }
 
 function updateCard( room, id, text, x, y, rot, colour, stickerId ) {
@@ -520,7 +557,132 @@ function roundRand( max )
 	return Math.floor(Math.random() * max);
 }
 
+// dateformat
+Date.prototype.format = function(fmt){
+	var o = {
+	  "M+" : this.getMonth()+1,                 //月份
+	  "d+" : this.getDate(),                    //日
+	  "h+" : this.getHours(),                   //小时
+	  "m+" : this.getMinutes(),                 //分
+	  "s+" : this.getSeconds(),                 //秒
+	  "q+" : Math.floor((this.getMonth()+3)/3), //季度
+	  "S"  : this.getMilliseconds()             //毫秒
+	};
+  
+	if(/(y+)/.test(fmt)){
+	  fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+	}
+		  
+	for(var k in o){
+	  if(new RegExp("("+ k +")").test(fmt)){
+		fmt = fmt.replace(
+		  RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));  
+	  }       
+	}
+  
+	return fmt;
+  }
 
+function DateToStr(date){
+	var month =(date.getMonth() + 1).toString();
+	var day = (date.getDate()).toString();
+	var year = date.getFullYear();
+	if (month.length == 1) {
+		month = "0" + month;
+	}
+	if (day.length == 1) {
+		day = "0" + day;
+	}
+	dateTime = year +"-"+ month +"-"+  day;
+	return dateTime;
+}
+
+function strToDate(dateStr){
+	var dateStr = dateStr.replace(/-/g, "/");//yyyy-MM-dd to yyyy/MM/dd
+	var dateTime = Date.parse(dateStr);//将日期字符串转换为表示日期的秒数
+	//Date.parse(dateStr)默认情况下只能转换：月/日/年 格式的字符串，但是经测试年/月/日格式的字符串也能被解析
+	var data = new Date(dateTime);//将日期秒数转换为日期格式
+	return data;
+}
+
+//dateformat to yyyy-MM-dd
+function getDate(datetime)
+{
+	var time = new String(datetime);
+	var datestring = time.substring(0, 10);
+	var date = strToDate(datestring);
+	return date;
+}
+
+//get interval days
+function getDateInterval(firstday, lastday)
+{
+	var timesDiff = Math.abs(firstday.getTime() - lastday.getTime());
+	var diffDays = Math.ceil(timesDiff / (1000 * 60 * 60 * 24));//向上取整
+	return diffDays;
+}
+
+//----------------BURNDOWNCHART FUNCTIONS
+function getBurndownchart(cards)
+{
+	var tempmap = new Map();
+	var timearray = new Array();
+	var temptimearray = new Array();
+	var hrsarray = new Array();
+	var data;
+    //every date only one
+    for(var i in cards){
+		var card = cards[i];
+		for(var j in card.remainhrs){
+			var remainhr = card.remainhrs[j];
+			var time = new String(remainhr.time);
+			var date = time.substring(0, 10);
+			if(!tempmap.has(date)){
+				tempmap.set(date, remainhrs);
+				temptimearray.push(date)
+			}
+		}
+	}
+	
+	//----get date array
+	temptimearray.sort();
+	var firstday = strToDate(temptimearray[0]);
+	var lastday = strToDate(temptimearray[temptimearray.length - 1]);
+	var datep = strToDate(temptimearray[0]);
+
+	var diffDays = getDateInterval(firstday, lastday);
+	
+	for(var i = 0; i <= diffDays; i++){
+		timearray.push(datep.format("yyyy-MM-dd"));
+		datep.setDate(datep.getDate() + 1);
+		hrsarray.push(0);
+	}
+
+	//----get remainhrs array
+	for(var i in cards){
+		var card = cards[i];
+		var cardfirstday = getDate(card.createtime);
+		var pointer = getDateInterval(cardfirstday, firstday);
+		var remainhrs;
+		for(var j in card.remainhrs){
+			var remainhr = card.remainhrs[j];
+			remainhrs = remainhr.rhrs;
+			var flagday = getDate(remainhr.time);
+			var intervaldays = getDateInterval(flagday, firstday);
+			while(pointer <= intervaldays){
+				hrsarray[pointer] += remainhrs;
+				pointer++;
+			}
+		}
+		while(pointer <= diffDays){
+			hrsarray[pointer] += remainhrs;
+			pointer++;
+		}
+	}
+
+	data = {date: timearray, rhrs: hrsarray};
+	return data;
+}
 
 //------------ROOM STUFF
 // Get Room name for the given Session ID
