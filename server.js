@@ -196,10 +196,10 @@ io.sockets.on('connection', function (client) {
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
 				clean_data.stickerId = scrub(data.stickerId);
-
+				clean_data.storyPoints = scrub(data.storyPoints);
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints);
 				});
 
 				message_out = {
@@ -241,10 +241,11 @@ io.sockets.on('connection', function (client) {
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
 				clean_data.stickerId = scrub(data.stickerId);
+				clean_data.storyPoints = scrub(data.storyPoints);
 
 
 				getRoom(client, function(room) {
-					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId);
+					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints);
 				});
 
 				message_out = {
@@ -511,10 +512,13 @@ const WorkStatus = {
     DONE: 2
 }
 
-function createCard( room, id, text, x, y, rot, colour, stickerId ) {
+function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
+	var createtime = new Date().format("yyyy-MM-dd hh:mm:ss");
+	var rhrs = parseInt(storyPoints);
+	
 	var remainhrs = {
-		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
-		rhrs: 100
+		time: createtime,
+		rhrs: rhrs
 	}
 	
 	var card = {
@@ -527,10 +531,10 @@ function createCard( room, id, text, x, y, rot, colour, stickerId ) {
 		summary: text,
 		text: text,
 		sprintno: 1,
-		rhrs: 100,
-		status: WorkStatus.TODO,
-		priority: WorkPriority.LOW,
-		createtime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+		rhrs: rhrs,
+		//status: WorkStatus.TODO,
+		//priority: WorkPriority.LOW,
+		createtime: createtime,
 		sticker: stickerId
 	};
 
@@ -538,7 +542,13 @@ function createCard( room, id, text, x, y, rot, colour, stickerId ) {
 	db.createRemainhrs(room, id, remainhrs);
 }
 
-function updateCard( room, id, text, x, y, rot, colour, stickerId ) {
+function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
+	var rhrs = parseInt(storyPoints);
+	var remainhrs = {
+		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
+		rhrs: rhrs
+	}
+	
 	var card = {
 		id: id,
 		colour: colour,
@@ -546,10 +556,12 @@ function updateCard( room, id, text, x, y, rot, colour, stickerId ) {
 		x: x,
 		y: y,
 		text: text,
-		sticker: stickerId
+		sticker: stickerId,
+		rhrs: rhrs
 	};
 
 	db.cardUpdate(room, id, card);
+	db.createRemainhrs(room, id, remainhrs);
 }
 
 function roundRand( max )
@@ -597,8 +609,9 @@ function DateToStr(date){
 	return dateTime;
 }
 
-function strToDate(dateStr){
-	var dateStr = dateStr.replace(/-/g, "/");//yyyy-MM-dd to yyyy/MM/dd
+function strToDate(datestr){
+	var dateStr = new String(datestr);
+	dateStr = dateStr.replace(/-/g, "/");//yyyy-MM-dd to yyyy/MM/dd
 	var dateTime = Date.parse(dateStr);//将日期字符串转换为表示日期的秒数
 	//Date.parse(dateStr)默认情况下只能转换：月/日/年 格式的字符串，但是经测试年/月/日格式的字符串也能被解析
 	var data = new Date(dateTime);//将日期秒数转换为日期格式
