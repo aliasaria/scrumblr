@@ -27,7 +27,6 @@ block body
 		i#create-card.fa.fa-plus-circle.fa-2x.bottom-icon
 		//i#smallify.fa.fa-expand.fa-2x.bottom-icon
 
-	#container(style='width: 600px;height:400px;')
 
 	div.stickers
 		div.sticker#sticker-red
@@ -60,56 +59,41 @@ block body
 		input#yourname-input
 		span.you-text (you)
 		ul#names-ul
+
+	div.Box 
+		div#container(style='width: 100%;height:100%;')
+
 	#Creation-dialog-form(title="Create issue")
-		p.validateTips All form fields are required.
 		form
 			fieldset
-				label(for="issue_type") Issue Type
-				select#issue_type.ui-widget-content.ui-corner-all(type="text" name="issue_type")
-					option Story
-					option Task
-					option Bug
+				div.FormGroup
+					lable(for="issue_type") Issue Type*
+					select#issue_type.formselect(type="text" name="issue_type")
+						option Story
+						option Task
+						option Bug
+				div.FormGroup
+					lable(for="priority") Priority*
+					select#priority.formselect(type="text" name="priority")
+						option Highest
+						option High
+						option(selected="") Medium
+						option Low
+						option Lowest
 				// <input type="text" name="issue_type" id="issue_type" class="text ui-widget-content ui-corner-all">
-				label(for="summary") Summary
-				input#summary.text.ui-widget-content.ui-corner-all(type="text" name="summary")
-				label(for="assignee") Assignee
-				input#assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee")
-				label(for="priority") Priority
-				select#priority.ui-widget-content.ui-corner-all(type="text" name="priority")
-					option Highest
-					option High
-					option(selected="") Medium
-					option Low
-					option Lowest
+				div.FormGroup
+					label(for="summary") Summary*
+					input#summary.forminput(type="text" name="summary" )
+				div.FormGroup
+					label(for="assignee") Assignee*
+					input#assignee.forminput(type="text" name="assignee")
 				// <input type="text" name="priority" id="priority" class="text ui-widget-content ui-corner-all">
-				label(for="story_points") Story Points
-				input#story_points.text.ui-widget-content.ui-corner-all(type="text" name="story_points")
+				div.FormGroup
+					label(for="story_points") Story Points*
+					input.Input#story_points.forminput(type="text" name="story_points")
 				// Allow form submission with keyboard without duplicating the dialog button
 				input(type="submit" tabindex="-1" style="position:absolute; top:-1000px")
-	#Detail-dialog-form(title="Issuse detail")
-		// <p class="validateTips">All form fields are required.</p>
-		form
-			fieldset
-				label(for="issue_type") Issue Type
-				select#Detail_issue_type.ui-widget-content.ui-corner-all(type="text" name="issue_type")
-					option Story
-					option Task
-					option Bug
-				label(for="summary") Summary
-				input#Detail_summary.text.ui-widget-content.ui-corner-all(type="text" name="summary")
-				label(for="assignee") Assignee
-				input#Detail_assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee")
-				label(for="priority") Priority
-				select#Detail_priority.ui-widget-content.ui-corner-all(type="text" name="priority")
-					option Highest
-					option High
-					option Medium
-					option Low
-					option Lowest
-				label(for="story_points") Story Points
-				input#Detail_story_points.text.ui-widget-content.ui-corner-all(type="text" name="story_points")
-				// Allow form submission with keyboard without duplicating the dialog button
-				input(type="submit" tabindex="-1" style="position:absolute; top:-1000px")
+	
 
 	//div.trash
 	//	i.fa.fa-trash-o.fa-lg.faded-icon
