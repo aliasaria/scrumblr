@@ -50,8 +50,8 @@ body {
 .board-outline {
 	border: solid #ccc 8px;
 	display: block;
-	width: 996px;
-	height: 466px;
+	width: 1020px;
+	height: 762px;
 
 	xmargin-left: auto;
 	xmargin-right: auto;
@@ -490,10 +490,10 @@ p.small {
 
 input.text {
     width: 230px;
-    background: none;
+    background:none;
     padding: 6px;
     margin-bottom: 10px;
-    border: none;
+    border:none;
 	font-size: 30px;
 	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
 	color: #5c9db4;
@@ -590,8 +590,73 @@ img {
 	color: #999
 }
 
+.FormGroup {
+    position: relative;
+    display: block;
+	margin: 2px 2px 15px;
+	color: inherit;
+    border-color: #dae0e4;
+    background-color: #f4f5f6;
+    cursor: not-allowed;
+}
 
 
+.formselect {
+	width: 100%
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: black;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: menulist;
+    box-sizing: border-box;
+    align-items: center;
+    white-space: pre;
+    -webkit-rtl-ordering: logical;
+    background-color: #f4f5f6;
+    cursor: default;
+    margin: 10px;
+    font-family: rubik,open sans,lucida grande,Verdana,Arial,sans-serif;
+    font-size: 20px;
+    border: 1px solid #dae0e4
+}
+
+.forminput {
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textfield;
+    background-color: #f4f5f6;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    margin: 0px 0px 10px;
+    font-family: rubik,open sans,lucida grande,Verdana,Arial,sans-serif;
+    font-size: 20px;
+    padding: 0px;
+	border: none;
+	width: 100%
+}
+
+.Box {
+    padding: 24px;
+    margin-bottom: 32px;
+    background-color: #f4f5f6;
+	border: 1px solid #dae0e4;
+	width: 400px;
+	height:300px;
+}
 
 /* states and images */
 .ui-icon { width: 16px; height: 16px; background-image: url(../images/ui-icons_222222_256x240.png); }
