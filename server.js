@@ -460,7 +460,6 @@ function initClient ( client )
 
 		//showburndownchart;
 		db.getAllCards(room, function(cards){
-		
 			var data = getBurndownchart(cards)
 			client.json.send(
 				{
@@ -512,14 +511,19 @@ const WorkStatus = {
     DONE: 2
 }
 
-function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
-	var createtime = new Date().format("yyyy-MM-dd hh:mm:ss");
-	var rhrs = parseInt(storyPoints);
-	
+function createRemainhrs(rhrs){
+	var uniqueID = Math.round(Math.random() * 99999999);
 	var remainhrs = {
-		time: createtime,
+		id: uniqueID,
+		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
 		rhrs: rhrs
 	}
+	return remainhrs;
+}
+
+function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
+	var rhrs = parseInt(storyPoints);
+	var remainhrs = createRemainhrs(rhrs);
 	
 	var card = {
 		id: id,
@@ -534,7 +538,7 @@ function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 		rhrs: rhrs,
 		//status: WorkStatus.TODO,
 		//priority: WorkPriority.LOW,
-		createtime: createtime,
+		createtime: remainhrs.time,
 		sticker: stickerId
 	};
 
@@ -542,13 +546,17 @@ function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 	db.createRemainhrs(room, id, remainhrs);
 }
 
+function getCard(cards, id){
+	for(var i in cards){
+		var card = cards[i];
+		if(card.id == id){
+			return card;
+		}
+	}
+}
+
 function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
 	var rhrs = parseInt(storyPoints);
-	var remainhrs = {
-		time: new Date().format("yyyy-MM-dd hh:mm:ss"),
-		rhrs: rhrs
-	}
-	
 	var card = {
 		id: id,
 		colour: colour,
@@ -559,9 +567,36 @@ function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 		sticker: stickerId,
 		rhrs: rhrs
 	};
-
 	db.cardUpdate(room, id, card);
-	db.createRemainhrs(room, id, remainhrs);
+
+	var updatetime = new Date();
+	var tmptime = DateToStr(updatetime);
+	db.getAllCards(room, function(cards){
+		var prcard = getCard(cards, id);
+		var updateflag = false;
+		for(var i in prcard.remainhrs){
+			var remainhr = prcard.remainhrs[i];
+			var time = DateToStr(getDate(remainhr.time));
+			console.log(time);
+			var remainhrs = remainhr.rhrs;
+			if(tmptime == time){
+				if(remainhrs != rhrs){
+					//update remainhrs.rhrs
+					updateflag = true;
+					var newremainhrs = {
+						id: remainhr.id,
+						time: updatetime.format("yyyy-MM-dd hh:mm:ss"),
+						rhrs: rhrs
+					}
+					db.updateRemainhrs(room, id, newremainhrs);
+				}
+			}
+		}
+		if(updateflag == false){
+			var newremainhrs = createRemainhrs(rhrs);
+			db.createRemainhrs(room, id, newremainhrs);
+		}
+	 })
 }
 
 function roundRand( max )
@@ -618,7 +653,7 @@ function strToDate(datestr){
 	return data;
 }
 
-//dateformat to yyyy-MM-dd
+//dateformat to yyyy-MM-dd return Date
 function getDate(datetime)
 {
 	var time = new String(datetime);
@@ -674,18 +709,20 @@ function getBurndownchart(cards)
 	//----get remainhrs array
 	for(var i in cards){
 		var card = cards[i];
-		var cardfirstday = getDate(card.createtime);
-		var pointer = getDateInterval(cardfirstday, firstday);
-		var remainhrs;
+		var point1 = firstday;
+		var point2;
+		var pointer = 0;
+		var remainhrs = 0;
 		for(var j in card.remainhrs){
 			var remainhr = card.remainhrs[j];
-			remainhrs = remainhr.rhrs;
-			var flagday = getDate(remainhr.time);
-			var intervaldays = getDateInterval(flagday, firstday);
-			while(pointer <= intervaldays){
+			point2 = getDate(remainhr.time);
+			var intervaldays = getDateInterval(point1, point2);
+			for(var i = 0; i < intervaldays; i++){
 				hrsarray[pointer] += remainhrs;
 				pointer++;
 			}
+			point1 = point2;
+			remainhrs = remainhr.rhrs;
 		}
 		while(pointer <= diffDays){
 			hrsarray[pointer] += remainhrs;
