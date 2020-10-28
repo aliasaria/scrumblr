@@ -542,8 +542,9 @@ function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 		sticker: stickerId
 	};
 
-	db.createCard(room, id, card);
-	db.createRemainhrs(room, id, remainhrs);
+	db.createCard(room, id, card, function(){
+		db.createRemainhrs(room, id, remainhrs);
+	});
 }
 
 function getCard(cards, id){
