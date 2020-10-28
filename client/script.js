@@ -477,7 +477,9 @@ function initCards(cardArray) {
     //first delete any cards that exist
     $('.card').remove();
 
-    cards = cardArray;
+    if (typeof (cardArray) != 'undefined') {
+        cards = cardArray;
+    }
 
     for (var i in cardArray) {
         card = cardArray[i];
