@@ -73,7 +73,8 @@ block body
 				label(for="summary") Summary
 				input#summary.text.ui-widget-content.ui-corner-all(type="text" name="summary")
 				label(for="assignee") Assignee
-				input#assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee")
+				select#assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee" data-live-search="true" data-live-search-style="startsWith" class="selectpicker")
+					option choose an assignee
 				label(for="priority") Priority
 				select#priority.ui-widget-content.ui-corner-all(type="text" name="priority")
 					option Highest
@@ -98,7 +99,8 @@ block body
 				label(for="summary") Summary
 				input#Detail_summary.text.ui-widget-content.ui-corner-all(type="text" name="summary")
 				label(for="assignee") Assignee
-				input#Detail_assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee")
+				select#Detail_assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee" data-live-search="true" data-live-search-style="startsWith" class="selectpicker")
+					option choose an assignee
 				label(for="priority") Priority
 				select#Detail_priority.ui-widget-content.ui-corner-all(type="text" name="priority")
 					option Highest

@@ -178,8 +178,8 @@ $(document).bind('keyup', function(event) {
     keyTrap = event.which;
 });
 
-function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, animationspeed) {
-    cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour, sticker: sticker, storyPoints: storyPoints};
+function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee, animationspeed) {
+    cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour, sticker: sticker, storyPoints: storyPoints, assignee: assignee};
 
     var h = '<div id="' + id + '" class="card ' + colour +
         ' draggable" style="-webkit-transform:rotate(' + rot +
@@ -245,7 +245,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, animatio
             rot: cards[cardId].rot,
             colour: cards[cardId].colour,
             stickerId: cards[cardId].sticker,
-            storyPoints: cards[cardId].storyPoints
+            storyPoints: cards[cardId].storyPoints,
+            assignee: cards[cardId].assignee
         };
 
         sendAction(action, data);
@@ -254,7 +255,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, animatio
     function updateCardUI() {
         var detail_issue_type = $("#Detail_issue_type").val(),
             detail_summary = $("#Detail_summary").val(),
-            // detail_assignee = $("#Detail_assignee").val(),
+            detail_assignee = $("#Detail_assignee").val(),
             detail_priority = $("#Detail_priority").val(),
             detail_story_points = $("#Detail_story_points").val();
 
@@ -262,6 +263,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, animatio
         cards[cardId].colour = transferTypeToColor(detail_issue_type);
         cards[cardId].sticker = transferPriorityToStickerId(detail_priority);
         cards[cardId].storyPoints = detail_story_points;
+        cards[cardId].assignee = detail_assignee;
 
         $("#" + cardId).children('.content:first').text(cards[cardId].text);
         $('#' + cardId + ' .card-image').remove();
@@ -276,11 +278,14 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, animatio
 
     card.dblclick(
         function(){
+            console.log(cards[id], "dblclick");
             detail_dialog.dialog( "open" );
             $("#Detail_summary").val(cards[id].text);
             $("#Detail_priority").val(transferStickerIdToPriority(cards[id].sticker));
             $("#Detail_issue_type").val(transferColorToType(cards[id].colour));
             $("#Detail_story_points").val(cards[id].storyPoints);
+            $("#Detail_assignee").val(cards[id].assignee);
+            $('.selectpicker').selectpicker('refresh');
             cardId = id;
         }
     );
@@ -444,8 +449,8 @@ function addSticker(cardId, stickerId) {
 //----------------------------------
 // cards
 //----------------------------------
-function createCard(id, text, x, y, rot, colour, stickerId, storyPoints) {
-    drawNewCard(id, text, x, y, rot, colour, stickerId, storyPoints);
+function createCard(id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
+    drawNewCard(id, text, x, y, rot, colour, stickerId, storyPoints, assignee);
 
     var action = "createCard";
 
@@ -457,7 +462,8 @@ function createCard(id, text, x, y, rot, colour, stickerId, storyPoints) {
         rot: rot,
         colour: colour,
         stickerId: stickerId,
-        storyPoints: storyPoints
+        storyPoints: storyPoints,
+        assignee: assignee
     };
 
     sendAction(action, data);
@@ -493,6 +499,7 @@ function initCards(cardArray) {
             card.colour,
             card.sticker,
             card.rhrs,
+            card.assignee,
             0
         );
     }
@@ -998,7 +1005,8 @@ $(function() {
             rotation,
             transferTypeToColor(issue_type.val()),
             transferPriorityToStickerId(priority.val()),
-            storyPoints.val());
+            storyPoints.val(),
+            assignee.val());
         dialog.dialog( "close" );
 
     }
@@ -1049,6 +1057,19 @@ $(function() {
         }
     );
 
+    $(function() {
+        $.ajax({
+            method: "GET",
+            url: "user/getUserList"
+          }).done(function(data){
+            let userList = data;
+            $.each(userList, function(i,user){
+                let option = $("<option></option>").val(user.username).text(user.username);
+                $("#Detail_assignee,#assignee").append(option);
+            });
+          });
+        
+    });
 
     // $('#cog-button').click( function(){
     // 	$('#config-dropdown').fadeToggle();

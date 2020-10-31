@@ -80,6 +80,13 @@ router.get('/profile/:username', function(req, res) {
 	
 });
 
+router.get('/user/getUserList', function(req, res) {
+    db.getUserList(function(userList){
+        res.json(userList);
+    });
+});
+
+
 router.post('/doRegister', function(req, res){
 	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
 	let db = new data(function() {
@@ -197,9 +204,10 @@ io.sockets.on('connection', function (client) {
 				clean_data.colour = scrub(data.colour);
 				clean_data.stickerId = scrub(data.stickerId);
 				clean_data.storyPoints = scrub(data.storyPoints);
+				clean_data.assignee = scrub(data.assignee);
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee);
 				});
 
 				message_out = {
@@ -242,10 +250,10 @@ io.sockets.on('connection', function (client) {
 				clean_data.colour = scrub(data.colour);
 				clean_data.stickerId = scrub(data.stickerId);
 				clean_data.storyPoints = scrub(data.storyPoints);
-
+				clean_data.assignee = scrub(data.assignee);
 
 				getRoom(client, function(room) {
-					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints);
+					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee);
 				});
 
 				message_out = {
@@ -521,7 +529,7 @@ function createRemainhrs(rhrs){
 	return remainhrs;
 }
 
-function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
+function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
 	var rhrs = parseInt(storyPoints);
 	var remainhrs = createRemainhrs(rhrs);
 	
@@ -536,6 +544,7 @@ function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 		text: text,
 		sprintno: 1,
 		rhrs: rhrs,
+		assignee: assignee,
 		//status: WorkStatus.TODO,
 		//priority: WorkPriority.LOW,
 		createtime: remainhrs.time,
@@ -556,7 +565,7 @@ function getCard(cards, id){
 	}
 }
 
-function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) {
+function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
 	var rhrs = parseInt(storyPoints);
 	var card = {
 		id: id,
@@ -566,7 +575,8 @@ function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints) 
 		y: y,
 		text: text,
 		sticker: stickerId,
-		rhrs: rhrs
+		rhrs: rhrs,
+		assignee: assignee
 	};
 	db.cardUpdate(room, id, card);
 
