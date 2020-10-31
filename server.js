@@ -27,6 +27,8 @@ var sids_to_user_names = [];
 **************/
 var app = express();
 var bodyParser = require('body-parser');
+const { waitForDebugger } = require('inspector');
+const { isContext } = require('vm');
 app.use(bodyParser.urlencoded({ extended: false }));
 var router = express.Router();
 
@@ -90,7 +92,29 @@ router.post('/doRegister', function(req, res){
 			else {
 				db.createUser(user, function() {
 					console.log(user);
-					res.redirect('/profile/'+user.username);
+					res.redirect('/login');
+				});
+				
+			}
+		});
+	});
+});
+
+router.get('/login', function(req, res) {
+	res.render('login.jade', {});
+});
+
+router.post('/doLogin', function(req, res){
+	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
+	let db = new data(function() {
+		db.checkIfUserExists(user, function(isExists) {
+			if(isExists) {
+				res.redirect('/profile/'+user.username);
+			}
+			else {
+				db.createUser(user, function() {
+					console.log(user);
+					res.redirect('/register?userExists=true');
 				});
 				
 			}
