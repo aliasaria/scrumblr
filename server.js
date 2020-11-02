@@ -32,6 +32,18 @@ const { isContext } = require('vm');
 app.use(bodyParser.urlencoded({ extended: false }));
 var router = express.Router();
 
+//session
+var session = require("express-session");
+app.use(session({
+	secret: 'keyboard cat',
+	resave: true,
+	saveUninitialized: true
+}))
+app.use(function(req,res,next){
+    res.locals.session = req.session;
+    next();
+});
+
 app.use(compression());
 app.use(conf.baseurl, router);
 
@@ -111,11 +123,18 @@ router.get('/login', function(req, res) {
 	res.render('login.jade', {});
 });
 
+router.get('/logout', function (req, res) {
+    req.session.username = null;
+    res.redirect('/login');
+});
+
 router.post('/doLogin', function(req, res){
 	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
 	let db = new data(function() {
 		db.checkIfUserExists(user, function(isExists) {
 			if(isExists) {
+				req.session.username = user.username;
+				console.log(req.session);
 				res.redirect('/profile/'+user.username);
 			}
 			else {
@@ -141,6 +160,24 @@ router.get('/:id', function(req, res){
 		pageTitle: ('scrumblr - ' + req.params.id)
 	});
 });
+
+//edit Profile
+router.post('/editProfile',function(req, res){
+	let uName=req.body.username;//or session
+	var newProfileData = {
+		displayName:req.body.displayName,
+		password:req.body.password,
+		organization:req.body.organization,
+		department:req.body.department,
+		team:req.body.team,
+		role:req.body.role,
+		email:req.body.email
+	};
+	db.updateUser(uName, newProfileData);
+	res.redirect('/profile/'+uName);
+});
+
+
 
 
 /**************

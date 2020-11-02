@@ -1,26 +1,142 @@
 doctype html
 html(lang='en')
   head
-    title Register Scrumblr+
+    title #{data.displayName} Scrumblr+
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
     script(src='http://code.jquery.com/jquery-3.5.1.min.js' integrity='sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=' crossorigin='anonymous')
+  
+  style.
+    h1.home a{
+      font-size: 100px;
+      font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+      color: #808080;
+    }
+    p.home{
+      text-align: left;
+    }
+    #editBtn{
+      z-index: 999;
+      margin-left: 20px;
+      margin-bottom: 10px;
+      border-style: solid;
+      border-color: #19ba98;
+      border-radius: 8px;
+      font-size: 30px;
+      font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+      color: #19ba98;
+      background: none;
+      display: block;
+    }
+    #saveBtn{
+      margin-left: 20px;
+      margin-bottom: 10px;
+      border-style: solid;
+      border-color: #19ba98;
+      border-radius: 8px;
+      font-size: 30px;
+      font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+      color: #19ba98;
+      background: none;
+      display: block;
+    }
+    #displayProfile{
+      margin-left: 13px;
+    }
+    #checkUpdate{
+      margin-bottom: 5px;
+      font-size: 25px;
+      font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+      color: #19ba98;
+    }
+    .text1{
+      border: 1px solid #19ba98;
+      border-radius: 3px;
+      height: 23px;
+      font-size: 20px;
+    }
+
+
+  
   body
-    h1 User Profile
-    form
-      p
-        | username: 
-        input(type='text' readonly='' name='username')
-      p
-        | password: 
-        input(name='password' type='password')
-      p
-        | display name: 
-        input(name='displayName' type='text')
-    h1 Your scrum boards:
-    script.
-      $(function() {
-          var user = !{JSON.stringify(data)};
-          console.log(user);
-          $.each(user, function(key,value) {
-            $("input[name="+key+"]").val(value);
-          });
-      });
+    h1 scrumblr by <a href="http://aliasaria.ca">aliasaria</a>
+    div.board-outline(style="height:auto;")
+      div#board(style="padding-bottom:10px;")
+        div#board-doodles(style="z-index: -1;")
+        h1.home #{data.displayName}
+        - if (data.username == null)
+          h1.home User Profile NOT Exist, Please 
+            a(href='/register') register.
+        - else
+          div#displayProfile
+            - if (session.username == data.username)
+              button#editBtn Edit
+            #display-Profile
+              //p.home #{session.username}
+              p.home Organization: #{data.organization}
+              p.home Department: #{data.department}
+              p.home Team: #{data.team}
+              p.home Role: #{data.role}
+              p.home Email: #{data.email}
+            form#editForm(action='/editProfile' method='POST' onsubmit='return checkUpdate();' style='display:none;')
+              #checkUpdate(style='display:none;')
+                | You did not update your profile,
+                a(href='/profile/#{data.username}') back
+              input#saveBtn(type='submit' value='Save')
+              p.home
+                | username: 
+                input.text1(type='text' readonly='' name='username')
+              p.home
+                | password: 
+                input.text1(name='password' type='password')
+              p.home
+                | display name: 
+                input.text1(name='displayName' type='text')
+              p.home
+                | Organization: 
+                input.text1(type='text' name='organization')
+              p.home
+                | Department: 
+                input.text1(type='text' name='department')
+              p.home
+                | Team: 
+                input.text1(type='text' name='team')
+              p.home
+                | Role: 
+                input.text1(type='text' name='role')
+              p.home
+                | Email: 
+                input.text1(type='text' name='email')
+            //p Your scrum boards:
+              
+  script.
+    var initStr = '';
+    $(function() {
+        var user = !{JSON.stringify(data)};
+        console.log(user);
+        $.each(user, function(key,value) {
+          $("input[name="+key+"]").val(value);
+        });
+        initStr = $("#editForm").serialize();
+        //Show the edit form
+        $("#editBtn").click(function() {
+          $("#display-Profile").hide();
+          $("#editForm").show();
+          $("#editBtn").hide();
+        });
+    });
+
+    //To check if the values of the input box are modified
+    function checkUpdate(){
+      console.log('to check');
+      var latestStr = $("#editForm").serialize();
+      if (initStr != latestStr){
+        return true;
+      }
+      else{
+        console.log('not UPDATE!');
+        $("#checkUpdate").show();
+        return false;
+      }
+    }
