@@ -3,7 +3,6 @@ var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
-var keyTrap = null;
 var cardId;
 
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
@@ -174,17 +173,11 @@ function getMessage(m) {
 
 }
 
-$(document).bind('keyup', function(event) {
-    keyTrap = event.which;
-});
-
 function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee, animationspeed) {
     cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour, sticker: sticker, storyPoints: storyPoints, assignee: assignee};
 
     var h = '<div id="' + id + '" class="card ' + colour +
-        ' draggable" style="-webkit-transform:rotate(' + rot +
-        'deg);\
-	">\
+        '">\
 	<img src="images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
 	<img class="card-image" src="images/' +
         colour + '-card.png">\
@@ -291,37 +284,22 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee
     );
 
     card.draggable({
-        snap: false,
-        snapTolerance: 5,
         containment: [0, 0, 2000, 2000],
-        stack: ".card",
-        start: function(event, ui) {
-            keyTrap = null;
-        },
-        drag: function(event, ui) {
-            if (keyTrap == 27) {
-                ui.helper.css(ui.originalPosition);
-                return false;
-            }
-        },
-		handle: "div.content"
+		handle: "div.content",
+        cursor: "move"
     });
 
-    //After a drag:
-    card.bind("dragstop", function(event, ui) {
-        if (keyTrap == 27) {
-            keyTrap = null;
-            return;
-        }
-
-        var data = {
-            id: this.id,
-            position: ui.position,
-            oldposition: ui.originalPosition,
-        };
-
-        sendAction('moveCard', data);
-    });
+//moveCard的持久化方案需要重构，可能不再使用坐标
+//    //After a drag:
+//    card.bind("dragstop", function(event, ui) {
+//        var data = {
+//            id: this.id,
+//            position: ui.position,
+//            oldposition: ui.originalPosition,
+//        };
+//
+//        sendAction('moveCard', data);
+//    });
 
     card.children(".droppable").droppable({
         accept: '.sticker',
@@ -520,9 +498,16 @@ function drawNewColumn(columnName) {
     }
 
     $('#icon-col').before('<td class="' + cls +
-        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
+        '" width="10%"><h2 id="col-' + (totalcolumns + 1) +
         '" class="editable">' + columnName + '</h2></td>');
 
+    $(".col").droppable({
+      accept: "*",
+      drop: function( event, ui ) {
+        ui.draggable.appendTo( $(this) ).fadeIn().css({"position":"relative","top":"0px","left":"0px"});
+      }
+    });
+    
     $('.editable').editable(function(value, settings) {
         onColumnChange(this.id, value);
         return (value);
@@ -621,16 +606,24 @@ function deleteColumns(next) {
 function initColumns(columnArray) {
     totalcolumns = 0;
     columns = columnArray;
-
+    
     $('.col').remove();
 
+    var newbie = true;
     for (var i in columnArray) {
         column = columnArray[i];
 
-        drawNewColumn(
-            column
-        );
+        drawNewColumn(column);
+        
+        newbie = false;
     }
+    if(newbie){
+        columns = [];
+        createColumn('backlog');
+        createColumn('onprogress');
+        createColumn('done');
+    }
+    
 }
 
 
