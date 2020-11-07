@@ -108,7 +108,8 @@ html(lang='en')
               p.home
                 | Email: 
                 input.text1(type='text' name='email')
-            //p Your scrum boards:
+            p Your scrum boards:
+              ul#boardList
               
   script.
     var initStr = '';
@@ -125,6 +126,20 @@ html(lang='en')
           $("#editForm").show();
           $("#editBtn").hide();
         });
+
+         $.ajax({
+            method: "GET",
+            url: "/user/getBoards/"+ user.username
+          }).done(function(data){
+            console.log(data);
+             $.each(data, function(i,board){
+                let li = $("<li></li>").val(board.name).text(board.name);
+                let a = $("<a></a>").attr("href", board.name);
+                a.append(li);
+                $("#boardList").append(a);
+            });
+          });
+
     });
 
     //To check if the values of the input box are modified

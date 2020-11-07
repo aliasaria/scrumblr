@@ -100,6 +100,12 @@ router.get('/user/getUserList', function(req, res) {
     });
 });
 
+router.get('/user/getBoards/:username', function(req, res) {
+	let username = req.params.username;
+    db.getBoardsByUsername(username, function(list){
+        res.json(list);
+    });
+});
 
 router.post('/doRegister', function(req, res){
 	let user = {username:req.body.username,password:req.body.password,displayName:req.body.displayName};
@@ -111,7 +117,7 @@ router.post('/doRegister', function(req, res){
 			else {
 				db.createUser(user, function() {
 					console.log(user);
-					res.redirect('/login');
+					res.redirect('/profile/'+user.username);
 				});
 				
 			}
