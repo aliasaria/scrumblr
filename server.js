@@ -235,10 +235,7 @@ io.sockets.on('connection', function (client) {
 					action: message.action,
 					data: {
 						id: scrub(message.data.id),
-						position: {
-							left: scrub(message.data.position.left),
-							top: scrub(message.data.position.top)
-						}
+						parentId: scrub(message.data.parentId)
 					}
 				};
 
@@ -248,8 +245,11 @@ io.sockets.on('connection', function (client) {
 				// console.log("-----" + message.data.id);
 				// console.log(JSON.stringify(message.data));
 
-				getRoom(client, function(room) {
-					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top);
+//				getRoom(client, function(room) {
+//					db.cardSetXY( room , message.data.id, message.data.position.left, message.data.position.top);
+//				});
+                getRoom(client, function(room) {
+					db.cardSetXY( room , message.data.id, message.data.parentId, message.data.parentId);
 				});
 
 				break;
@@ -259,9 +259,9 @@ io.sockets.on('connection', function (client) {
 				clean_data = {};
 				clean_data.text = scrub(data.text);
 				clean_data.id = scrub(data.id);
-				clean_data.x = scrub(data.x);
-				clean_data.y = scrub(data.y);
-				clean_data.rot = scrub(data.rot);
+				clean_data.x = scrub(data.parentId);
+				clean_data.y = scrub(data.parentId);
+				clean_data.rot = scrub(data.parentId);
 				clean_data.colour = scrub(data.colour);
 				clean_data.stickerId = scrub(data.stickerId);
 				clean_data.storyPoints = scrub(data.storyPoints);
@@ -456,20 +456,8 @@ function initClient ( client )
 {
 	console.log ('initClient Started');
 	getRoom(client, function(room) {
-
-		db.getAllCards( room , function (cards) {
-
-			client.json.send(
-				{
-					action: 'initCards',
-					data: cards
-				}
-			);
-
-		});
-
-
-		db.getAllColumns ( room, function (columns) {
+		
+        db.getAllColumns ( room, function (columns) {
 			client.json.send(
 				{
 					action: 'initColumns',
@@ -478,6 +466,14 @@ function initClient ( client )
 			);
 		});
 
+		db.getAllCards ( room , function (cards) {
+			client.json.send(
+				{
+					action: 'initCards',
+					data: cards
+				}
+			);
+		});
 
 		db.getTheme( room, function(theme) {
 
@@ -593,7 +589,7 @@ function createRemainhrs(rhrs){
 function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
 	var rhrs = parseInt(storyPoints);
 	var remainhrs = createRemainhrs(rhrs);
-	
+	//'hrs' means 'hours'
 	var card = {
 		id: id,
 		userid: 0,
