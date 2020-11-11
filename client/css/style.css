@@ -27,6 +27,27 @@ body {
 
 #board {
 	position: relative;
+	/*background-color: #dcd5d1;*/
+
+	height: 100%;
+	xwidth: 980px;
+	xborder: solid silver 8px;
+
+	/*background-image: -webkit-gradient(
+	    linear,
+	    left top,
+	    right bottom,
+	    color-stop(0.49, rgb(214,210,206)),
+	    color-stop(0.84, rgb(196,191,182))
+	);*/
+
+	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
+
+	/*-moz-box-shadow:inset 1px 1px 3px #999;
+	box-shadow:inset 1px 1px 3px #999;*/
+}
+#todo-board {
+	position: relative;
 	background-color: #dcd5d1;
 
 	height: 100%;
@@ -52,6 +73,29 @@ body {
 	display: block;
 	width: 996px;
 	height: 466px;
+    overflow: auto;
+
+	xmargin-left: auto;
+	xmargin-right: auto;
+
+	box-shadow: 1px 3px 2px #aaa;
+
+	x-webkit-transform:rotate(0.3deg); /*"is that a little off-level? i feel like it is off-level"*/
+    
+    background-color: #dcd5d1;
+    background-image: -webkit-gradient(
+	    linear,
+	    left top,
+	    right bottom,
+	    color-stop(0.49, rgb(214,210,206)),
+	    color-stop(0.84, rgb(196,191,182))
+	);
+}
+.todo-board-outline {
+	border: solid #ccc 8px;
+	display: block;
+	width: 1025px;
+	height: 460px;
 
 	xmargin-left: auto;
 	xmargin-right: auto;
@@ -67,9 +111,16 @@ body {
 	position: absolute;
 	display: inline;
 	opacity: 0.035;
+	/*background-image: url('scribbles2.png');*/
+}
+#todo-board-doodles {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: inline;
+	opacity: 0.035;
 	background-image: url('scribbles2.png');
 }
-
 
 
 .hover .content {
@@ -138,7 +189,6 @@ width: 16px; height: 16px;
 	vertical-align: top;
 	height: 100%;
 	background-image: none;
-
 }
 
 h1, h1 a {

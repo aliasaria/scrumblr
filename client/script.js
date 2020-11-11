@@ -3,7 +3,6 @@ var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
-var keyTrap = null;
 var cardId;
 
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
@@ -87,7 +86,7 @@ function getMessage(m) {
             break;
 
         case 'moveCard':
-            moveCard($("#" + data.id), data.position);
+            moveCard($("#" + data.id), data.parentId);
             break;
 
         case 'initCards':
@@ -96,7 +95,10 @@ function getMessage(m) {
 
         case 'createCard':
             //console.log(data);
-            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, data.stickerId, data.storyPoints);
+            //'data' equals to 'clean_data'{id,text,x,y,rot,colour,stickerId,storyPoints,assignee}
+            //go to 280th row of server.js for detail
+            //把x当parentId用，忽略y和rot
+            drawNewCard(data.id, data.text, data.x, data.colour, data.stickerId, data.storyPoints, data.assignee);
             break;
 
         case 'deleteCard':
@@ -174,17 +176,11 @@ function getMessage(m) {
 
 }
 
-$(document).bind('keyup', function(event) {
-    keyTrap = event.which;
-});
-
-function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee, animationspeed) {
-    cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour, sticker: sticker, storyPoints: storyPoints, assignee: assignee};
+function drawNewCard(id, text, parentId, colour, sticker, storyPoints, assignee){
+    cards[id] = {id: id, text: text, parentId: parentId, colour: colour, sticker: sticker, storyPoints: storyPoints, assignee: assignee};
 
     var h = '<div id="' + id + '" class="card ' + colour +
-        ' draggable" style="-webkit-transform:rotate(' + rot +
-        'deg);\
-	">\
+        '">\
 	<img src="images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
 	<img class="card-image" src="images/' +
         colour + '-card.png">\
@@ -194,7 +190,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee
 	</div>';
 
     var card = $(h);
-    card.appendTo('#board');
+    card.appendTo($('#'+parentId)).css({"position":"relative","top":"0px","left":"0px"});
 
     //@TODO
     //Draggable has a bug which prevents blur event
@@ -291,35 +287,19 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee
     );
 
     card.draggable({
-        snap: false,
-        snapTolerance: 5,
         containment: [0, 0, 2000, 2000],
-        stack: ".card",
-        start: function(event, ui) {
-            keyTrap = null;
-        },
-        drag: function(event, ui) {
-            if (keyTrap == 27) {
-                ui.helper.css(ui.originalPosition);
-                return false;
-            }
-        },
-		handle: "div.content"
+		handle: "div.content",
+        cursor: "move",
+        revert: "invalid"
     });
 
     //After a drag:
     card.bind("dragstop", function(event, ui) {
-        if (keyTrap == 27) {
-            keyTrap = null;
-            return;
-        }
-
+        //console.log($(this).parents().attr("id"));
         var data = {
             id: this.id,
-            position: ui.position,
-            oldposition: ui.originalPosition,
+            parentId: $(this).parents().attr("id"),
         };
-
         sendAction('moveCard', data);
     });
 
@@ -345,37 +325,37 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, storyPoints, assignee
     });
 
     var speed = Math.floor(Math.random() * 1000);
-    if (typeof(animationspeed) != 'undefined') speed = animationspeed;
+//    if (typeof(animationspeed) != 'undefined') speed = animationspeed;
 
-    var startPosition = $("#create-card").position();
+//    var startPosition = $("#create-card").position();
 
-    card.css('top', startPosition.top - card.height() * 0.5);
-    card.css('left', startPosition.left - card.width() * 0.5);
+//    card.css('top', startPosition.top - card.height() * 0.5);
+//    card.css('left', startPosition.left - card.width() * 0.5);
 
-    card.animate({
-        left: x + "px",
-        top: y + "px"
-    }, speed);
+//    card.animate({
+//        left: x + "px",
+//        top: y + "px"
+//    }, speed);
 
-    card.hover(
-        function() {
-            $(this).addClass('hover');
-            $(this).children('.card-icon').fadeIn(10);
-        },
-        function() {
-            $(this).removeClass('hover');
-            $(this).children('.card-icon').fadeOut(150);
-        }
-    );
+//    card.hover(
+//        function() {
+//            $(this).addClass('hover');
+//            $(this).children('.card-icon').fadeIn(10);
+//        },
+//        function() {
+//            $(this).removeClass('hover');
+//            $(this).children('.card-icon').fadeOut(150);
+//        }
+//    );
 
-    card.children('.card-icon').hover(
-        function() {
-            $(this).addClass('card-icon-hover');
-        },
-        function() {
-            $(this).removeClass('card-icon-hover');
-        }
-    );
+//    card.children('.card-icon').hover(
+//        function() {
+//            $(this).addClass('card-icon-hover');
+//        },
+//        function() {
+//            $(this).removeClass('card-icon-hover');
+//        }
+//    );
 
     card.children('.delete-card-icon').click(
         function() {
@@ -415,11 +395,8 @@ function onCardChange(id, text) {
     });
 }
 
-function moveCard(card, position) {
-    card.animate({
-        left: position.left + "px",
-        top: position.top + "px"
-    }, 500);
+function moveCard(card, parentId) {
+    card.appendTo($('#'+parentId)).css({"position":"relative","top":"0px","left":"0px"});
 }
 
 function addSticker(cardId, stickerId) {
@@ -449,17 +426,15 @@ function addSticker(cardId, stickerId) {
 //----------------------------------
 // cards
 //----------------------------------
-function createCard(id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
-    drawNewCard(id, text, x, y, rot, colour, stickerId, storyPoints, assignee);
+function createCard(id, text, parentId, colour, stickerId, storyPoints, assignee) {
+    drawNewCard(id, text, parentId, colour, stickerId, storyPoints, assignee)
 
     var action = "createCard";
 
     var data = {
         id: id,
         text: text,
-        x: x,
-        y: y,
-        rot: rot,
+        parentId: parentId,
         colour: colour,
         stickerId: stickerId,
         storyPoints: storyPoints,
@@ -494,13 +469,10 @@ function initCards(cardArray) {
             card.id,
             card.text,
             card.x,
-            card.y,
-            card.rot,
             card.colour,
             card.sticker,
             card.rhrs,
-            card.assignee,
-            0
+            card.assignee
         );
     }
 
@@ -519,10 +491,20 @@ function drawNewColumn(columnName) {
         cls = "col first";
     }
 
-    $('#icon-col').before('<td class="' + cls +
-        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
-        '" class="editable">' + columnName + '</h2></td>');
+//    $('#icon-col').before('<td class="' + cls +
+//        '" width="10%"><h2 id="col-' + (totalcolumns + 1) +
+//        '" class="editable">' + columnName + '</h2></td>');
+    $('#icon-col').before('<td id="col-' + (totalcolumns + 1) +
+        '" class="' + cls +
+        '" width="10%"><h2 class="editable">' + columnName + '</h2></td>');
 
+    $(".col").droppable({
+      accept: "*",
+      drop: function( event, ui ) {
+        ui.draggable.appendTo( $(this) ).fadeIn().css({"position":"relative","top":"0px","left":"0px"});
+      }
+    });
+    
     $('.editable').editable(function(value, settings) {
         onColumnChange(this.id, value);
         return (value);
@@ -621,16 +603,24 @@ function deleteColumns(next) {
 function initColumns(columnArray) {
     totalcolumns = 0;
     columns = columnArray;
-
+    
     $('.col').remove();
 
+    var newbie = true;
     for (var i in columnArray) {
         column = columnArray[i];
 
-        drawNewColumn(
-            column
-        );
+        drawNewColumn(column);
+        
+        newbie = false;
     }
+    if(newbie){
+        columns = [];
+        createColumn('ToDo');
+        createColumn('InProgress');
+        createColumn('Done');
+    }
+    
 }
 
 
@@ -1001,17 +991,13 @@ $(function() {
         createCard(
             'card' + uniqueID,
             summary.val(),
-            58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
-            rotation,
+            'todo-row',  //default parent element's id
             transferTypeToColor(issue_type.val()),
             transferPriorityToStickerId(priority.val()),
             storyPoints.val(),
             assignee.val());
         dialog.dialog( "close" );
-
     }
-
-
 
     // Style changer
     $("#smallify").click(function() {
@@ -1123,13 +1109,13 @@ $(function() {
     });
 
 
-    $(".board-outline").resizable({
-        ghost: false,
-        minWidth: 700,
-        minHeight: 400,
-        maxWidth: 3200,
-        maxHeight: 1800,
-    });
+//    $(".board-outline").resizable({
+//        ghost: false,
+//        minWidth: 700,
+//        minHeight: 400,
+//        maxWidth: 3200,
+//        maxHeight: 1800,
+//    });
 
     //A new scope for precalculating
     (function() {

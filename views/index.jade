@@ -12,8 +12,8 @@ block body
 	div.board-outline
 		div#board
 			div#board-doodles
-			image#marker(src='images/marker.png')
-			image#eraser(src='images/eraser.png')
+			//image#marker(src='images/marker.png')
+			//image#eraser(src='images/eraser.png')
 
 
 			table#board-table.board-table
@@ -21,7 +21,12 @@ block body
 					td#icon-col(width='1%')
 						image#add-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/plus_alt_32x32.png')
 						image#delete-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/minus_alt_32x32.png')
-
+	div.todo-board-outline
+		div#todo-board
+			div#todo-board-doodles
+			
+			table#board-table.board-table
+				tr#todo-row
 
 	div.buttons
 		i#create-card.fa.fa-plus-circle.fa-2x.bottom-icon
