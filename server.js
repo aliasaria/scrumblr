@@ -274,7 +274,9 @@ io.sockets.on('connection', function (client) {
 				clean_data.assignee = scrub(data.assignee);
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee, function(){
+						updateBurndownchart(room, client);
+					});
 				});
 
 				message_out = {
@@ -320,7 +322,9 @@ io.sockets.on('connection', function (client) {
 				clean_data.assignee = scrub(data.assignee);
 
 				getRoom(client, function(room) {
-					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee);
+					updateCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.stickerId, clean_data.storyPoints, clean_data.assignee, function(){
+						updateBurndownchart(room, client);
+					});
 				});
 
 				message_out = {
@@ -339,7 +343,9 @@ io.sockets.on('connection', function (client) {
 				};
 
 				getRoom( client, function(room) {
-					db.deleteCard ( room, clean_message.data.id );
+					db.deleteCard ( room, clean_message.data.id, function(){
+						updateBurndownchart(room, client);
+					} );
 				});
 
 				//report to all other browsers
@@ -592,7 +598,7 @@ function createRemainhrs(rhrs){
 	return remainhrs;
 }
 
-function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
+function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee, callback) {
 	var rhrs = parseInt(storyPoints);
 	var remainhrs = createRemainhrs(rhrs);
 	//'hrs' means 'hours'
@@ -615,7 +621,11 @@ function createCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, 
 	};
 
 	db.createCard(room, id, card, function(){
-		db.createRemainhrs(room, id, remainhrs);
+		db.createRemainhrs(room, id, remainhrs, function(){
+			if(callback){
+				callback();
+			}
+		});
 	});
 }
 
@@ -628,7 +638,7 @@ function getCard(cards, id){
 	}
 }
 
-function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee) {
+function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, assignee, callback) {
 	var rhrs = parseInt(storyPoints);
 	var card = {
 		id: id,
@@ -662,13 +672,21 @@ function updateCard( room, id, text, x, y, rot, colour, stickerId, storyPoints, 
 						time: updatetime.format("yyyy-MM-dd hh:mm:ss"),
 						rhrs: rhrs
 					}
-					db.updateRemainhrs(room, id, newremainhrs);
+					db.updateRemainhrs(room, id, newremainhrs, function(){
+						if(callback){
+							callback();
+						}
+					});
 				}
 			}
 		}
 		if(updateflag == false){
 			var newremainhrs = createRemainhrs(rhrs);
-			db.createRemainhrs(room, id, newremainhrs);
+			db.createRemainhrs(room, id, newremainhrs, function(){
+				if(callback){
+					callback();
+				}
+			});
 		}
 	 })
 }
@@ -806,6 +824,24 @@ function getBurndownchart(cards)
 
 	data = {date: timearray, rhrs: hrsarray};
 	return data;
+}
+
+function updateBurndownchart(room, client){
+	//updateburndownchart;
+	db.getAllCards(room, function(cards){
+		var data = getBurndownchart(cards)
+		var message = {
+			action: 'updateburndownchart',
+			data: data
+		}
+		broadcastToRoom(client, message);
+		client.json.send(
+			{
+				action: 'updateburndownchart',
+				data: data
+			}
+		);
+	 })
 }
 
 //------------ROOM STUFF
