@@ -166,6 +166,9 @@ function getMessage(m) {
         case 'showburndownchart':
             showBurndownchart(message.data);
             break;
+        case 'updateburndownchart':
+            showBurndownchart(message.data);
+            break;
     
         default:
             //unknown message
