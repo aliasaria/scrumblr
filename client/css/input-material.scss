@@ -1,0 +1,75 @@
+.form-group.input-material {
+  
+    // variables (normally global variables in Bootstrap scss)
+    $gray-400: #ced4da;
+    $primary: #007bff;
+    $danger: #dc3545;
+    $black: #000;
+    // local variables
+    $inactive-color: $gray-400;
+  
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 25px;
+  
+    label {
+        color: darken($inactive-color, 10%);
+        font-size: 16px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 5px;
+        top: 7px;
+        transition: 0.1s ease all;
+        -moz-transition: 0.1s ease all;
+        -webkit-transition: 0.1s ease all;
+    }
+  
+    .form-control {
+        border: none;
+        border-bottom: 2px solid $inactive-color;
+        border-radius: 0px;
+        background: transparent;
+        padding-left: 5px;
+        box-shadow: none;
+
+        /* required fields */
+        &:required ~ label::after {
+            content: '*';
+            color: $danger;
+            padding-left: 2px;
+            font-size: 0.8em;
+        }
+    
+        /* active state */
+        &:focus,
+        &[value]:not([value=""]) {
+            border-bottom-color: $primary;
+            color: $black;
+        }
+    
+        &:focus ~ label,
+        &[value]:not([value=""]) ~ label {
+            top: -25px;
+            font-size: 14px;
+            color: $primary;
+            font-weight: 500;
+        }
+    
+        /* invalid state */
+        &:focus.invalid,
+        &.invalid,
+        &:focus.parsley-error,
+        &[value]:not([value=""]).parsley-error {
+            border-bottom-color: $danger;
+        }
+        
+        &:focus.invalid ~ label,
+        &.invalid ~ label,
+        &:focus.parsley-error ~ label,
+        &[value]:not([value=""]).parsley-error ~ label {
+            color: $danger;
+        }
+    }
+    
+}  
