@@ -108,8 +108,11 @@ html(lang='en')
               p.home
                 | Email: 
                 input.text1(type='text' name='email')
-            p Your scrum boards:
-              ul#boardList
+    form(action='/newRoom' method='POST')   
+      input(type='text' name='boardName' placeholder='name of a new board')
+      button#newBoard New Board
+    p Your scrum boards:
+      ul#boardList
               
   script.
     var initStr = '';
