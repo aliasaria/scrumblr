@@ -75,10 +75,13 @@ router.get('/', function(req, res) {
 	var connected = io.sockets.connected;
 	clientsCount = Object.keys(connected).length;
 
-	res.render('home.jade', {
-		url: url,
-		connected: clientsCount
-	});
+	// res.render('home.jade', {
+	// 	url: url,
+	// 	connected: clientsCount
+	// });
+
+	res.render('login.jade', {});
+
 });
 
 router.get('/register', function(req, res) {
@@ -98,6 +101,10 @@ router.get('/user/getUserList', function(req, res) {
     db.getUserList(function(userList){
         res.json(userList);
     });
+});
+
+router.post('/newRoom', function(req, res) {
+	res.redirect('/'+req.body.boardName);
 });
 
 router.get('/user/getBoards/:username', function(req, res) {
@@ -146,7 +153,7 @@ router.post('/doLogin', function(req, res){
 			else {
 				db.createUser(user, function() {
 					console.log(user);
-					res.redirect('/register?userExists=true');
+					res.redirect('/login?wrong=true');
 				});
 				
 			}

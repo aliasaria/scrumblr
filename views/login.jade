@@ -57,9 +57,8 @@ html(lang='en')
                     tr
                         td  
                             h1.home Login Scrumblr+  
-                            br
-                            input#serviceAccount.ap(name='displayName' type='text' placeholder='your display name, e.g. Tommy, Darth Vador, etc.')
-                            br
+                              h3 Don't have an account? 
+                                a(href='http://localhost:3000/register') Sign up
                             input#serviceAccount.ap(name='username' type='text' placeholder='username')
                             br
                             input#servicePwd.ap(name='password' type='password' placeholder='password')
@@ -68,9 +67,7 @@ html(lang='en')
                             //div
                             input#loginBut(type='submit' value='Login')
                             br
-                            .bottem-text
-                            | Don't have an account? 
-                            a(href='http://localhost:3000/register') Sign up
+                            
         div.stickers 
             div.sticker#sticker-red  
             div.sticker#sticker-blue 
@@ -99,26 +96,9 @@ html(lang='en')
       }
       }
       }
+     
       $(function() {
-      if(getUrlParameter("userExists") == "true") {
-      $("#duplicateUserWanringMsg").show();
+      if(getUrlParameter("wrong") == "true") {
+        alert("Wrong credentials. Please try again. ");
       }
-      else
-      $("#duplicateUserWanringMsg").hide();
       });
-  //$(function() {
-      $("#loginBut").on("click",function(){
-      var serviceAccount = $("#serviceAccount").val();
-      var servicePwd = $("#servicePwd").val();
-      if(!serviceAccount){
-      $("#helpInfoSpan").html("User Name is empty!");
-      $("#serviceAccount").focus();
-      }else {
-      if(!servicePwd){
-      $("#helpInfoSpan").html("Password is empty!");
-      $("#servicePwd").focus();
-      }else{
-      setTimeout("window.location.href='http://localhost:3000/profile/qwqw'",1000);
-      }
-      })
-      });  

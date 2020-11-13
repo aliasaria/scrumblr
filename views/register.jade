@@ -58,8 +58,6 @@ html(lang='en')
                         td  
                             h1.home Register Scrumblr+  
                             br
-                            input#serviceAccount.ap(name='displayName' type='text' placeholder='your display name, e.g. Tommy, Darth Vador, etc.')
-                            br
                             input#serviceAccount.ap(name='username' type='text' placeholder='username')
                             br
                             input#servicePwd.ap(name='password' type='password' placeholder='password')
@@ -67,7 +65,6 @@ html(lang='en')
                             span#helpInfoSpan
                             //div
                             input#loginBut(type='submit' value='register')
-                            #duplicateUserWanringMsg(style='display:none') The username is already in use, please try another one.
         div.stickers 
             div.sticker#sticker-red  
             div.sticker#sticker-blue 
@@ -98,8 +95,6 @@ html(lang='en')
       }
       $(function() {
       if(getUrlParameter("userExists") == "true") {
-      $("#duplicateUserWanringMsg").show();
+        alert("The username is already in use, please try another one.");
       }
-      else
-      $("#duplicateUserWanringMsg").hide();
       });
