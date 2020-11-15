@@ -418,8 +418,8 @@ function addSticker(cardId, stickerId) {
                 '.png">');
         }
     } else {
-        if (stickerContainer.html().indexOf(stickerId) < 0)
-            stickerContainer.prepend('<img src="images/stickers/' + stickerId +
+        // if (stickerContainer.html().indexOf(stickerId) < 0)
+        stickerContainer.prepend('<img src="images/stickers/' + stickerId +
                 '.png">');
     }
 
