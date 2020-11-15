@@ -32,7 +32,6 @@ block body
 		i#create-card.fa.fa-plus-circle.fa-2x.bottom-icon
 		//i#smallify.fa.fa-expand.fa-2x.bottom-icon
 
-	#container(style='width: 600px;height:400px;')
 
 	div.stickers
 		div.sticker#sticker-red
@@ -65,33 +64,37 @@ block body
 		input#yourname-input
 		span.you-text (you)
 		ul#names-ul
+	div.Box 
+		div#container(style='width: 100%;height:100%;')
+	
 	#Creation-dialog-form(title="Create issue")
-		p.validateTips All form fields are required.
+		//p.validateTips All form fields are required.
 		form
 			fieldset
-				label(for="issue_type") Issue Type
-				select#issue_type.ui-widget-content.ui-corner-all(type="text" name="issue_type")
+				label.form-group-material(for="issue_type" required) Issue Type
+					//select#issue_type.ui-widget-content.ui-corner-all(type="text" name="issue_type")
+				select#issue_type.ui-widget-content.ui-corner-all(type="text" name="issue_type" class="selectpicker" )
 					option Story
 					option Task
 					option Bug
 				// <input type="text" name="issue_type" id="issue_type" class="text ui-widget-content ui-corner-all">
-				label(for="summary") Summary
-				input#summary.text.ui-widget-content.ui-corner-all(type="text" name="summary")
-				label(for="assignee") Assignee
-				select#assignee.text.ui-widget-content.ui-corner-all(type="text" name="assignee" data-live-search="true" data-live-search-style="startsWith" class="selectpicker")
+				label.form-group-material(for="summary" required) Summary
+				input#summary.ui-widget-content.ui-corner-all.material-field(type="text" name="summary" )
+				label.form-group-material(for="assignee" required) Assignee
+				select#assignee.width.ui-widget-content.ui-corner-all(type="text" name="assignee" data-live-search="true" data-live-search-style="startsWith" class="selectpicker" )
 					option choose an assignee
-				label(for="priority") Priority
-				select#priority.ui-widget-content.ui-corner-all(type="text" name="priority")
+				label.form-group-material(for="priority" required) Priority
+				select#priority.ui-widget-content.ui-corner-all(type="text" name="priority" class="selectpicker" )
 					option Highest
 					option High
 					option(selected="") Medium
 					option Low
 					option Lowest
 				// <input type="text" name="priority" id="priority" class="text ui-widget-content ui-corner-all">
-				label(for="story_points") Story Points
-				input#story_points.text.ui-widget-content.ui-corner-all(type="text" name="story_points")
+				label.form-group-material(for="story_points") Story Points
+				input#story_points.ui-widget-content.ui-corner-all.material-field(type="text" name="story_points")
 				// Allow form submission with keyboard without duplicating the dialog button
-				input(type="submit" tabindex="-1" style="position:absolute; top:-1000px")
+				input.material-field(type="submit" tabindex="-1" style="position:absolute; top:-1000px")
 	#Detail-dialog-form(title="Issuse detail",style="display: none;")
 		// <p class="validateTips">All form fields are required.</p>
 		form

@@ -640,7 +640,128 @@ img {
 	color: #999
 }
 
+.shadow {
+	box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
+  
+  .m-panel {
+	border: 0;
+	background: #ffffff;
+	margin-top: -50px;
+	border-top: 5px solid #7E57C2;
+  }
+  
+  .form-group-material {
+	position: relative;
+	margin-top: 20px;
+	margin-bottom: 12px;
+  }
+  .form-group-material:after {
+	height: 1px;
+	background: #e6e6e6;
+	width: 80%;
+  }
+  .form-group-material:before {
+	height: 2px;
+	background: #E91E63;
+	z-index: 1;
+	width: 0;
+	-webkit-transition: width 0.3s;
+			transition: width 0.3s;
+  }
+  .form-group-material:after, .form-group-material:before {
+	display: block;
+	content: "";
+	position: absolute;
+	bottom: 0;
+  }
 
+  
+  .form-group-material.focused:before {
+	width: 100%;
+  }
+  
+  .width {
+	width: 100%;
+  }
+ 
+  
+  .material-label {
+	display: block;
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+	line-height: 1;
+	cursor: text;
+	color: #b3b3b3;
+	-webkit-transition: -webkit-transform ease 0.3s, color ease 0.3s;
+			transition: transform ease 0.3s, color ease 0.3s;
+	-webkit-transform-origin: 0 0;
+		-ms-transform-origin: 0 0;
+			transform-origin: 0 0;
+  }
+
+  
+  
+  input.material-field, textarea.material-field {
+	border-width: 3PX;
+	margin-bottom: 12px;
+    width: 75%;
+    padding: .4em;
+	padding-left: 0;
+	padding-right: 0;
+	border: #464646 ;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+	background: transparent;
+	text-align: center;
+  }
+
+  #Creation-dialog-form.form-group-material:required ~ label::after {
+	content: '*';
+	color: #dc3545;
+	padding-left: 2px;
+	font-size: 0.8em; }
+
+  button {
+  display: inline-block;
+  border: none;
+  border-radius: .3em;
+  background-color: #d6dadb;
+  font-size: 1em;
+  /*box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), inset 0 -0.25em 0 rgba(0, 0, 0, 0.25), 0 0.25em 0.25em rgba(0, 0, 0, 0.05);*/
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  padding: .5em 1.5em .75em;
+  position: relative;
+  text-decoration: none;
+  text-shadow: 0 1px 1px rgba(255, 246, 246, 0.25);
+  vertical-align: middle;
+  }
+  button:hover {
+	background: #a5a5a5;
+  }
+  .btn:active {
+    outline: none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.1), inset 0 0.25em 0.5em rgba(0, 0, 0, 0.05);
+    margin-top: .25em;
+	padding-bottom: .5em; }
+
+
+	.Box {
+		padding: 24px;
+		margin-bottom: 32px;
+		background-color: #f4f5f6;
+		border: 1px solid #dae0e4;
+		width: 400px;
+		height:300px;
+	}
 
 
 /* states and images */

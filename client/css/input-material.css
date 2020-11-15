@@ -1,0 +1,78 @@
+.form-group.input-material {
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 25px; 
+   }
+  .form-group.input-material label {
+    top: -25px;
+    color:#737679;
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    margin:14px,150px;
+    left: 5px;
+    transition: 0.1s ease all;
+    -moz-transition: 0.1s ease all;
+    -webkit-transition: 0.1s ease all; }
+  .form-group.input-material .form-control {
+    border:none;
+    width: 300px;
+    border-bottom: 2px solid#737679;
+    border-radius: 0px;
+    background:none ;
+    line-height: 30px;
+    border-radius: 5px;
+    padding-left: 5px;
+    box-shadow: none;
+    margin:14px,150px;
+    /* required fields */
+    /* active state */
+    /* invalid state */ }
+    .form-group.input-material .form-control:required ~ label::after {
+      content: '*';
+      color: #dc3545;
+      padding-left: 2px;
+      font-size: 0.8em; }
+    .form-group.input-material .form-control:focus, .form-group.input-material .form-control[value]:not([value=""]) {
+      border-bottom-color: #007bff;
+      color: #000; }
+    .form-group.input-material .form-control:focus ~ label, .form-group.input-material .form-control[value]:not([value=""]) ~ label {
+      font-size: 14px;
+      color: #007bff;
+      font-weight: 500; }
+ 
+.al {
+  display: block;
+  margin-left: 350px;
+  }
+.ab {
+  margin-bottom: 125px; 
+  position: absolute
+  }
+
+  @font-face {
+    font-family: 'icomoon';
+    src:url('../fonts/icomoon.eot?rretjt');
+    src:url('../fonts/icomoon.eot?#iefixrretjt') format('embedded-opentype'),
+      url('../fonts/icomoon.woff?rretjt') format('woff'),
+      url('../fonts/icomoon.ttf?rretjt') format('truetype'),
+      url('../fonts/icomoon.svg?rretjt#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  [class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
