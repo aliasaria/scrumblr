@@ -8,6 +8,8 @@ var keyTrap = null;
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
 var socket = io.connect({path: baseurl + "/socket.io"});
 
+marked.setOptions({sanitize: true});
+
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {
@@ -108,7 +110,8 @@ function getMessage(m) {
             break;
 
         case 'editCard':
-            $("#" + data.id).children('.content:first').text(data.value);
+            $("#" + data.id).children('.content:first').attr('data-text', data.value);
+            $("#" + data.id).children('.content:first').html(marked(data.value));
             break;
 
         case 'initColumns':
@@ -171,12 +174,13 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
 	<img class="card-image" src="images/' +
         colour + '-card.png">\
 	<div id="content:' + id +
-        '" class="content stickertarget droppable">' +
-        text + '</div><span class="filler"></span>\
+        '" class="content stickertarget droppable" data-text="">' +
+        marked(text) + '</div><span class="filler"></span>\
 	</div>';
 
     var card = $(h);
     card.appendTo('#board');
+    $("#" + id).children('.content:first').attr('data-text', text);
 
     //@TODO
     //Draggable has a bug which prevents blur event
@@ -287,10 +291,14 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     );
 
     card.children('.content').editable(function(value, settings) {
+        $("#" + id).children('.content:first').attr('data-text', value);
         onCardChange(id, value);
-        return (value);
+        return (marked(value));
     }, {
         type: 'textarea',
+        data: function() {
+            return $("#" + id).children('.content:first').attr('data-text');
+        },
         submit: 'OK',
         style: 'inherit',
         cssclass: 'card-edit-form',

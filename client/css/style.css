@@ -617,3 +617,15 @@ img {
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
 
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+
+.content h1 {
+	font-family: 'Rock Salt', "Arial Rounded MT Bold", arial, serif;
+	color: #5c9db4;
+	font-size: 22px;
+}
+.content * {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
