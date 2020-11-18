@@ -1,7 +1,10 @@
 var cards = {};
 var totalcolumns = 0;
 var columns = [];
+var requiredPassword = null;
+var passwordAttempts = 0;
 var currentTheme = "bigcards";
+var currentFont = null;
 var boardInitialized = false;
 var keyTrap = null;
 
@@ -78,12 +81,17 @@ function getMessage(m) {
         case 'roomAccept':
             //okay we're accepted, then request initialization
             //(this is a bit of unnessary back and forth but that's okay for now)
-            sendAction('initializeMe', null);
+            sendAction('initializeMe');
             break;
 
         case 'roomDeny':
             //this doesn't happen yet
             break;
+			
+		case 'requirePassword':
+			initPasswordForm(false);
+			requiredPassword = data;
+			break;
 
         case 'moveCard':
             moveCard($("#" + data.id), data.position);
@@ -121,6 +129,10 @@ function getMessage(m) {
 
         case 'changeTheme':
             changeThemeTo(data);
+            break;
+			
+		case 'changeFont':
+            changeFontTo(data);
             break;
 
         case 'join-announce':
@@ -160,6 +172,88 @@ $(document).bind('keyup', function(event) {
     keyTrap = event.which;
 });
 
+// password functions
+function initPasswordForm(attempt) {
+	
+	blockUI((attempt === true ? '<h1>Invalid password!</h1><br>' : '' ) 
+		+ '<form id="password-form"><input type="password" id="room-password" placeholder="Enter the room password..."><input type="submit" value="Go!"></form>');
+	
+	$('#password-form').submit(function(event) {
+		event.preventDefault();
+		
+		if (validatePassword($('#room-password').val()) === true) {
+			sendAction('passwordValidated', null);
+		}
+	});
+	
+}
+
+function initLockForm(attempt) {
+	
+	blockUI((attempt === true ? '<h1>The passwords do not match!</h1><br>' : '' ) 
+		+ '<form id="lock-form">'
+		+ '<input type="password" id="lock-password" placeholder="Password"><br>'
+		+ '<input type="password" id="lock-password-confirm" placeholder="Confirm Password"><br>'
+		+ (requiredPassword !== null ? '<button id="lock-remove">Unlock</button>' : '')
+		+ '<button id="lock-cancel">Cancel</button><input type="submit" value="Lock!"></form>');
+		
+	$('#lock-form').submit(function(event) {
+		event.preventDefault();
+		
+		var passwrd = $('#lock-password').val();
+		var confirmPasswrd = $('#lock-password-confirm').val();
+		
+		if (validateLock(passwrd, confirmPasswrd) === true) {
+			sendAction('setPassword', (passwrd !== null ? window.btoa(passwrd) : null));
+			unblockUI();
+		}
+	});
+	
+	$('#lock-form').on('click', '#lock-cancel', function() {
+		sendAction('setPassword', null);
+	});
+	
+	$('#lock-form').on('click', '#lock-remove', function() {
+		sendAction('clearPassword', null);
+	});
+}
+
+function validateLock(passwrd, confirmPasswrd) {
+	
+	if (passwrd == null || passwrd.length == 0) {
+		return true;
+	}
+	
+	if (passwrd != confirmPasswrd) {
+		initLockForm(true);
+		return false;
+	}
+	
+	requiredPassword = passwrd;
+	return true;
+}
+
+function validatePassword(passwrd) {
+	
+	passwordAttempts++;
+	
+	if (passwordAttempts > 5) {
+		blockUI('<h1>You have attempted to login too many times. Please return to the homepage</h1><br>');
+		return false;
+	}
+	
+	var modified = window.btoa(passwrd);
+	
+	if (requiredPassword == modified) {
+		return true;
+	}
+	
+	initPasswordForm(true);
+	return false;
+}
+
+
+// card functions
 function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     //cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 
@@ -177,6 +271,9 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
 
     var card = $(h);
     card.appendTo('#board');
+	
+	// Initialize any custom room font onto the card
+	changeFontTo(currentFont);
 
     //@TODO
     //Draggable has a bug which prevents blur event
@@ -243,7 +340,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         hoverClass: 'card-hover-draggable'
     });
 
-    var speed = Math.floor(Math.random() * 1000);
+    var speed = Math.floor(Math.random() * 800) + 200;
     if (typeof(animationspeed) != 'undefined') speed = animationspeed;
 
     var startPosition = $("#create-card").position();
@@ -529,6 +626,12 @@ function changeThemeTo(theme) {
     $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
 }
 
+function changeFontTo(font) {
+    currentFont = font;
+    $(".card .content").css("font-family", font.family);
+	$(".card .content").css("font-size", font.size);
+}
+
 
 //////////////////////////////////////////////////////////
 ////////// NAMES STUFF ///////////////////////////////////
@@ -696,11 +799,16 @@ $(function() {
         .click(function() {
             var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
             uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
+			var x = (window.innerWidth / 2) + $(window).scrollLeft();
+			var y = (window.innerHeight / 2) + $(window).scrollTop();
+			
+            //alert(uniqueID);
             //alert(uniqueID);
             createCard(
                 'card' + uniqueID,
                 '',
-                58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
+                x, 
+				y,
                 rotation,
                 randomCardColour());
         });
@@ -709,24 +817,108 @@ $(function() {
 
     // Style changer
     $("#smallify").click(function() {
-        if (currentTheme == "bigcards") {
-            changeThemeTo('smallcards');
-        } else if (currentTheme == "smallcards") {
+		
+        if (currentTheme == "smallcards") {
+            changeThemeTo('mediumcards');
+        } else if (currentTheme == "mediumcards") {
             changeThemeTo('bigcards');
-        }
-        /*else if (currentTheme == "nocards")
-		{
-			currentTheme = "bigcards";
-			$("link[title=cardsize]").attr("href", "css/bigcards.css");
-		}*/
+        } else {
+			changeThemeTo('smallcards');
+		}
 
         sendAction('changeTheme', currentTheme);
 
 
         return false;
     });
+	
+	// Style changer
+    $("#fontify").click(function() {
+		
+		var font = currentFont;
+		
+		if (font != null) {
+			if (font.family == "Covered By Your Grace") {
+				font.family = 'Chela One';
+			} else if (font.family == "Chela One") {
+				font.family = 'Gaegu';
+			} else if (font.family == "Gaegu") {
+				font.family = 'Merienda';
+			} else if (font.family == "Merienda") {
+				font.family = 'Oswald';
+			} else if (font.family == "Oswald") {
+				font.family = 'Roboto';
+			} else if (font.family == "Roboto") {
+				font.family = 'Ubuntu';
+			} else {
+				font.family = 'Covered By Your Grace';
+			}
+        } else {
+			font = {
+				family: 'Covered By Your Grace',
+				size: '12'
+			};
+        }
+		
+		changeFontTo(font);
+        sendAction('changeFont', currentFont);
 
+        return false;
+    });
+	
+	// Increase card font size
+    $('#font-increase').click(function() {
+		
+		var font = currentFont;
+		
+		if (font != null) {
+			font.size = font.size + 1;
+		
+			if (font.size > 20) {
+				font.size = 8;
+			}
+		} else {
+			font = {
+				family: 'Covered By Your Grace',
+				size: 12
+			};
+		}
+		
+        changeFontTo(font);
+        sendAction('changeFont', currentFont);
 
+        return false;
+    });
+	
+	// Decrease card font size
+    $('#font-decrease').click(function() {
+		
+		var font = currentFont;
+		
+		if (font != null) {
+			font.size = font.size - 1;
+		
+			if (font.size < 8) {
+				font.size = 22;
+			}
+		} else {
+			font = {
+				family: 'Covered By Your Grace',
+				size: 12
+			};
+		}
+		
+        changeFontTo(font);
+        sendAction('changeFont', currentFont);
+
+        return false;
+    });
+	
+	// Setup a password
+	$('#protect-room').click(function() {
+		initLockForm(false);
+		return false;
+	});
 
     $('#icon-col').hover(
         function() {

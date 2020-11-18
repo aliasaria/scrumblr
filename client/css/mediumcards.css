@@ -1,6 +1,6 @@
 .card {
-	width: 277px;
-	height: 183px;
+	width: 230px;
+	height: 152px;
 	xpadding: 5px; float: left;
 	xmargin: 0 10px 10px 0;
 	font-size: .9em;
@@ -43,12 +43,12 @@
 .content {
 	overflow: hidden;
 	display: block;
-	width: 190px;
-	height: 106px;
-	margin: 5px 23px 0px 43px;
+	width: 158px;
+	height: 88px;
+	margin: 5px 23px 0px 34px;
 
 	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
-	font-size: 19px;
+	font-size: 18px;
 	letter-spacing: 0px;
 
 	xtext-shadow: 0px 0px 1px #444;

@@ -76,6 +76,16 @@ body {
 	xborder: solid rgba(92, 157, 181,0.5) 3px;
 }
 
+#password-form input, #lock-form input, #lock-form button {
+	font-family: roboto;
+	font-size: 16px;
+	padding: 10px;
+	margin: 5px;
+	border-radius: 5px;
+	border: none;
+	box-shadow: none;
+}
+
 
 .card-icon {
 display:none;
@@ -210,7 +220,18 @@ h2 {
 }
 
 .buttons {
-	float: left;
+	position: fixed;
+	z-index: 1000;
+	top: 15px;
+	right: 15px;
+	padding: 10px;
+	background: white;
+	border-radius: 5px;
+	opacity: 0.5;
+}
+
+.buttons:hover {
+	opacity: 0.95;
 }
 
 .names {
