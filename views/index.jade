@@ -60,6 +60,25 @@ block body
 		span.you-text (you)
 		ul#names-ul
 
+	div.export
+		h3 Export board
+		button#export-txt Text format
+		button#export-csv CSV format
+		button#export-json JSON format (for import in Scrumblr)
+
+	div.import
+		h3 Import board
+		div
+			label(for="import-input") JSON file to import
+			input(type="file")#import-input
+			button#import-file Import
+
+	div.revisions
+		h3 Revisions
+		button#create-revision Create a revision
+		div
+			ul#revisions-list
+
 	//div.trash
 	//	i.fa.fa-trash-o.fa-lg.faded-icon
 
