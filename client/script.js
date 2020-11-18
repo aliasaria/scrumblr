@@ -337,16 +337,16 @@ function drawNewCard(id, text, parentId, colour, sticker, storyPoints, assignee)
 //        top: y + "px"
 //    }, speed);
 
-//    card.hover(
-//        function() {
-//            $(this).addClass('hover');
-//            $(this).children('.card-icon').fadeIn(10);
-//        },
-//        function() {
-//            $(this).removeClass('hover');
-//            $(this).children('.card-icon').fadeOut(150);
-//        }
-//    );
+   card.hover(
+       function() {
+           $(this).addClass('hover');
+           $(this).children('.card-icon').fadeIn(10);
+       },
+       function() {
+           $(this).removeClass('hover');
+           $(this).children('.card-icon').fadeOut(150);
+       }
+   );
 
 //    card.children('.card-icon').hover(
 //        function() {
