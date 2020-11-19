@@ -50,8 +50,7 @@ const options = { /* ... */ };
 const io = require('socket.io')(server, options);
 
 server.listen(conf.port);
-console.log('Server running at http://127.0.0.1:' + conf.port + '/');
-
+console.log('Server running at port:' + conf.port + '/');
 
 
 /**************
@@ -61,8 +60,7 @@ router.get('/', function(req, res) {
 	//console.log(req.header('host'));
 	var url = req.header('host') + req.baseUrl;
 
-	var connected = 0; //io.sockets.connected;
-	var clientsCount = Object.keys(connected).length;
+	var clientsCount = io.of("/").sockets.size;
 
 	res.render('home.pug', {
 		url: url,
@@ -88,14 +86,11 @@ router.get('/:id', function(req, res){
 /**************
  SOCKET.I0
 **************/
-//io.on('connection', socket => { /* ... */ });
 io.on('connection', (client) => {
-	console.log("a user connected");
 	//santizes text
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
 		{
-
 			//clip the string if it is too long
 			if (text.length > 65535)
 			{
