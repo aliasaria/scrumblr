@@ -166,8 +166,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     var h = '<div id="' + id + '" class="card ' + colour +
         ' draggable" style="-webkit-transform:rotate(' + rot +
         'deg);\
-	">\
-	<img src="images/icons/token/Xion.png" class="card-icon delete-card-icon" />\
+    ">\
+    <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
 	<img class="card-image" src="images/' +
         colour + '-card.png">\
 	<div id="content:' + id +
@@ -210,6 +210,15 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
     card.bind("dragstop", function(event, ui) {
         if (keyTrap == 27) {
             keyTrap = null;
+            return;
+        }
+
+        if ($(event.target).hasClass("stuck-sticker"))
+        {
+            //You're dragging a sticker on the card, not the card itself
+            //so do not move the card
+            //console.log(event);
+            if(event.offsetX > 20) console.log('delete!');
             return;
         }
 
@@ -332,13 +341,19 @@ function addSticker(cardId, stickerId) {
     if (Array.isArray(stickerId)) {
         for (var i in stickerId) {
             stickerContainer.prepend('<img src="images/stickers/' + stickerId[i] +
-                '.png">');
+                '.png" class="stuck-sticker">');
         }
     } else {
         if (stickerContainer.html().indexOf(stickerId) < 0)
             stickerContainer.prepend('<img src="images/stickers/' + stickerId +
-                '.png">');
+                '.png" class="stuck-sticker">');
     }
+
+    $(".stuck-sticker").draggable({
+        revert: true,
+        zIndex: 1000,
+        cursor: "pointer",
+    });
 
 }
 

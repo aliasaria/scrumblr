@@ -19,8 +19,10 @@ block body
 			table#board-table.board-table
 				tr
 					td#icon-col(width='1%')
-						image#add-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/plus_alt_32x32.png')
-						image#delete-col.col-icon(width='20', height='20', src='images/icons/iconic/raster/black/minus_alt_32x32.png')
+						svg#add-col.col-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+						svg#delete-col.col-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
 
 
 	div.buttons
