@@ -54,10 +54,10 @@ var io = require('socket.io')(server, {
 **************/
 router.get('/', function(req, res) {
 	//console.log(req.header('host'));
-	url = req.header('host') + req.baseUrl;
+	var url = req.header('host') + req.baseUrl;
 
 	var connected = io.sockets.connected;
-	clientsCount = Object.keys(connected).length;
+	var clientsCount = Object.keys(connected).length;
 
 	res.render('home.jade', {
 		url: url,
