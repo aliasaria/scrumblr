@@ -24,8 +24,10 @@ block body
 
 
 	div.buttons
-		i#create-card.fa.fa-plus-circle.fa-2x.bottom-icon
-		i#smallify.fa.fa-expand.fa-2x.bottom-icon
+		svg#create-card.bottom-icon(width='20', height='20')
+			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+		svg#smallify.bottom-icon(width='20', height='20')
+			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--caret-vertical-circle" />
 
 
 	div.stickers
