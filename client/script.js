@@ -642,7 +642,7 @@ function calcCardOffset() {
         $(".col").each(function(i) {
             var col = $(this);
             if (col.offset().left + col.outerWidth() > card.offset().left +
-                card.outerWidth() || i === $(".col").size() - 1) {
+                card.outerWidth() || i === $(".col").length - 1) {
                 offsets[card.attr('id')] = {
                     col: col,
                     x: ((card.offset().left - col.offset().left) / col.outerWidth())
