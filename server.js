@@ -2,7 +2,7 @@
  SYSTEM INCLUDES
 **************/
 var	http = require('http');
-var sys = require('sys');
+var sys = require('util');
 var	async = require('async');
 var sanitizer = require('sanitizer');
 var compression = require('compression');
