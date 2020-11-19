@@ -39,16 +39,19 @@ app.locals.gaAccount = ga.account;
 router.use(express.static(__dirname + '/client'));
 
 var server = require('http').Server(app);
-server.listen(conf.port);
-
-console.log('Server running at http://127.0.0.1:' + conf.port + '/');
 
 /**************
  SETUP Socket.IO
 **************/
-var io = require('socket.io')(server, {
-	path: conf.baseurl == '/' ? '' : conf.baseurl + "/socket.io"
-});
+// var io = require('socket.io')(server, {
+// 	path: conf.baseurl == '/' ? '' : conf.baseurl + "/socket.io"
+// });
+const options = { /* ... */ };
+const io = require('socket.io')(server, options);
+
+server.listen(conf.port);
+console.log('Server running at http://127.0.0.1:' + conf.port + '/');
+
 
 
 /**************
@@ -58,7 +61,7 @@ router.get('/', function(req, res) {
 	//console.log(req.header('host'));
 	var url = req.header('host') + req.baseUrl;
 
-	var connected = io.sockets.connected;
+	var connected = 0; //io.sockets.connected;
 	var clientsCount = Object.keys(connected).length;
 
 	res.render('home.pug', {
@@ -85,7 +88,9 @@ router.get('/:id', function(req, res){
 /**************
  SOCKET.I0
 **************/
-io.sockets.on('connection', function (client) {
+//io.on('connection', socket => { /* ... */ });
+io.on('connection', (client) => {
+	console.log("a user connected");
 	//santizes text
 	function scrub( text ) {
 		if (typeof text != "undefined" && text !== null)
@@ -125,7 +130,7 @@ io.sockets.on('connection', function (client) {
 			case 'joinRoom':
 				joinRoom(client, message.data, function(clients) {
 
-						client.json.send( { action: 'roomAccept', data: '' } );
+						client.send( { action: 'roomAccept', data: '' } );
 
 				});
 
@@ -333,7 +338,7 @@ function initClient ( client )
 
 		db.getAllCards( room , function (cards) {
 
-			client.json.send(
+			client.send(
 				{
 					action: 'initCards',
 					data: cards
@@ -344,7 +349,7 @@ function initClient ( client )
 
 
 		db.getAllColumns ( room, function (columns) {
-			client.json.send(
+			client.send(
 				{
 					action: 'initColumns',
 					data: columns
@@ -357,7 +362,7 @@ function initClient ( client )
 
 			if (theme === null) theme = 'bigcards';
 
-			client.json.send(
+			client.send(
 				{
 					action: 'changeTheme',
 					data: theme
@@ -368,7 +373,7 @@ function initClient ( client )
 		db.getBoardSize( room, function(size) {
 
 			if (size !== null) {
-				client.json.send(
+				client.send(
 					{
 						action: 'setBoardSize',
 						data: size
@@ -394,7 +399,7 @@ function initClient ( client )
 		}
 
 		//console.log('initialusers: ' + roommates);
-		client.json.send(
+		client.send(
 			{
 				action: 'initialUsers',
 				data: roommates
