@@ -304,6 +304,24 @@ io.on('connection', (client) => {
 				broadcastToRoom( client, { action: 'setBoardSize', data: size } );
 				break;
 
+			case 'editText':
+				var text = "";
+				text = scrub(message.data.text);
+
+				//shorten string in case it is long
+				text = text.substring(0,64);
+
+				//save Board Name to DB @TODO
+				getRoom(client, function(room) {
+					db.textEdit( room, 'board-title', text );
+				});
+
+				var msg = {};
+				msg.action = 'editText';
+				msg.data = { item: 'board-title', text: text };
+				broadcastToRoom( client, msg );
+				break;
+
 			default:
 				//console.log('unknown action');
 				break;
@@ -372,6 +390,19 @@ function initClient ( client )
 					{
 						action: 'setBoardSize',
 						data: size
+					}
+				);
+			}
+		});
+
+		//Right now this only gets one object (board title) but we will extend it later
+		//to handle an array of all text we want to sync
+		db.getAllTexts( room , function (texts) {
+			if (texts) {
+				client.send(
+					{
+						action: 'editText',
+						data: { item: "board-title", text: texts }
 					}
 				);
 			}

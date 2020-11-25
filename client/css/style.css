@@ -1,5 +1,15 @@
+/* reset css */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
+body{line-height:1}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+table{border-collapse:collapse;border-spacing:0}
 
-
+[contenteditable] {
+	outline: 0px solid transparent;
+  }
 
 body {
 	font-family: 'Helvetica Neue Light', arial, serif;
@@ -13,8 +23,6 @@ body {
 	xheight: 1400px;
 	xwidth: 2000px;
 
-
-
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
@@ -22,7 +30,64 @@ body {
 	-webkit-user-select: none;
 
 	background-image: url('bg/concrete_wall_2_2.png');
+}
 
+/*
+https://headers-css.vercel.app/styles/header-1.css
+*/
+
+.site-header {
+	position: relative;
+	background-color: none; 
+}
+
+.site-header__wrapper {
+	padding-top: 1rem;
+	padding-bottom: 1rem; 
+}
+
+.site-header__wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 0;
+	padding-bottom: 0;
+} 
+
+.nav__wrapper {
+	  display: flex; 
+}
+
+.ui-menu { width: 150px; }
+.ui-icon { display: none; }
+#menu {
+	display: none;
+	position: absolute;
+	right: 138px;
+	z-index: 10000;
+
+}
+
+.nav__item a {
+	display: block;
+    padding: .5rem 1rem; 
+}
+
+.ui-widget-content {
+	background: #d6d2ce;
+}
+.ui-widget.ui-widget-content {
+	border: none;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    border: 1px solid darkgrey;
+    background:darkgrey;
+    font-weight: normal;
+    color: #ffffff;
+}
+
+.board-wrapper {
+	width: fit-content;
 }
 
 #board {
@@ -46,6 +111,8 @@ body {
 	-moz-box-shadow:inset 1px 1px 3px #999;
 	box-shadow:inset 1px 1px 3px #999;
 }
+
+
 
 .board-outline {
 	border: solid #ccc 8px;
@@ -89,15 +156,15 @@ width: 16px; height: 16px;
 	opacity: .9;
 }
 
-.card-edit-form, .card-edit-form input, .card-edit-form textarea {
+.card .editing, .card .editing input, .card .editing textarea,
+.col .editing, .col .editing input, .col .editing textarea
+{
 	border: none;
 	font-size:inherit;
 	font-weight:inherit;
 	background-color:inherit;
-	xvertical-align: inherit;
 	font-family: inherit;
 	text-align: center;
-	xcolor: #444;
 	padding: 0;
 	margin: 0;
 	outline-width:0;
@@ -106,10 +173,31 @@ width: 16px; height: 16px;
 	width: 100%;
 	color: #330066;
 	color: #666;
-
+	letter-spacing: inherit;
+	outline: none;
+	outline-width: 0;
 }
 
+#board-title .editing, #board-title .editing input, #board-title .editing textarea {
+	border: none;
+	font-size:inherit;
+	font-weight:inherit;
+	background-color:inherit;
+	font-family: inherit;
+	padding: 0;
+	margin: 0;
+	outline-width:0;
+	overflow: hidden;
+	resize: none;
+	width: 100%;
+	color: #330066;
+	color: #666;
+	letter-spacing: inherit;
+	outline: none;
+	outline-width: 0;
+	float: left;
 
+}
 
 .board-table {
 	xz-index: 1;
@@ -142,34 +230,56 @@ width: 16px; height: 16px;
 }
 
 h1, h1 a {
-	color: #b6b6b6;
+	color: #727272;
 	padding: 0px;
 	margin: 0px;
 	margin-left: 1px;
 	font-weight: normal;
 	xtext-shadow: 1px 1px 1px #b6b6b6;
-	font-size: 15px;
+	font-size: 26px;
 	padding-top: 14px;
-	letter-spacing: +1px;
+	/*letter-spacing: +1px;*/
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	text-decoration: none;
+	height: 1.2em;
+}
+
+#board-title, .title {
+	color: #727272;
 }
 
 h2 {
 	font-family: 'Rock Salt', "Arial Rounded MT Bold", arial, serif;
 	color: #5c9db4;
 	font-size: 18px;
-	}
+	margin-top: 16px;
+	opacity: 0.9;
+	line-height: normal;
+}
+
+.greyheading, .greyheading a
+{
+	color: #727272;
+	padding: 0px;
+	margin: 0px;
+	margin-left: 1px;
+	font-weight: normal;
+	xtext-shadow: 1px 1px 1px #b6b6b6;
+	font-size: 14px;
+	/*letter-spacing: +1px;*/
+	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	text-decoration: none;
+	height: 1.2em;
+}
 
 .bottom-icon {
 	padding: 5px;
 	padding-top: 8px;
-	opacity: .4;
+	opacity: 0.5;
 }
 
 .bottom-icon:hover {
-	padding: 5px;
-	opacity: .6;
+	opacity: 1.0;
 }
 
 .faded-icon {
@@ -180,18 +290,22 @@ h2 {
 	opacity: .6;
 }
 
+
+
 #add-col {
-	position: absolute; right: 3px; top: 200px; display: none; opacity: .15;
-}
-#add-col:hover {
-	opacity: .5;
+	position: absolute; right: 3px; top: 200px; display: none;
 }
 
 #delete-col {
-	position: absolute; right: 3px; top: 224px; display: none; opacity: .15;
+	position: absolute; right: 3px; top: 228px; display: none;
 }
-#delete-col:hover {
-	opacity: .5;
+
+.col-icon {
+	opacity: 0.4;	
+}
+
+.col-icon:hover {
+	opacity: 1.0;
 }
 
 #config-dropdown {
@@ -216,7 +330,8 @@ h2 {
 
 .names {
 	padding-left: 10px;
-	width: 980px;
+	margin-top: 18px;
+	xwidth: 980px;
 	text-align: right;
 	color: #bbb;
 	letter-spacing: 4px;
@@ -305,9 +420,9 @@ xopacity: .5;
 }
 
 .stickers {
-	width: 1000px;
+	xwidth: 1000px;
 	text-align: right;
-	padding-top: 2px; margin: 0;
+	padding-top: 6px; margin: 0;
 }
 
 
@@ -528,7 +643,7 @@ input:hover {
 	padding: 0;
 	margin: 0;
 	xtext-align: center;
-	margin-left: 300px;
+	xmargin-left: 300px;
 }
 
 .notice-bar a {
@@ -595,7 +710,6 @@ img {
 
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(../images/ui-icons_222222_256x240.png); }
 .ui-widget-content .ui-icon {background-image: url(../images/ui-icons_222222_256x240.png); }
 .ui-widget-header .ui-icon {background-image: url(../images/ui-icons_222222_256x240.png); }
 .ui-state-default .ui-icon { background-image: url(../images/ui-icons_888888_256x240.png); }

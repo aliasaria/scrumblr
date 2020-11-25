@@ -73,6 +73,7 @@ function getMessage(m) {
     var data = message.data;
 
     //console.log('<-- ' + action);
+    //console.log(message);
 
     switch (action) {
         case 'roomAccept':
@@ -147,6 +148,13 @@ function getMessage(m) {
             resizeBoard(message.data);
             break;
 
+        case 'editText':
+            var item = data.item;
+            var text = "";
+            if (data.text) { text = data.text; }
+            updateText(item, text);
+            break;
+
         default:
             //unknown message
             alert('unknown action: ' + JSON.stringify(message));
@@ -155,6 +163,13 @@ function getMessage(m) {
 
 
 }
+
+function updateText (item, text) {
+    if (item == 'board-title' && text != '') {
+        $('#board-title').text(text);
+    }
+}
+
 
 $(document).bind('keyup', function(event) {
     keyTrap = event.which;
@@ -295,17 +310,12 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         }
     );
 
-    card.children('.content').editable(function(value, settings) {
-        onCardChange(id, value);
-        return (value);
-    }, {
-        type: 'textarea',
-        submit: 'OK',
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        placeholder: 'Double Click to Edit.',
-        onblur: 'submit',
-        event: 'dblclick', //event: 'mouseover'
+    card.children('.content').editable({
+        multiline: true,
+        saveDelay: 600,
+        save: function(content) {
+            onCardChange(id, content.target.innerText);
+        }
     });
 
     //add applicable sticker
@@ -428,20 +438,12 @@ function drawNewColumn(columnName) {
         '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
         '" class="editable">' + columnName + '</h2></td>');
 
-    $('.editable').editable(function(value, settings) {
-        onColumnChange(this.id, value);
-        return (value);
-    }, {
-        style: 'inherit',
-        cssclass: 'card-edit-form',
-        type: 'textarea',
-        placeholder: 'New',
-        onblur: 'submit',
-        width: '',
-        height: '',
-        xindicator: '<img src="images/ajax-loader.gif">',
-        event: 'dblclick', //event: 'mouseover'
-    });
+    $('.editable').editable({
+        multiline: false,
+        save: function(content) {
+            onColumnChange(this.id, content.target.innerText);
+        }
+    });    
 
     $('.col:last').fadeIn(1500);
 
@@ -620,17 +622,18 @@ function updateName(sid, name) {
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
-function boardResizeHappened(event, ui) {
-    var newsize = ui.size;
-
-    sendAction('setBoardSize', newsize);
+function boardResizeHappened(event, newSize) {
+    sendAction('setBoardSize', newSize);
 }
 
 function resizeBoard(size) {
-    $(".board-outline").animate({
-        height: size.height,
-        width: size.width
-    });
+    // $(".board-outline").animate({
+    //     height: size.height,
+    //     width: size.width
+    // });
+
+    $(".board-outline").height(size.height);
+    $(".board-outline").width(size.width);
 }
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -724,18 +727,36 @@ $(function() {
 
     // Style changer
     $("#smallify").click(function() {
+
+        var newBoardSize = {};
+        var oldWidth = $(".board-outline").width();
+        var oldHeight = $(".board-outline").height();
+
+        var offsets = calcCardOffset();
+    
         if (currentTheme == "bigcards") {
             changeThemeTo('smallcards');
+            newBoardSize.height = oldHeight / 1.5;
+            newBoardSize.width = oldWidth / 1.5;
         } else if (currentTheme == "smallcards") {
             changeThemeTo('bigcards');
+            newBoardSize.height = oldHeight * 1.5;
+            newBoardSize.width = oldWidth * 1.5; 
         }
         /*else if (currentTheme == "nocards")
 		{
 			currentTheme = "bigcards";
 			$("link[title=cardsize]").attr("href", "css/bigcards.css");
-		}*/
+        }*/
+    
+        resizeBoard(newBoardSize);
+        boardResizeHappened(null, newBoardSize);
+        adjustCard(offsets, true);
+
 
         sendAction('changeTheme', currentTheme);
+
+
 
 
         return false;
@@ -838,7 +859,7 @@ $(function() {
             adjustCard(offsets, false);
         });
         $(".board-outline").bind("resizestop", function(event, ui) {
-            boardResizeHappened(event, ui);
+            boardResizeHappened(event, ui.size);
             adjustCard(offsets, true);
         });
     })();
@@ -856,4 +877,39 @@ $(function() {
     });
 
 
+    
+    $( "#menu" ).menu();
+    $('#configmenu').click(function() {
+        $('#menu').show();
+    });
+    $(document.body).click(function() {
+        $('#menu').hide();
+    });
+    $("#menu,#configmenu").click( function(e) {
+        e.stopPropagation(); // this stops the event from bubbling up to the body
+    });
+    
+    $(".ceditable").editable({
+        multiline: false,
+        saveDelay: 600, //wait 600ms before calling "save" callback
+        autoselect: false, //select content automatically when editing starts
+        save: function(content) {
+            //here you can save content to your MVC framework's model or send directly to server...
+            //console.log(content);
+
+            var action = "editText";
+
+            var data = {
+                item: 'board-title',
+                text: content.target.innerText
+            };
+            
+            if (content.target.innerText.length > 0)
+                sendAction(action, data);
+        },
+        validate: function(content) {
+            //here you can validate content using RegExp or any other JS code to return false for invalid input
+            return content !== "";
+        }
+    });
 });
