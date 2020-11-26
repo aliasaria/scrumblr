@@ -73,3 +73,67 @@
 .stickertarget {
 	position: absolute;
 }
+
+
+
+.sticky {
+	width: 112px;
+	height: 100px;
+	xpadding: 5px; float: left;
+	xmargin: 0 10px 10px 0;
+	font-size: .9em;
+
+
+
+	overflow: visible;
+
+	position: absolute;
+	z-index: 10;
+
+	top: 460px;
+	left: 0px;
+
+	display: block;
+}
+
+.sticky .content {
+	overflow: hidden;
+	display: block;
+	width: 73px;
+	height: 68px;
+	margin: 1px 3px 0px 32px;
+
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	font-size: 16px;
+	letter-spacing: 0px;
+
+	xtext-shadow: 0px 0px 1px #444;
+
+	opacity: .9;
+
+	color: black;
+	text-align: center;
+	padding-top: 4px;
+	xline-height: 16px;
+
+	align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.sticky .card-icon {
+	left: 100px;
+	top: -5px;
+}
+
+.sticky .card-icon2 {
+	left: 100px;
+	top: 14px;
+	
+}
+
+.sticky .filler {
+	margin-right: 5px;
+    margin-bottom: 23px;
+    margin-left: 25px;
+}

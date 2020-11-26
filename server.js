@@ -165,9 +165,11 @@ io.on('connection', (client) => {
 				clean_data.y = scrub(data.y);
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
+				clean_data.type = scrub(data.type);
+
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.type);
 				});
 
 				message_out = {
@@ -184,10 +186,14 @@ io.on('connection', (client) => {
 				clean_data = {};
 				clean_data.value = scrub(message.data.value);
 				clean_data.id = scrub(message.data.id);
+				clean_data.colour = scrub(message.data.colour);
+
+				// console.log("cardupdate:");
+				// console.log(clean_data);
 
 				//send update to database
 				getRoom(client, function(room) {
-					db.cardEdit( room , clean_data.id, clean_data.value );
+					db.cardEdit( room , clean_data.id, clean_data.value, clean_data.colour );
 				});
 
 				message_out = {
@@ -462,7 +468,7 @@ function broadcastToRoom ( client, message ) {
 }
 
 //----------------CARD FUNCTIONS
-function createCard( room, id, text, x, y, rot, colour ) {
+function createCard( room, id, text, x, y, rot, colour, type ) {
 	var card = {
 		id: id,
 		colour: colour,
@@ -470,6 +476,7 @@ function createCard( room, id, text, x, y, rot, colour ) {
 		x: x,
 		y: y,
 		text: text,
+		type: type,
 		sticker: null
 	};
 

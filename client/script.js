@@ -96,7 +96,7 @@ function getMessage(m) {
 
         case 'createCard':
             //console.log(data);
-            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour,
+            drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, data.type, null,
                 null);
             break;
 
@@ -109,7 +109,12 @@ function getMessage(m) {
             break;
 
         case 'editCard':
-            $("#" + data.id).children('.content:first').text(data.value);
+            if (data.value) $("#" + data.id).children('.content:first').text(data.value);
+            if (data.colour)
+            {
+                $('#' + data.id).children('.change-colour').data('colour',data.colour);
+                $('#' + data.id).children('.card-image').attr("src", 'images/' + data.colour + '-card.png');
+            }
             break;
 
         case 'initColumns':
@@ -175,20 +180,36 @@ $(document).bind('keyup', function(event) {
     keyTrap = event.which;
 });
 
-function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
+function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed) {
     //cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
 
-    var h = '<div id="' + id + '" class="card ' + colour +
-        ' draggable" style="-webkit-transform:rotate(' + rot +
-        'deg);\
-    ">\
-    <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
-	<img class="card-image" src="images/' +
-        colour + '-card.png">\
-	<div id="content:' + id +
-        '" class="content stickertarget droppable">' +
-        text + '</div><span class="filler"></span>\
-	</div>';
+    var h = '';
+
+    if (type == 'card' || type == null) {
+        h = '<div id="' + id + '" class="card ' + colour +
+            ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
+            'deg);\
+        ">\
+        <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
+        <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
+        <img class="card-image" src="images/' + colour + '-card.png">\
+        <div id="content:' + id +
+            '" class="content stickertarget droppable">' +
+            text + '</div><span class="filler"></span>\
+        </div>';
+    }
+    else if (type == 'sticky') {
+         h = '<div id="' + id + '" class="sticky ' + colour +
+         ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
+         'deg);\
+        ">\
+        <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
+        <img class="card-image" src="images/postit/p' + colour + '.png">\
+        <div id="content:' + id +
+            '" class="content stickertarget droppable">' +
+            text + '</div><span class="filler"></span>\
+        </div>';
+    }
 
     var card = $(h);
     card.appendTo('#board');
@@ -208,7 +229,7 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         snap: false,
         snapTolerance: 5,
         containment: [0, 0, 2000, 2000],
-        stack: ".card",
+        stack: ".cardstack",
         start: function(event, ui) {
             keyTrap = null;
         },
@@ -218,7 +239,8 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
                 return false;
             }
         },
-		handle: "div.content"
+        handle: "div.content",
+        zIndex: 100
     });
 
     //After a drag:
@@ -310,24 +332,31 @@ function drawNewCard(id, text, x, y, rot, colour, sticker, animationspeed) {
         }
     );
 
+    card.children('.change-colour').click(
+        function() {
+                rotateCardColor(id, $(this).data('colour'));
+            });
+ 
+
     card.children('.content').editable({
         multiline: true,
         saveDelay: 600,
         save: function(content) {
-            onCardChange(id, content.target.innerText);
+            onCardChange(id, content.target.innerText, null);
         }
     });
 
     //add applicable sticker
-    if (sticker !== null)
+    if (sticker)
         addSticker(id, sticker);
 }
 
 
-function onCardChange(id, text) {
+function onCardChange(id, text, c) {
     sendAction('editCard', {
         id: id,
-        value: text
+        value: text,
+        colour: c
     });
 }
 
@@ -341,6 +370,8 @@ function moveCard(card, position) {
 function addSticker(cardId, stickerId) {
 
     stickerContainer = $('#' + cardId + ' .filler');
+
+    if (stickerContainer.length == 0) return;
 
     if (stickerId === "nosticker") {
         stickerContainer.html("");
@@ -371,8 +402,8 @@ function addSticker(cardId, stickerId) {
 //----------------------------------
 // cards
 //----------------------------------
-function createCard(id, text, x, y, rot, colour) {
-    drawNewCard(id, text, x, y, rot, colour, null);
+function createCard(id, text, x, y, rot, colour, type) {
+    drawNewCard(id, text, x, y, rot, colour, type, null, null);
 
     var action = "createCard";
 
@@ -382,19 +413,45 @@ function createCard(id, text, x, y, rot, colour) {
         x: x,
         y: y,
         rot: rot,
-        colour: colour
+        colour: colour,
+        type: type
     };
 
     sendAction(action, data);
 
 }
 
+var cardColours = ['yellow', 'green', 'blue', 'white'];
+var stickyColours = ['1', '2', '3'];
+
+
 function randomCardColour() {
-    var colours = ['yellow', 'green', 'blue', 'white'];
 
-    var i = Math.floor(Math.random() * colours.length);
+    var i = Math.floor(Math.random() * cardColours.length);
 
-    return colours[i];
+    return cardColours[i];
+}
+
+function randomStickyColour() {
+
+    var i = Math.floor(Math.random() * stickyColours.length);
+
+    return stickyColours[i];
+}
+
+
+function rotateCardColor(id, currentColour) {
+    var index = cardColours.indexOf(currentColour.toString());
+    //new position:
+    var newIndex = index + 1;
+    newIndex = newIndex % (stickyColours.length + 1);
+
+    $('#'+id).children('.card-image').attr("src", 'images/' + cardColours[newIndex] + '-card.png');
+    $('#'+id).children('.change-colour').data('colour',cardColours[newIndex]);
+
+    //var trueId = id.substr(4); // remove "card" from start of id // no don't do this, server wants "card" in front
+    onCardChange(id, null, cardColours[newIndex]);
+
 }
 
 
@@ -414,8 +471,9 @@ function initCards(cardArray) {
             card.y,
             card.rot,
             card.colour,
+            card.type,
             card.sticker,
-            0
+            0,
         );
     }
 
@@ -712,7 +770,7 @@ $(function() {
 
     $("#create-card")
         .click(function() {
-            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 10deg)
+            var rotation = Math.random() * 10 - 5; //add a bit of random rotation (+/- 5deg)
             uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
             //alert(uniqueID);
             createCard(
@@ -720,7 +778,22 @@ $(function() {
                 '',
                 58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
                 rotation,
-                randomCardColour());
+                randomCardColour(),
+                "card");
+        });
+    
+    $("#create-sticky")
+        .click(function() {
+            var rotation = Math.random() * 4 - 2; //add a bit of random rotation (+/- 2deg)
+            uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                randomStickyColour(),
+                "sticky");
         });
 
 

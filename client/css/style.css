@@ -147,14 +147,21 @@ https://headers-css.vercel.app/styles/header-1.css
 .card-icon {
 display:none;
 position: absolute;
-top: 3%; left: 82%;
-opacity: .3;
+top: 3%; left: 85%;
+opacity: .5;
 width: 16px; height: 16px;
 }
 
 .card-icon-hover {
-	opacity: .9;
+	opacity: 1;
 }
+
+
+.card-icon2 {
+	top: 17%; left: 85%;
+
+}
+
 
 .card .editing, .card .editing input, .card .editing textarea,
 .col .editing, .col .editing input, .col .editing textarea
