@@ -9,7 +9,11 @@ table{border-collapse:collapse;border-spacing:0}
 
 [contenteditable] {
 	outline: 0px solid transparent;
+	/* fix contenteditable for safari: */
+	-webkit-user-select: text;
+    user-select: text;
   }
+
 
 body {
 	font-family: 'Helvetica Neue Light', arial, serif;
