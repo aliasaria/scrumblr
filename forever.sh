@@ -1,1 +1,1 @@
-forever start -o out.log -e err.log server.js 80
+forever start server.js --server:port=80
