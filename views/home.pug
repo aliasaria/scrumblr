@@ -12,45 +12,46 @@ html(lang="en")
 body
 	p.greyheading scrumblr by <a href="https://github.com/aliasaria">aliasaria</a>
 
-	div.board-outline
-		div#board
-			div#board-doodles
+	div.board-wrapper
+		div.board-outline
+			div#board
+				div#board-doodles
 
 
-			table#board-table.board-table
-				tr
-					td
-						h1.home(style="margin-top: 30px;") scrumblr.
-						form.home(onsubmit="return go();")
-							label name your new board:
-							br
-							input.text(type="text", name="name")
-							a#go(onclick="return go();") &nbsp;go.
-						<br><br>
-						p.home example board:
-						p.home!= '<a href="http://' + locals.url + '/demo">' + locals.url + '/demo</a>'
-						<br><br><br>
-						p.home.small sourcecode at <a href="https://github.com/aliasaria/scrumblr">github</a>
+				table#board-table.board-table
+					tr
+						td
+							h1.home(style="margin-top: 30px;") scrumblr.
+							form.home(onsubmit="return go();")
+								label name your new board:
+								br
+								input.text(type="text", name="name")
+								a#go(onclick="return go();") &nbsp;go.
+							<br><br>
+							p.home example board:
+							p.home!= '<a href="http://' + locals.url + '/demo">' + locals.url + '/demo</a>'
+							<br><br><br>
+							p.home.small sourcecode at <a href="https://github.com/aliasaria/scrumblr">github</a>
 
-	div.stickers
-		div.sticker#sticker-red
-		div.sticker#sticker-blue
-		div.sticker#sticker-yellow
-		div.sticker#sticker-green
-		br
-		div.sticker#sticker-pink
-		div.sticker#sticker-lightblue
-		div.sticker#sticker-orange
-		div.sticker#sticker-purple
-		br
-		div.sticker#sticker-gold
-		div.sticker#sticker-bluestar
-		div.sticker#sticker-silverstar
-		div.sticker#sticker-redstar
+		div.stickers
+			div.sticker#sticker-red
+			div.sticker#sticker-blue
+			div.sticker#sticker-yellow
+			div.sticker#sticker-green
+			br
+			div.sticker#sticker-pink
+			div.sticker#sticker-lightblue
+			div.sticker#sticker-orange
+			div.sticker#sticker-purple
+			br
+			div.sticker#sticker-gold
+			div.sticker#sticker-bluestar
+			div.sticker#sticker-silverstar
+			div.sticker#sticker-redstar
 
 
-	//display # of active users here
-	div.active-connections= "connections: " + connected
+		//display # of active users here
+		div.active-connections= "connections: " + connected
 
 	//<div style="width: 980px; height: 450px; border: solid 2px; opacity:.1; margin-top: 100px"> this will be the backlog that only appears on drag or perhaps not at all</div>
 
