@@ -500,7 +500,7 @@ function drawNewColumn(columnName) {
 
     $('#icon-col').before('<td class="' + cls +
         '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
-        '" class="editable">' + columnName + '</h2></td>');
+        '" class="editable column-editable">' + columnName + '</h2></td>');
 
     $('.editable').editable({
         multiline: false,

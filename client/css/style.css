@@ -321,6 +321,11 @@ h2 {
 	opacity: 1.0;
 }
 
+.column-editable {
+	min-height: 40px;
+	min-width: 70px;
+}
+
 #config-dropdown {
 	border: solid #666 5px;
 	width: 200px;
