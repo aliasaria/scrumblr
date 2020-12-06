@@ -7,14 +7,40 @@ var	async = require('async');
 var sanitizer = require('sanitizer');
 var compression = require('compression');
 var express = require('express');
-var conf = require('./config.js').server;
-var ga = require('./config.js').googleanalytics;
+// var conf = require('./config.js').server;
+// var ga = require('./config.js').googleanalytics;
+var nconf = require('nconf');
+
+/*************
+ * nconf SETUP
+ *************/
+
+// Set up nconf to include configuration first
+// From command line args, then env, then
+// config file
+nconf.argv()
+.env()
+.file({ file: 'config.json' });
+
+// Now set default config values:
+nconf.set('server:baseurl', '/');
+nconf.set('server:port', 8080);
+
+nconf.set('ga:account', 'UA-2069672-4');
+
+nconf.set('redis:url', 'redis://127.0.0.1:6379');
+nconf.set('redis:prefix', '#scrumblr#');
+
+console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
+console.log('server: ' + JSON.stringify(nconf.get('server')));
+console.log('redis: ' + JSON.stringify(nconf.get('redis')));
 
 /**************
  LOCAL INCLUDES
 **************/
 var	rooms	= require('./lib/rooms.js');
-var	data	= require('./lib/data.js').db;
+var	data	= require('./lib/data/redis.js').db;
+
 
 /**************
  GLOBALS
@@ -31,10 +57,10 @@ var router = express.Router();
 app.set('view engine', 'pug');
 
 app.use(compression());
-app.use(conf.baseurl, router);
+app.use(nconf.get('server:baseurl'), router);
 
-app.locals.ga = ga.enabled;
-app.locals.gaAccount = ga.account;
+// app.locals.ga = ga.enabled;
+// app.locals.gaAccount = ga.account;
 
 router.use(express.static(__dirname + '/client'));
 
@@ -52,8 +78,8 @@ var server = require('http').Server(app);
 const options = { path: '/socketio' };
 const io = require('socket.io')(server, options);
 
-server.listen(conf.port);
-console.log('Server running at port:' + conf.port + '/');
+server.listen(nconf.get('server:port'));
+console.log('Server running at port:' + nconf.get('server:port') + '/');
 
 
 /**************
