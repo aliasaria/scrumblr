@@ -27,7 +27,7 @@ if you are a developer, please fork and submit changes/fixes.
 browser support
 ---------------
 
-scrumblr works on up to date chrome and firefox browsers. enable websockets for optimal performance. tested mainly on chrome for osx. this was not designed for browser support. use chrome for this app.
+scrumblr works on up to date chrome browsers. tested mainly on chrome for osx.
 
 design philosophy
 -----------------
@@ -39,14 +39,14 @@ my goal was to avoid buttons and ui (almost everything is edit in place or dragg
 how to install and run on your own computer (linux/osx)
 -------------------------------------------------------
 
-- [install redis](http://redis.io/download) (last tested on v2.8.4)
-- [install node.js](http://nodejs.org/) (last tested on v0.10.30)
-- install npm (if you're running node.js [v0.6.3](https://github.com/joyent/node/commit/b159c6) or newer it's already installed!)
-- cd to the scrumblr directory; you should see server.js and config.js and other files.
+- [install redis](http://redis.io/download) (last tested on v6.0.9)
+- [install node.js](http://nodejs.org/) (last tested on v13.11.0)
+- [install npm](https://www.npmjs.com/get-npm)
+- cd to the scrumblr directory; you should see server.js and other files.
 - run `npm install`
-- run redis `redis-server`
-- run scrumblr `node server.js --port 80` where "80" is the port you have opened in your firewall and want scrumblr to run on. 
-- open a browser to `http://<server>:<port>` where `<server>` is your server's url or IP address, and `<port>` is the port you chose in the previous step.
+- run redis `redis-server` (this will run forever, so open a new terminal for the next steps, or learn how to run redis as a daemon)
+- run scrumblr `node server.js --server:port=80` where "80" is the port you want scrumblr to run on. it defaults to 8080 
+- open a browser to `http://<server>:<port>` where `<server>` is your server's url or IP address, and `<port>` is the port you chose in the previous step. e.g. `http://yourwebserver:8080/
 
 license
 -------
