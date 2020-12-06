@@ -743,3 +743,35 @@ img {
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
 
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+
+
+
+.signature_wrapper {
+	position: relative;
+	width: 400px;
+	height: 200px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+  }
+  
+  .signature-pad {
+	position: absolute;
+	left: 0;
+	top: 0;
+	/* width:800px;
+	height:400px; */
+	xbackground-color: white;
+	z-index: 1;
+  }
+
+  #pen[data-ison=false] {
+	  color: grey;
+  }
+
+
+  #pen[data-ison=true] {
+	color: black;
+	opacity: 1;
+}

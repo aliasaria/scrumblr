@@ -41,6 +41,7 @@ socket.on('message', function(data) {
 });
 
 function unblockUI() {
+    $('.board-outline').trigger('initboard');
     $.unblockUI({fadeOut: 50});
 }
 
@@ -692,6 +693,10 @@ function resizeBoard(size) {
 
     $(".board-outline").height(size.height);
     $(".board-outline").width(size.width);
+
+    $('.board-outline').trigger('initboard');
+
+
 }
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -985,4 +990,6 @@ $(function() {
             return content !== "";
         }
     });
+
+    
 });
