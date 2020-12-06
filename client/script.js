@@ -6,8 +6,13 @@ var boardInitialized = false;
 var keyTrap = null;
 
 var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'));
-var socket = io();
-
+//var socket = io();
+// We move socket.io from it's default URL (/socket.io) to (/socketio) because during
+// the upgrade to new socket.io, old clients on production server were hitting old
+// URL and crashing the server.
+var socket = io({
+    path: '/socketio'
+});
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {

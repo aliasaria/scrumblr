@@ -46,7 +46,10 @@ var server = require('http').Server(app);
 // var io = require('socket.io')(server, {
 // 	path: conf.baseurl == '/' ? '' : conf.baseurl + "/socket.io"
 // });
-const options = { /* ... */ };
+// We move socket.io from it's default URL (/socket.io) to (/socketio) because during
+// the upgrade to new socket.io, old clients on production server were hitting old
+// URL and crashing the server.
+const options = { path: '/socketio' };
 const io = require('socket.io')(server, options);
 
 server.listen(conf.port);
