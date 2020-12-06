@@ -281,6 +281,8 @@ h2 {
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	text-decoration: none;
 	height: 1.2em;
+
+	margin-top: 10px;
 }
 
 .bottom-icon {
