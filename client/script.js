@@ -708,7 +708,7 @@ function resizeBoard(size) {
 
 function calcCardOffset() {
     var offsets = {};
-    $(".card").each(function() {
+    $(".card,.sticky").each(function() {
         var card = $(this);
         $(".col").each(function(i) {
             var col = $(this);
@@ -730,7 +730,7 @@ function calcCardOffset() {
 //doSync is false if you don't want to synchronize
 //with all the other users who are in this room
 function adjustCard(offsets, doSync) {
-    $(".card").each(function() {
+    $(".card,.sticky").each(function() {
         var card = $(this);
         var offset = offsets[this.id];
         if (offset) {
