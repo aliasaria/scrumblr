@@ -22,7 +22,7 @@
     "redis": "^3.x",
     "sanitizer": "~0.1.1",
     "simplesets": "~1.2.0",
-    "socket.io": "3.x",
+    "socket.io": "^3.0.4",
     "teenyicons": "^0.4.0",
     "yargs": "~2.3.0"
   }
