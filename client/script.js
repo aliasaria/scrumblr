@@ -762,6 +762,24 @@ function adjustCard(offsets, doSync) {
     });
 }
 
+//adjusts the marker and eraser after a board resize
+function adjustMarker(originalSize, newSize) {
+    //remove any y positioning. Makes a harsh jump but works as a hack
+    $("#marker,#eraser").css('top','');
+    // console.log( "markerleft: " + $('#marker').css('left') );
+    // console.log( "size: " + newSize.width);
+     
+    //if either has gone over the edge of the board, just bring it in
+    if ( parseFloat($('#marker').css('left')) > newSize.width - 100)
+    {
+        $('#marker').css('left', newSize.width-100 + 'px' );
+    }
+    if ( parseFloat($('#eraser').css('left')) > newSize.width - 100)
+    {
+        $('#eraser').css('left', newSize.width-100 + 'px' );
+    }
+}
+
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
@@ -944,6 +962,7 @@ $(function() {
         $(".board-outline").bind("resizestop", function(event, ui) {
             boardResizeHappened(event, ui.size);
             adjustCard(offsets, true);
+            adjustMarker(ui.originalSize, ui.size);
         });
     })();
 
