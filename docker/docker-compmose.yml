@@ -1,0 +1,31 @@
+version: "2"
+services:
+  redis:
+    image: "redis:latest"
+    user: "redis"
+    ports:
+      - "6370:6370"
+    expose:
+      - "6370"
+    networks:
+        kafka:
+            ipv4_address: 172.30.2.31
+  node:
+    image: "node:13.11.0-slim"
+    user: "node"
+    working_dir: /data/scrumblr/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - /data/scrumblr/app:/data/scrumblr/app
+      - /data/scrumblr/node:/home/node
+    ports:
+      - "8081:8081"
+    command: "sh forever.sh"
+    networks:
+        kafka:
+            ipv4_address: 172.30.2.30
+networks:
+    kafka:
+        external:
+            name: kafka

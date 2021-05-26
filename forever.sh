@@ -1,1 +1,2 @@
-forever start server.js --server:port=80
+npm install
+node server.js --server:port=80
