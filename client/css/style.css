@@ -94,21 +94,11 @@ https://headers-css.vercel.app/styles/header-1.css
 
 #board {
 	position: relative;
-	background-color: #dcd5d1;
+	background-color: #f4f3f3;
 
 	height: 100%;
 	xwidth: 980px;
 	xborder: solid silver 8px;
-
-	background-image: -webkit-gradient(
-	    linear,
-	    left top,
-	    right bottom,
-	    color-stop(0.49, rgb(214,210,206)),
-	    color-stop(0.84, rgb(196,191,182))
-	);
-
-	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
 
 	-moz-box-shadow:inset 1px 1px 3px #999;
 	box-shadow:inset 1px 1px 3px #999;
