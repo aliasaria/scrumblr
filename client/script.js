@@ -135,6 +135,10 @@ function getMessage(m) {
             changeThemeTo(data);
             break;
 
+        case 'changeBg':
+            changeBgTo(data);
+            break;
+
         case 'join-announce':
             displayUserJoined(data.sid, data.user_name);
             break;
@@ -608,6 +612,14 @@ function initColumns(columnArray) {
 function changeThemeTo(theme) {
     currentTheme = theme;
     $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
+}
+
+
+function changeBgTo(bgUrl) {
+    $("#board-doodles").css(
+      "background-image",
+      "url('" + bgUrl + "')"
+    );
 }
 
 

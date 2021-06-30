@@ -107,16 +107,29 @@ router.get('/demo', function(req, res) {
 });
 
 router.get('/:id', function(req, res){
-	var template;
-	if (req.query.embed == 1){
-		template = 'iframe.pug';
+
+	// Check for background param
+	if (req.query.bg !== undefined){
+		const room = '/' + req.params.id;
+		db.setBg(room, req.query.bg, function() {
+			res.redirect(302, room);
+		});
 	}
 	else {
-		template = 'index.pug';
+		// Set template according to embed param
+		// to choose iframe mode or not
+		var template;
+		if (req.query.embed == 1){
+			template = 'iframe.pug';
+		}
+		else {
+			template = 'index.pug';
+		}
+
+		res.render(template, {
+			pageTitle: ('scrumblr - ' + req.params.id)
+		});
 	}
-	res.render(template, {
-		pageTitle: ('scrumblr - ' + req.params.id)
-	});
 });
 
 // *******************
@@ -128,13 +141,16 @@ router.get('/api/rooms/:id', function(req, res) {
 
 	db.getAllColumns ( room, function (columns) {
 		db.getTheme( room, function(theme) {
-			db.getBoardSize( room, function(size) {
-				db.getAllTextsMap( room , function (texts) {
-					res.json({
-						columns,
-						theme,
-						size,
-						texts
+			db.getBg( room, function(bg) {
+				db.getBoardSize( room, function(size) {
+					db.getAllTextsMap( room , function (texts) {
+						res.json({
+							columns,
+							theme,
+							size,
+							texts,
+							bg
+						});
 					});
 				});
 			});
@@ -161,6 +177,12 @@ router.put('/api/rooms/:id', function(req, res) {
 	if (req.body.theme){
 		operations.push(function (callback){
 			db.setTheme(room, req.body.theme, callback);
+		});
+	}
+
+	if (req.body.bg){
+		operations.push(function (callback){
+			db.setBg(room, req.body.bg, callback);
 		});
 	}
 
@@ -552,6 +574,18 @@ function initClient ( client )
 				{
 					action: 'changeTheme',
 					data: theme
+				}
+			);
+		});
+
+		db.getBg( room, function(bg) {
+
+			if (bg === null) bg = 'css/bg/scribbles2.png';
+
+			client.send(
+				{
+					action: 'changeBg',
+					data: bg
 				}
 			);
 		});

@@ -125,8 +125,8 @@ https://headers-css.vercel.app/styles/header-1.css
 	height: 100%;
 	position: absolute;
 	display: inline;
-	opacity: 0.035;
-	background-image: url('scribbles2.png');
+	opacity: 1;
+	background-repeat: no-repeat;
 }
 
 
