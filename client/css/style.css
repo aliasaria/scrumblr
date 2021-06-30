@@ -19,8 +19,7 @@ body {
 	font-family: 'Helvetica Neue Light', arial, serif;
 	font-size: 13px;
 	color: #333;
-	background-color: #ddd;
-	xbackground-image: -webkit-gradient(radial, 265 118, 456, 147 0, 29, from(#DDDDDD), to(#f3f3f3));
+	background-color: #fff;
 
 	padding-left: 10px;
 
@@ -33,7 +32,6 @@ body {
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 
-	background-image: url('bg/concrete_wall_2_2.png');
 }
 
 /*
@@ -345,6 +343,7 @@ h2 {
 
 .buttons {
 	float: left;
+	cursor: pointer;
 }
 
 .names {
@@ -782,4 +781,8 @@ img {
   #pen[data-ison=true] {
 	color: black;
 	opacity: 1;
+}
+
+.sticker, #add-col, #delete-col {
+  cursor: pointer;
 }
