@@ -110,7 +110,7 @@ https://headers-css.vercel.app/styles/header-1.css
 	border: solid #ccc 2px;
 	display: block;
 	width: 996px;
-	height: 466px;
+	height: 510px;
 
 	xmargin-left: auto;
 	xmargin-right: auto;
@@ -619,6 +619,19 @@ input.text {
     margin-bottom: 10px;
     border: none;
 	font-size: 30px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #5c9db4;
+	text-align: center;
+	border-bottom: dashed 3px #19ba98;
+}
+
+input.url {
+    width: 360px;
+    background: none;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: none;
+	font-size: 18px;
 	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
 	color: #5c9db4;
 	text-align: center;
