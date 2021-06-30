@@ -342,7 +342,7 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         function() {
                 rotateCardColor(id, $(this).data('colour'));
             });
- 
+
 
     card.children('.content').editable({
         multiline: true,
@@ -507,7 +507,7 @@ function drawNewColumn(columnName) {
         save: function(content) {
             onColumnChange(this.id, content.target.innerText);
         }
-    });    
+    });
 
     $('.col:last').fadeIn(1500);
 
@@ -768,7 +768,7 @@ function adjustMarker(originalSize, newSize) {
     $("#marker,#eraser").css('top','');
     // console.log( "markerleft: " + $('#marker').css('left') );
     // console.log( "size: " + newSize.width);
-     
+
     //if either has gone over the edge of the board, just bring it in
     if ( parseFloat($('#marker').css('left')) > newSize.width - 100)
     {
@@ -778,6 +778,18 @@ function adjustMarker(originalSize, newSize) {
     {
         $('#eraser').css('left', newSize.width-100 + 'px' );
     }
+}
+
+
+function fullscreenMode() {
+    var offsets = calcCardOffset();
+    var size = {
+      width: $(window).width() - 32,
+      height: $(window).height() - 85
+    };
+    resizeBoard(size);
+    boardResizeHappened(null, size);
+    adjustCard(offsets, true);
 }
 
 //////////////////////////////////////////////////////////
@@ -809,7 +821,7 @@ $(function() {
                 randomCardColour(),
                 "card");
         });
-    
+
     $("#create-sticky")
         .click(function() {
             var rotation = Math.random() * 4 - 2; //add a bit of random rotation (+/- 2deg)
@@ -834,7 +846,7 @@ $(function() {
         var oldHeight = $(".board-outline").height();
 
         var offsets = calcCardOffset();
-    
+
         if (currentTheme == "bigcards") {
             changeThemeTo('smallcards');
             newBoardSize.height = oldHeight / 1.5;
@@ -849,7 +861,7 @@ $(function() {
 			currentTheme = "bigcards";
 			$("link[title=cardsize]").attr("href", "css/bigcards.css");
         }*/
-    
+
         resizeBoard(newBoardSize);
         boardResizeHappened(null, newBoardSize);
         adjustCard(offsets, true);
@@ -979,7 +991,7 @@ $(function() {
     });
 
 
-    
+
     $( "#menu" ).menu();
     $('#configmenu').click(function() {
         $('#menu').show();
@@ -990,7 +1002,7 @@ $(function() {
     $("#menu,#configmenu").click( function(e) {
         e.stopPropagation(); // this stops the event from bubbling up to the body
     });
-    
+
     $(".ceditable").editable({
         multiline: false,
         saveDelay: 600, //wait 600ms before calling "save" callback
@@ -1005,7 +1017,7 @@ $(function() {
                 item: 'board-title',
                 text: content.target.innerText
             };
-            
+
             if (content.target.innerText.length > 0)
                 sendAction(action, data);
         },
@@ -1015,5 +1027,5 @@ $(function() {
         }
     });
 
-    
+
 });
