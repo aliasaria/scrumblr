@@ -40,12 +40,12 @@ https://headers-css.vercel.app/styles/header-1.css
 
 .site-header {
 	position: relative;
-	background-color: none; 
+	background-color: none;
 }
 
 .site-header__wrapper {
 	padding-top: 1rem;
-	padding-bottom: 1rem; 
+	padding-bottom: 1rem;
 }
 
 .site-header__wrapper {
@@ -54,10 +54,10 @@ https://headers-css.vercel.app/styles/header-1.css
 	align-items: center;
 	padding-top: 0;
 	padding-bottom: 0;
-} 
+}
 
 .nav__wrapper {
-	  display: flex; 
+	  display: flex;
 }
 
 .ui-menu { width: 150px; }
@@ -72,7 +72,7 @@ https://headers-css.vercel.app/styles/header-1.css
 
 .nav__item a {
 	display: block;
-    padding: .5rem 1rem; 
+    padding: .5rem 1rem;
 }
 
 .ui-widget-content {
@@ -117,7 +117,7 @@ https://headers-css.vercel.app/styles/header-1.css
 
 
 .board-outline {
-	border: solid #ccc 8px;
+	border: solid #ccc 2px;
 	display: block;
 	width: 996px;
 	height: 466px;
@@ -313,7 +313,7 @@ h2 {
 }
 
 .col-icon {
-	opacity: 0.4;	
+	opacity: 0.4;
 }
 
 .col-icon:hover {
@@ -762,7 +762,7 @@ img {
 	-ms-user-select: none;
 	user-select: none;
   }
-  
+
   .signature-pad {
 	position: absolute;
 	left: 0;
