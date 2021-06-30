@@ -107,7 +107,14 @@ router.get('/demo', function(req, res) {
 });
 
 router.get('/:id', function(req, res){
-	res.render('index.pug', {
+	var template;
+	if (req.query.embed == 1){
+		template = 'iframe.pug';
+	}
+	else {
+		template = 'index.pug';
+	}
+	res.render(template, {
 		pageTitle: ('scrumblr - ' + req.params.id)
 	});
 });

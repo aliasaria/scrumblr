@@ -1,0 +1,122 @@
+extends layout
+
+block body
+	// Header Start
+	header.site-header
+		div.site-header__wrapper
+			//ul.nav__wrapper
+				li.nav__item
+					a#configmenu(href="#")
+						svg.title(width='12', height='12')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
+					ul#menu
+						li
+							div Enlarge
+						li
+							div Books
+						li
+							div Electronics
+						li
+							div Movies
+				//- li.nav__item
+				//- 	a(href="#")
+				//- 		svg.title(width='12', height='12')
+				//- 			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
+
+
+	div.board-wrapper
+		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline;")
+			//div(style="")
+					a#configmenu(href="#")
+						svg.title(width='12', height='12')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
+					ul#menu
+						li
+							div(style="height: 12px;")
+								svg.title(width='12', height='12')
+									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+						li
+							div(style="height: 12px;")
+								svg.title(width='12', height='12')
+									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+						li
+							div(style="height: 12px;")
+								svg.title(width='12', height='12')
+									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+						li
+							div Poop
+
+		div.board-outline(style="clear:both;")
+			div#board
+				div#board-doodles
+				//<canvas id="signature-pad" class="signature-pad" width=100% height=100%></canvas>
+
+
+				table#board-table.board-table
+					tr
+						td#icon-col(width='1%')
+							svg#add-col.col-icon(width='20', height='20')
+								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+							svg#delete-col.col-icon(width='20', height='20')
+								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
+
+
+		div.buttons
+			//- svg#pen.bottom-icon(width='20', height='20', data-ison='true')
+			//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--pen" />
+			svg#create-card.bottom-icon(width='20', height='20')
+				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--text-document" />
+			svg#create-sticky.bottom-icon(width='20', height='20')
+				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--note" />
+			//- svg#smallify.bottom-icon(width='20', height='20')
+			//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--caret-vertical-circle" />
+
+
+		div.stickers
+			div.sticker#sticker-red
+			div.sticker#sticker-blue
+			div.sticker#sticker-yellow
+			div.sticker#sticker-green
+			br
+			div.sticker#sticker-pink
+			div.sticker#sticker-lightblue
+			div.sticker#sticker-orange
+			div.sticker#sticker-purple
+			//div.sticker#sticker-silverstar
+			//div#addsticker
+			br
+			div.sticker#nosticker
+			//br
+			//div.sticker#sticker-gold
+			//	image(src="/images/stickers/sticker-gold.png")
+			//div.sticker#sticker-bluestar
+			//	image(src="/images/stickers/sticker-bluestar.png")
+			//div.sticker#sticker-silverstar
+			//	image(src="/images/stickers/sticker-silverstar.png")
+			//div.sticker#sticker-redstar
+			//	image(src="/images/stickers/sticker-redstar.png")
+
+
+	//div.trash
+	//	i.fa.fa-trash-o.fa-lg.faded-icon
+
+	//<div style="width: 980px; height: 450px; border: solid 2px; opacity:.1; margin-top: 100px"> this will be the backlog that only appears on drag or perhaps not at all</div>
+
+
+	//- img.sticker(src="images/postit/p2.png", width=140, height=140, style="width:110px;height:110px;")
+	//- img.sticker(src="images/postit/p3.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p4.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p6.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p7.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p8.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p9.png", width=140, height=140, style="width:110px;height:110px;")
+	//- //- img.sticker(src="images/postit/p10.png", width=140, height=140, style="width:110px;height:110px;")
+	//- img.sticker(src="images/postit/p11.png", width=140, height=140, style="width:110px;height:110px;")
+
+	//- <button id="save-png">Save as PNG</button>
+	//- <button id="save-jpeg">Save as JPEG</button>
+	//- <button id="save-svg">Save as SVG</button>
+	//- <button id="undo">Undo</button>
+	//- <button id="clear">Clear</button>
+
+	<script type="text/javascript">	  var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-2069672-4']);  _gaq.push(['_trackPageview']);   (function() {    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);  })(); </script>
