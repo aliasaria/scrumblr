@@ -366,7 +366,7 @@ h2 {
    padding: 0; //2px 8px 2px 2px;
     border: none;
     outline: 0;
-    width: 100px;
+    width: 200px;
     background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 
@@ -386,7 +386,7 @@ h2 {
     xpadding: 2px 2px 2px 2px;
     xborder: solid 1px #E5E5E5;
     outline: 0;
-    width: 100px;
+    width: 200px;
     background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 xopacity: .5;
@@ -788,4 +788,8 @@ img {
 
 .sticker, #add-col, #delete-col {
   cursor: pointer;
+}
+
+.delete-card-icon {
+	cursor: pointer;
 }
