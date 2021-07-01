@@ -40,6 +40,17 @@
 	z-index: -1000;
 }
 
+.card-avatar {
+	position: absolute;
+	top: 60%;
+	left: 80%;
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	z-index: -500;
+	border-radius: 50%;
+}
+
 .content {
 	overflow: hidden;
 	display: block;
@@ -129,7 +140,7 @@
 .sticky .card-icon2 {
 	left: 100px;
 	top: 14px;
-	
+
 }
 
 .sticky .filler {

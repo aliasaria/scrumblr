@@ -355,10 +355,11 @@ io.on('connection', (client) => {
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
 				clean_data.type = scrub(data.type);
+				clean_data.username = data.username ? scrub(data.username) : null;
 
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.type);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.type, clean_data.username);
 				});
 
 				message_out = {
@@ -475,6 +476,30 @@ io.on('connection', (client) => {
 				broadcastToRoom( client, msg );
 				break;
 
+
+			case 'setUserInfo':
+				const username = scrub(message.data.username);
+				const userEmail = scrub(message.data.userEmail);
+				const userAvatar = scrub(message.data.userAvatar);
+				const userinfo = {
+					username,
+					userEmail,
+					userAvatar
+				};
+
+				getRoom(client, function(room) {
+					db.addUser(room, username, userinfo, function(){
+						db.getAllUsers(room, function(users){
+							var msg = {};
+							msg.action = 'updateUserCache';
+							msg.data = users;
+							broadcastToRoom( client, msg );
+						});
+					});
+				});
+
+				break;
+
 			case 'addSticker':
 				var cardId = scrub(message.data.cardId);
 				var stickerId = scrub(message.data.stickerId);
@@ -544,17 +569,14 @@ function initClient ( client )
 	//console.log ('initClient Started');
 	getRoom(client, function(room) {
 
-		db.getAllCards( room , function (cards) {
-
+		db.getAllUsers(room, function(users){
 			client.send(
 				{
-					action: 'initCards',
-					data: cards
+					action: 'updateUserCache',
+					data: users
 				}
 			);
-
 		});
-
 
 		db.getAllColumns ( room, function (columns) {
 			client.send(
@@ -615,6 +637,17 @@ function initClient ( client )
 			}
 		});
 
+		db.getAllCards( room , function (cards) {
+
+			client.send(
+				{
+					action: 'initCards',
+					data: cards
+				}
+			);
+
+		});
+
 		roommates_clients = rooms.room_clients(room);
 		roommates = [];
 
@@ -669,7 +702,7 @@ function broadcastToRoom ( client, message ) {
 }
 
 //----------------CARD FUNCTIONS
-function createCard( room, id, text, x, y, rot, colour, type ) {
+function createCard( room, id, text, x, y, rot, colour, type, username ) {
 	var card = {
 		id: id,
 		colour: colour,
@@ -678,7 +711,8 @@ function createCard( room, id, text, x, y, rot, colour, type ) {
 		y: y,
 		text: text,
 		type: type,
-		sticker: null
+		sticker: null,
+		username: username
 	};
 
 	db.createCard(room, id, card);

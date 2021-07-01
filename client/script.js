@@ -13,6 +13,9 @@ var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'))
 var socket = io({
     path: '/socketio'
 });
+
+var userCache = {};
+
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {
@@ -103,7 +106,7 @@ function getMessage(m) {
         case 'createCard':
             //console.log(data);
             drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, data.type, null,
-                null);
+                null, data.username);
             break;
 
         case 'deleteCard':
@@ -155,6 +158,10 @@ function getMessage(m) {
             updateName(message.data.sid, message.data.user_name);
             break;
 
+        case 'updateUserCache':
+            updateUserCache(message.data);
+            break;
+
         case 'addSticker':
             addSticker(message.data.cardId, message.data.stickerId);
             break;
@@ -190,8 +197,10 @@ $(document).bind('keyup', function(event) {
     keyTrap = event.which;
 });
 
-function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed) {
+function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed, username) {
     //cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
+
+    const userAvatar = userCache[username] ? userCache[username].userAvatar : null;
 
     var h = '';
 
@@ -203,7 +212,8 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
         <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
         <img class="card-image" src="images/' + colour + '-card.png">\
-        <div id="content:' + id +
+        ' + (userAvatar ? ('<img class="card-avatar" src="' + userAvatar + '">'): '') +
+        '<div id="content:' + id +
             '" class="content stickertarget droppable">' +
             text + '</div><span class="filler"></span>\
         </div>';
@@ -215,7 +225,8 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         ">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
         <img class="card-image" src="images/postit/p' + colour + '.png">\
-        <div id="content:' + id +
+        ' + (userAvatar ? ('<img class="card-avatar" src="' + userAvatar + '">'): '') +
+        '<div id="content:' + id +
             '" class="content stickertarget droppable">' +
             text + '</div><span class="filler"></span>\
         </div>';
@@ -413,7 +424,8 @@ function addSticker(cardId, stickerId) {
 // cards
 //----------------------------------
 function createCard(id, text, x, y, rot, colour, type) {
-    drawNewCard(id, text, x, y, rot, colour, type, null, null);
+    const username = getCookie('adh-username');
+    drawNewCard(id, text, x, y, rot, colour, type, null, null, username);
 
     var action = "createCard";
 
@@ -424,7 +436,8 @@ function createCard(id, text, x, y, rot, colour, type) {
         y: y,
         rot: rot,
         colour: colour,
-        type: type
+        type: type,
+        username: getCookie('adh-username')
     };
 
     sendAction(action, data);
@@ -484,6 +497,7 @@ function initCards(cardArray) {
             card.type,
             card.sticker,
             0,
+            card.username
         );
     }
 
@@ -654,6 +668,26 @@ function setName(name) {
     sendAction('setUserName', name);
 
     setCookie('scrumscrum-username', name, 365);
+}
+
+function updateUserInfo() {
+    const username = getCookie('adh-username');
+    const userEmail = getCookie('adh-email');
+    const userAvatar = getCookie('adh-avatar');
+    sendAction('setUserInfo', {
+      username,
+      userEmail,
+      userAvatar
+    });
+    userCache[username] = {
+      username,
+      userEmail,
+      userAvatar
+    };
+}
+
+function updateUserCache(users) {
+  userCache = users;
 }
 
 function displayInitialUsers(users) {
