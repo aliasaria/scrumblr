@@ -636,7 +636,9 @@ function deleteColumn() {
 
 function deleteRow() {
     if (columns.length <= 0) return false;
-    if (columns[0].length <= 1) return false;
+    if (columns[0].length == 1)
+      return deleteColumn();
+    if (columns[0].length <= 0) return false;
 
     displayRemoveRow();
     columns.forEach(function(col){
@@ -673,7 +675,7 @@ function drawNewRow() {
 
 function createRow() {
   if (!columns.length){
-    return;
+    return createColumn();
   }
   const totalrows = columns[0].length;
 
