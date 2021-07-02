@@ -575,6 +575,17 @@ function onColumnChange(colId, rowId, text) {
     updateColumns(columns);
 }
 
+function displayRemoveAllColumns() {
+    if (columns.length <= 0) return false;
+
+    $('.col').fadeOut(150,
+        function() {
+            $(this).remove();
+        }
+    );
+
+}
+
 function displayRemoveColumn() {
     if (columns.length <= 0) return false;
 
@@ -620,6 +631,17 @@ function createColumn() {
     sendAction(action, data);
 }
 
+function deleteAllColumns() {
+    if (columns.length <= 0) return false;
+
+    displayRemoveAllColumns();
+    columns = [];
+
+    var action = "updateColumns";
+    var data = columns;
+    sendAction(action, data);
+}
+
 function deleteColumn() {
     if (columns.length <= 0) return false;
 
@@ -636,9 +658,13 @@ function deleteColumn() {
 
 function deleteRow() {
     if (columns.length <= 0) return false;
-    if (columns[0].length == 1)
-      return deleteColumn();
-    if (columns[0].length <= 0) return false;
+
+    // Delete all cols if last line
+    if (columns[0].length == 1){
+      return deleteAllColumns();
+    }
+
+    if (columns[0].length <= 1) return false;
 
     displayRemoveRow();
     columns.forEach(function(col){
