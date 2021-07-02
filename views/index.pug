@@ -68,12 +68,19 @@ block body
 
 
 				table#board-table.board-table
-					tr
+					tr(data-row='1')
 						td#icon-col(width='1%')
 							svg#add-col.col-icon(width='20', height='20')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
 							svg#delete-col.col-icon(width='20', height='20')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
+
+				div.line-buttons
+					div.line-buttons-inner
+						svg#add-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+						svg#delete-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
 
 
 		div.buttons

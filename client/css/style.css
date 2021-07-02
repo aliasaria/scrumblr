@@ -217,7 +217,6 @@ width: 16px; height: 16px;
 	xborder-left: dashed #19ba98 5px;
 	text-align: center;
 	vertical-align: top;
-	height: 100%;
 	xopacity: 1;
 	background-image: url('../images/green-board-line.png');
 	background-repeat: repeat-y;
@@ -228,7 +227,6 @@ width: 16px; height: 16px;
 	border-left: none;
 	text-align: center;
 	vertical-align: top;
-	height: 100%;
 	background-image: none;
 
 }
@@ -307,12 +305,35 @@ h2 {
 	position: absolute; right: 3px; top: 228px; display: none;
 }
 
-.col-icon {
+.col-icon, .line-icon {
 	opacity: 0.4;
+	cursor: pointer;
 }
 
-.col-icon:hover {
+.col-icon:hover, .line-icon:hover {
 	opacity: 1.0;
+}
+
+.line-buttons {
+	position: relative;
+	height: 25px;
+	top: calc(100% - 25px);
+	width: 100%;
+}
+
+.line-buttons-inner {
+	width: 52px;
+	margin: auto;
+	padding-right: 10px;
+}
+
+.line-icon {
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+ #add-line, #delete-line {
+	display: none;
 }
 
 .column-editable {

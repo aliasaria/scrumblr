@@ -1,5 +1,4 @@
 var cards = {};
-var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
@@ -510,67 +509,97 @@ function initCards(cardArray) {
 // cols
 //----------------------------------
 
-function drawNewColumn(columnName) {
+function drawNewColumn() {
     var cls = "col";
-    if (totalcolumns === 0) {
+    var drawn_col_number = $('tr:first').find('td').length - 1;
+
+    if (drawn_col_number === 0) {
         cls = "col first";
     }
 
-    $('#icon-col').before('<td class="' + cls +
-        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
-        '" class="editable column-editable">' + columnName + '</h2></td>');
+    var columnName = 'New';
+    var colId = drawn_col_number + 1;
 
-    $('.editable').editable({
-        multiline: false,
-        save: function(content) {
-            onColumnChange(this.id, content.target.innerText);
-        }
+    $('tr').each(function() {
+      var newTd = $('<td class="' + cls +
+          '" width="10%"><h2 ' +
+          ' class="editable column-editable" data-col="' + colId + '">' + columnName + '</h2></td>');
+      $( this ).find('#icon-col').before(newTd);
+
+      newTd.hide();
+      $( this ).find('.col:last').fadeIn(1500);
     });
 
-    $('.col:last').fadeIn(1500);
+    /*$('#icon-col').before('<td class="' + cls +
+        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
+        '" class="editable column-editable">' + columnName + '</h2></td>');*/
 
-    totalcolumns++;
+    refreshEditable();
+
+    //$('.col:last').fadeIn(1500);
 }
 
-function onColumnChange(id, text) {
-    var names = Array();
+function refreshEditable(){
+  $('.editable').editable({
+      multiline: false,
+      save: function(content) {
+          const colId = parseInt($(this).attr('data-col'));
+          const rowId = parseInt($(this).parents('tr:first').attr('data-row'));
+          onColumnChange(colId, rowId, content.target.innerText);
+      }
+  });
+}
 
-    //console.log(id + " " + text );
+function setCellText(colId, rowId, text){
+  const row = $('tr[data-row=' + rowId + ']');
+  const col = row.find('h2[data-col=' + colId + ']');
+  col.text(text);
+}
 
-    //Get the names of all the columns right from the DOM
-    $('.col').each(function() {
+function onColumnChange(colId, rowId, text) {
 
-        //get ID of current column we are traversing over
-        var thisID = $(this).children("h2").attr('id');
-
-        if (id == thisID) {
-            names.push(text);
-        } else {
-            names.push($(this).text());
-        }
-
-    });
-
-    updateColumns(names);
+    console.log(text);
+    columns[colId - 1][rowId - 1] = text;
+    updateColumns(columns);
 }
 
 function displayRemoveColumn() {
-    if (totalcolumns <= 0) return false;
+    if (columns.length <= 0) return false;
 
-    $('.col:last').fadeOut(150,
+    $('tr').each(function(){
+      $(this).find('.col:last').fadeOut(150,
+          function() {
+              $(this).remove();
+          }
+      );
+    });
+
+}
+
+function displayRemoveRow() {
+    if (columns.length <= 0) return false;
+    if (columns[0].length <= 1) return false;
+
+    $('tr:last').fadeOut(150,
         function() {
             $(this).remove();
         }
     );
 
-    totalcolumns--;
 }
 
-function createColumn(name) {
-    if (totalcolumns >= 8) return false;
+function createColumn() {
+    if (columns.length >= 8) return false;
 
-    drawNewColumn(name);
-    columns.push(name);
+    drawNewColumn();
+    if (columns.length){
+      // Create a copy of the first col
+      var newCol = columns[0].map((x) => x);
+      columns.push(newCol);
+    }
+    else {
+      columns.push(['New']);
+    }
 
     var action = "updateColumns";
 
@@ -580,7 +609,7 @@ function createColumn(name) {
 }
 
 function deleteColumn() {
-    if (totalcolumns <= 0) return false;
+    if (columns.length <= 0) return false;
 
     displayRemoveColumn();
     columns.pop();
@@ -590,6 +619,66 @@ function deleteColumn() {
     var data = columns;
 
     sendAction(action, data);
+}
+
+
+function deleteRow() {
+    if (columns.length <= 0) return false;
+    if (columns[0].length <= 1) return false;
+
+    displayRemoveRow();
+    columns.forEach(function(col){
+      col.pop();
+    });
+
+    var action = "updateColumns";
+
+    var data = columns;
+
+    sendAction(action, data);
+}
+
+
+function drawNewRow() {
+
+    var line = $('tr:last');
+    var newLine = line.clone();
+    newLine.find('.col').css('opacity', '1');
+    var latestRowId = parseInt(newLine.attr('data-row'));
+    newLine.attr('data-row', latestRowId + 1);
+    newLine.insertAfter(line);
+    newLine.hide();
+    newLine.fadeIn(1500);
+
+    rowCount = $('tr').length;
+
+    $('tr td:last-child').hide();
+    $('tr:first td:last-child').attr('rowspan', rowCount).show();
+
+    refreshEditable();
+
+}
+
+function createRow() {
+  if (!columns.length){
+    return;
+  }
+  const totalrows = columns[0].length;
+
+  if (totalrows >= 4) return false;
+
+  drawNewRow();
+
+  columns.forEach(function(col){
+    col.push('New');
+  });
+
+  var action = "updateColumns";
+
+  var data = columns;
+
+  sendAction(action, data);
+
 }
 
 function updateColumns(c) {
@@ -608,18 +697,27 @@ function deleteColumns(next) {
 }
 
 function initColumns(columnArray) {
-    totalcolumns = 0;
     columns = columnArray;
 
+    // Remove all cols
     $('.col').remove();
+    // Remove all rows except first
+    $("tr:not(:first)").remove();
 
-    for (var i in columnArray) {
-        column = columnArray[i];
-
-        drawNewColumn(
-            column
-        );
+    // Init cols and rows
+    if (columnArray.length){
+      columnArray.forEach(drawNewColumn);
+      for (var i=0; i < columnArray[0].length - 1; i++)
+        drawNewRow();
     }
+
+    for (var i in columns){
+      const col = columns[i];
+      for (var j in col){
+        setCellText(parseInt(i)+1, parseInt(j)+1, col[j]);
+      }
+    }
+
 }
 
 
@@ -932,9 +1030,18 @@ $(function() {
         }
     );
 
+    $('.line-buttons').hover(
+        function() {
+            $('.line-icon').fadeIn(10);
+        },
+        function() {
+            $('.line-icon').fadeOut(150);
+        }
+    );
+
     $('#add-col').click(
         function() {
-            createColumn('New');
+            createColumn();
             return false;
         }
     );
@@ -942,6 +1049,20 @@ $(function() {
     $('#delete-col').click(
         function() {
             deleteColumn();
+            return false;
+        }
+    );
+
+    $('#add-line').click(
+        function() {
+            createRow();
+            return false;
+        }
+    );
+
+    $('#delete-line').click(
+        function() {
+            deleteRow();
             return false;
         }
     );
