@@ -149,9 +149,14 @@ width: 16px; height: 16px;
 }
 
 
+.card-avatar {
+	opacity: 1 !important;
+}
+
+
 .card-icon2 {
 	top: 17%; left: 85%;
-
+  cursor: pointer;
 }
 
 

@@ -48,7 +48,7 @@
 
 .card-avatar {
 	position: absolute;
-	top: 60%;
+	top: 60% !important;
 	left: 80%;
 	width: 24px;
 	height: 24px;
