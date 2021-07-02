@@ -436,17 +436,11 @@ io.on('connection', (client) => {
 				if (!(columns instanceof Array))
 					break;
 
-				var clean_columns = [];
-
-				for (var i in columns)
-				{
-					clean_columns[i] = scrub( columns[i] );
-				}
 				getRoom( client, function(room) {
-					db.setColumns( room, clean_columns );
+					db.setColumns( room, columns );
 				});
 
-				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
+				broadcastToRoom( client, { action: 'updateColumns', data: columns } );
 
 				break;
 
