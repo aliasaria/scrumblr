@@ -48,17 +48,24 @@ block body
 
 		div.board-outline(style="clear:both;")
 			div#board
-				div#board-doodles
+				div#board-doodles(style="background-image: url('css/bg/scribbles2.png');")
 				//<canvas id="signature-pad" class="signature-pad" width=100% height=100%></canvas>
 
 
 				table#board-table.board-table
-					tr
+					tr(data-row='1')
 						td#icon-col(width='1%')
 							svg#add-col.col-icon(width='20', height='20')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
 							svg#delete-col.col-icon(width='20', height='20')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
+
+				div.line-buttons
+					div.line-buttons-inner
+						svg#add-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+						svg#delete-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
 
 
 		div.buttons
@@ -68,6 +75,8 @@ block body
 				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--text-document" />
 			svg#create-sticky.bottom-icon(width='20', height='20')
 				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--note" />
+			svg#create-label.bottom-icon(width='20', height='20')
+				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paragraph" />
 			//- svg#smallify.bottom-icon(width='20', height='20')
 			//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--caret-vertical-circle" />
 
