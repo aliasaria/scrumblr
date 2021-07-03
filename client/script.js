@@ -234,8 +234,6 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed,
         </div>';
     }
     else if (type == 'label') {
-        console.log(colour);
-        console.log(text);
         h = '<div id="' + id + '" class="label ' + colour +
             ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
             'deg);\
@@ -576,8 +574,6 @@ function setCellText(colId, rowId, text){
 }
 
 function onColumnChange(colId, rowId, text) {
-
-    console.log(text);
     columns[colId - 1][rowId - 1] = text;
     updateColumns(columns);
 }
@@ -1038,7 +1034,7 @@ $(function() {
                 '',
                 58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
                 rotation,
-                randomStickyColour(),
+                randomCardColour(),
                 "label");
         });
 
