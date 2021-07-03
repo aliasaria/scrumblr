@@ -1141,6 +1141,7 @@ $(function() {
     //
 
     var user_name = getCookie('scrumscrum-username');
+    var adh_user_name = getCookie('adh-username');
 
 
 
@@ -1162,7 +1163,14 @@ $(function() {
         setName($(this).val());
     });
 
-    $("#yourname-input").val(user_name);
+    if (adh_user_name){
+      $("#yourname-input").val(adh_user_name);
+      $("#yourname-input").prop('readonly', true);
+    }
+    else {
+      $("#yourname-input").val(user_name);
+    }
+
     $("#yourname-input").blur();
 
     $("#yourname-li").hide();
