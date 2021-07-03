@@ -116,18 +116,9 @@ router.get('/:id', function(req, res){
 		});
 	}
 	else {
-		// Set template according to embed param
-		// to choose iframe mode or not
-		var template;
-		if (req.query.embed == 1){
-			template = 'iframe.pug';
-		}
-		else {
-			template = 'index.pug';
-		}
-
-		res.render(template, {
-			pageTitle: ('scrumblr - ' + req.params.id)
+		res.render('index.pug', {
+			pageTitle: ('scrumblr - ' + req.params.id),
+			embed: req.query.embed
 		});
 	}
 });

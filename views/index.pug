@@ -4,59 +4,50 @@ block body
 	// Header Start
 	header.site-header
 		div.site-header__wrapper
-			a.greyheading(href="/") scrumblr
-			//ul.nav__wrapper
-				li.nav__item
-					a#configmenu(href="#")
-						svg.title(width='12', height='12')
-							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-					ul#menu
-						li
-							div Enlarge
-						li
-							div Books
-						li
-							div Electronics
-						li
-							div Movies
-				//- li.nav__item
-				//- 	a(href="#")
-				//- 		svg.title(width='12', height='12')
-				//- 			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-
-
-	- if (locals.demo)
-		div.notice-bar this is a demo board. to make a private board, go to <a href="/">scrumblr home</a>
-
-	//div.config
-	//	i.fa.fa-cog.fa-lg.faded-icon
-	//- svg(width='15', height='15')
-	//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--home" />
-	<br/><br/>
-	//p.greyheading scrumblr by <a href="https://github.com/aliasaria">aliasaria</a>
+			- if (!locals.embed)
+				a.greyheading(href="/") scrumblr
+				//ul.nav__wrapper
+					li.nav__item
+						a#configmenu(href="#")
+							svg.title(width='12', height='12')
+								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
+						ul#menu
+							li
+								div Enlarge
+							li
+								div Books
+							li
+								div Electronics
+							li
+								div Movies
+					//- li.nav__item
+					//- 	a(href="#")
+					//- 		svg.title(width='12', height='12')
+					//- 			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
 
 	div.board-wrapper
 		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline;")
-			h1#board-title.ceditable(style="") Board Title
-			//div(style="")
-					a#configmenu(href="#")
-						svg.title(width='12', height='12')
-							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-					ul#menu
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div Poop
+			- if (!locals.embed)
+				h1#board-title.ceditable(style="") Board Title
+				//div(style="")
+						a#configmenu(href="#")
+							svg.title(width='12', height='12')
+								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
+						ul#menu
+							li
+								div(style="height: 12px;")
+									svg.title(width='12', height='12')
+										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+							li
+								div(style="height: 12px;")
+									svg.title(width='12', height='12')
+										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+							li
+								div(style="height: 12px;")
+									svg.title(width='12', height='12')
+										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
+							li
+								div Poop
 
 		div.board-outline(style="clear:both;")
 			div#board
@@ -121,12 +112,13 @@ block body
 			//	image(src="/images/stickers/sticker-redstar.png")
 
 
-		div.names
-			p connected:
-			//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
-			input#yourname-input
-			span.you-text (you)
-			ul#names-ul
+		- if (!locals.embed)
+			div.names
+				p connected:
+				//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
+				input#yourname-input
+				span.you-text (you)
+				ul#names-ul
 
 	//div.trash
 	//	i.fa.fa-trash-o.fa-lg.faded-icon
