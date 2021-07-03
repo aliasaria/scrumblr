@@ -1,4 +1,73 @@
 /* reset css */
+
+@font-face {
+    font-family: 'Nexa Bold';
+    src: url('/fonts/NexaFreeBoldwebfont.eot');
+    src: local('Nexa Bold'), url('/fonts/NexaFreeBoldwebfont.woff') format('woff'), url('/fonts//NexaFreeBoldwebfont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/NexaFreeBoldwebfont.eot');
+    src: local('Nexa Bold'), url('/fonts/NexaFreeBoldwebfont.woff') format('woff'), url('/fonts//NexaFreeBoldwebfont.ttf') format('truetype');
+}
+
+// ------------------------------------------------
+
+/* Manrope-regular - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Manrope Regular'), local('Manrope-Regular'),
+       url('/fonts/manrope-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Regular.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-regular.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+/* Manrope-500 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Manrope Medium'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-medium.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Medium.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-medium.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+/* Manrope-600 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Manrope SemiBold'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-semibold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-SemiBold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-semibold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+/* Manrope-700 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Manrope Bold'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-bold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Bold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-bold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+/* Manrope-800 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Manrope ExtraBold'), local('Manrope-ExtraBold'),
+       url('/fonts/manrope-extrabold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-ExtraBold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-extrabold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
 body{line-height:1}
@@ -368,8 +437,7 @@ h2 {
 	xwidth: 980px;
 	text-align: right;
 	color: #bbb;
-	letter-spacing: 4px;
-	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	font-family:  "Manrope", "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
 
 }
@@ -402,7 +470,6 @@ h2 {
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
-	letter-spacing: 4px;
 	margin:0;
 
 	position: relative;
@@ -423,7 +490,6 @@ xopacity: .5;
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
-	letter-spacing: 4px;
 	margin:0;
 
 }
