@@ -240,8 +240,7 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed,
         ">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
         <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
-        ' + (userAvatar ? ('<img class="card-icon card-avatar" src="' + userAvatar + '">'): '') +
-        '<div id="content:' + id +
+        <div id="content:' + id +
             '" class="content stickertarget droppable">' +
             text + '</div><span class="filler"></span>\
         </div>';
