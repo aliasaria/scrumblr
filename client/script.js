@@ -122,6 +122,9 @@ function getMessage(m) {
             {
                 $('#' + data.id).children('.change-colour').data('colour',data.colour);
                 $('#' + data.id).children('.card-image').attr("src", 'images/' + data.colour + '-card.png');
+
+                // Remove all color classes and add new one
+                $('#' + data.id).removeClass(cardColours.join(' ')).addClass(data.colour);
             }
             break;
 
@@ -231,11 +234,14 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed,
         </div>';
     }
     else if (type == 'label') {
+        console.log(colour);
+        console.log(text);
         h = '<div id="' + id + '" class="label ' + colour +
             ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
             'deg);\
         ">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
+        <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
         ' + (userAvatar ? ('<img class="card-icon card-avatar" src="' + userAvatar + '">'): '') +
         '<div id="content:' + id +
             '" class="content stickertarget droppable">' +
@@ -480,6 +486,7 @@ function rotateCardColor(id, currentColour) {
     var newIndex = index + 1;
     newIndex = newIndex % (stickyColours.length + 1);
 
+    $('#'+id).removeClass(currentColour).addClass(cardColours[newIndex]);
     $('#'+id).children('.card-image').attr("src", 'images/' + cardColours[newIndex] + '-card.png');
     $('#'+id).children('.change-colour').data('colour',cardColours[newIndex]);
 

@@ -18,31 +18,6 @@
 	display: block;
 }
 
-.label .content {
-	overflow: hidden;
-	display: block;
-	width: 230px;
-	height: 60px;
-	margin: auto;
-
-	font-family: "Rock Salt" !important;
-	font-size: 1.2em;
-	letter-spacing: 0px;
-
-	xtext-shadow: 0px 0px 1px #444;
-
-	opacity: .9;
-
-	color: black;
-	text-align: center;
-	padding-top: 4px;
-	xline-height: 16px;
-
-	align-items: center;
-    justify-content: center;
-    display: flex;
-}
-
 /* .label .content {
 	font-family: "Rock Salt" !important;
 	font-size: 1.2em;
@@ -54,9 +29,6 @@
 	xpadding: 5px; float: left;
 	xmargin: 0 10px 10px 0;
 	font-size: .9em;
-	background: white;
-	opacity: 0.8;
-	box-shadow: 5px 5px 5px #ccc;
 	font-family: "Rock Salt" !important;
 	border-radius: 5px;
 
@@ -73,6 +45,29 @@
 	display: block;
 }
 
+.label .content {
+	overflow: hidden;
+	display: block;
+	width: 190px;
+	height: 60px;
+	margin: auto;
+	padding: 0 20px;
+
+	font-family: "Rock Salt" !important;
+	font-size: 1.2em;
+	letter-spacing: 0px;
+
+	xtext-shadow: 0px 0px 1px #444;
+
+	opacity: .9;
+	text-align: center;
+	xline-height: 16px;
+
+	align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
 .label .card-icon {
 	left: 210px;
 	top: 5px;
@@ -80,9 +75,49 @@
 }
 
 .label .card-icon2 {
-	left: 100px;
-	top: 14px;
+	left: 210px;
+	top: 28px;
 
+}
+
+.label.white {
+	color: black;
+	background: rgba(255, 255, 255, 0.5);
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+
+.label.green {
+	background: #016a70;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #fff;
+	color: #ffffff;
+}
+
+.label.green .content {
+	color: #ffffff;
+}
+
+.label.yellow {
+	background: #f1cd5f;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #ccc;
+	color: #black;
+}
+
+.label.yellow .content {
+	color: black;
+}
+
+.label.blue {
+	background: #d37153;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #fff;
+	color: #ffffff;
+}
+
+.label.blue .content {
+	color: #ffffff;
 }
 
 /* .sticky .filler {
