@@ -2,52 +2,9 @@ extends layout
 
 block body
 	// Header Start
-	header.site-header
-		div.site-header__wrapper
-			- if (!locals.embed)
-				a.greyheading(href="/") scrumblr
-				//ul.nav__wrapper
-					li.nav__item
-						a#configmenu(href="#")
-							svg.title(width='12', height='12')
-								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-						ul#menu
-							li
-								div Enlarge
-							li
-								div Books
-							li
-								div Electronics
-							li
-								div Movies
-					//- li.nav__item
-					//- 	a(href="#")
-					//- 		svg.title(width='12', height='12')
-					//- 			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
 
 	div.board-wrapper
-		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline;")
-			- if (!locals.embed)
-				h1#board-title.ceditable(style="") Board Title
-				//div(style="")
-						a#configmenu(href="#")
-							svg.title(width='12', height='12')
-								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-						ul#menu
-							li
-								div(style="height: 12px;")
-									svg.title(width='12', height='12')
-										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-							li
-								div(style="height: 12px;")
-									svg.title(width='12', height='12')
-										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-							li
-								div(style="height: 12px;")
-									svg.title(width='12', height='12')
-										<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-							li
-								div Poop
+		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;")
 
 		div.board-outline(style="clear:both;")
 			img.logo(src="images/adh-logo.png", height=25, style="")
