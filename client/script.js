@@ -162,6 +162,7 @@ function getMessage(m) {
 
         case 'updateUserCache':
             updateUserCache(message.data);
+            updateUserInfo();
             break;
 
         case 'addSticker':
@@ -814,6 +815,10 @@ function updateUserInfo() {
     const username = getCookie('adh-username');
     const userEmail = getCookie('adh-email');
     const userAvatar = getCookie('adh-avatar');
+
+    if (!username)
+      return false;
+
     sendAction('setUserInfo', {
       username,
       userEmail,
