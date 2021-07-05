@@ -1,5 +1,4 @@
 var cards = {};
-var totalcolumns = 0;
 var columns = [];
 var currentTheme = "bigcards";
 var boardInitialized = false;
@@ -13,6 +12,9 @@ var baseurl = location.pathname.substring(0, location.pathname.lastIndexOf('/'))
 var socket = io({
     path: '/socketio'
 });
+
+var userCache = {};
+
 //an action has happened, send it to the
 //server
 function sendAction(a, d) {
@@ -103,7 +105,7 @@ function getMessage(m) {
         case 'createCard':
             //console.log(data);
             drawNewCard(data.id, data.text, data.x, data.y, data.rot, data.colour, data.type, null,
-                null);
+                null, data.username);
             break;
 
         case 'deleteCard':
@@ -120,6 +122,9 @@ function getMessage(m) {
             {
                 $('#' + data.id).children('.change-colour').data('colour',data.colour);
                 $('#' + data.id).children('.card-image').attr("src", 'images/' + data.colour + '-card.png');
+
+                // Remove all color classes and add new one
+                $('#' + data.id).removeClass(cardColours.join(' ')).addClass(data.colour);
             }
             break;
 
@@ -133,6 +138,10 @@ function getMessage(m) {
 
         case 'changeTheme':
             changeThemeTo(data);
+            break;
+
+        case 'changeBg':
+            changeBgTo(data);
             break;
 
         case 'join-announce':
@@ -149,6 +158,11 @@ function getMessage(m) {
 
         case 'nameChangeAnnounce':
             updateName(message.data.sid, message.data.user_name);
+            break;
+
+        case 'updateUserCache':
+            updateUserCache(message.data);
+            updateUserInfo();
             break;
 
         case 'addSticker':
@@ -186,8 +200,10 @@ $(document).bind('keyup', function(event) {
     keyTrap = event.which;
 });
 
-function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed) {
+function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed, username) {
     //cards[id] = {id: id, text: text, x: x, y: y, rot: rot, colour: colour};
+
+    const userAvatar = userCache[username] ? userCache[username].userAvatar : null;
 
     var h = '';
 
@@ -199,7 +215,8 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
         <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
         <img class="card-image" src="images/' + colour + '-card.png">\
-        <div id="content:' + id +
+        ' + (userAvatar ? ('<img class="card-icon card-avatar" src="' + userAvatar + '">'): '') +
+        '<div id="content:' + id +
             '" class="content stickertarget droppable">' +
             text + '</div><span class="filler"></span>\
         </div>';
@@ -211,6 +228,19 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         ">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
         <img class="card-image" src="images/postit/p' + colour + '.png">\
+        ' + (userAvatar ? ('<img class="card-icon card-avatar" src="' + userAvatar + '">'): '') +
+        '<div id="content:' + id +
+            '" class="content stickertarget droppable">' +
+            text + '</div><span class="filler"></span>\
+        </div>';
+    }
+    else if (type == 'label') {
+        h = '<div id="' + id + '" class="label ' + colour +
+            ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
+            'deg);\
+        ">\
+        <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
+        <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
         <div id="content:' + id +
             '" class="content stickertarget droppable">' +
             text + '</div><span class="filler"></span>\
@@ -342,7 +372,7 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
         function() {
                 rotateCardColor(id, $(this).data('colour'));
             });
- 
+
 
     card.children('.content').editable({
         multiline: true,
@@ -409,7 +439,8 @@ function addSticker(cardId, stickerId) {
 // cards
 //----------------------------------
 function createCard(id, text, x, y, rot, colour, type) {
-    drawNewCard(id, text, x, y, rot, colour, type, null, null);
+    const username = getCookie('adh-username');
+    drawNewCard(id, text, x, y, rot, colour, type, null, null, username);
 
     var action = "createCard";
 
@@ -420,7 +451,8 @@ function createCard(id, text, x, y, rot, colour, type) {
         y: y,
         rot: rot,
         colour: colour,
-        type: type
+        type: type,
+        username: getCookie('adh-username')
     };
 
     sendAction(action, data);
@@ -452,6 +484,7 @@ function rotateCardColor(id, currentColour) {
     var newIndex = index + 1;
     newIndex = newIndex % (stickyColours.length + 1);
 
+    $('#'+id).removeClass(currentColour).addClass(cardColours[newIndex]);
     $('#'+id).children('.card-image').attr("src", 'images/' + cardColours[newIndex] + '-card.png');
     $('#'+id).children('.change-colour').data('colour',cardColours[newIndex]);
 
@@ -480,6 +513,7 @@ function initCards(cardArray) {
             card.type,
             card.sticker,
             0,
+            card.username
         );
     }
 
@@ -492,67 +526,106 @@ function initCards(cardArray) {
 // cols
 //----------------------------------
 
-function drawNewColumn(columnName) {
+function drawNewColumn() {
     var cls = "col";
-    if (totalcolumns === 0) {
+    var drawn_col_number = $('tr:first').find('td').length - 1;
+
+    if (drawn_col_number === 0) {
         cls = "col first";
     }
 
-    $('#icon-col').before('<td class="' + cls +
-        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
-        '" class="editable column-editable">' + columnName + '</h2></td>');
+    var columnName = 'New';
+    var colId = drawn_col_number + 1;
 
-    $('.editable').editable({
-        multiline: false,
-        save: function(content) {
-            onColumnChange(this.id, content.target.innerText);
-        }
-    });    
+    $('tr').each(function() {
+      var newTd = $('<td class="' + cls +
+          '" width="10%"><h2 ' +
+          ' class="editable column-editable" data-col="' + colId + '">' + columnName + '</h2></td>');
+      $( this ).find('#icon-col').before(newTd);
 
-    $('.col:last').fadeIn(1500);
-
-    totalcolumns++;
-}
-
-function onColumnChange(id, text) {
-    var names = Array();
-
-    //console.log(id + " " + text );
-
-    //Get the names of all the columns right from the DOM
-    $('.col').each(function() {
-
-        //get ID of current column we are traversing over
-        var thisID = $(this).children("h2").attr('id');
-
-        if (id == thisID) {
-            names.push(text);
-        } else {
-            names.push($(this).text());
-        }
-
+      newTd.hide();
+      $( this ).find('.col:last').fadeIn(1500);
     });
 
-    updateColumns(names);
+    /*$('#icon-col').before('<td class="' + cls +
+        '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
+        '" class="editable column-editable">' + columnName + '</h2></td>');*/
+
+    refreshEditable();
+
+    //$('.col:last').fadeIn(1500);
 }
 
-function displayRemoveColumn() {
-    if (totalcolumns <= 0) return false;
+function refreshEditable(){
+  $('.editable').editable({
+      multiline: false,
+      save: function(content) {
+          const colId = parseInt($(this).attr('data-col'));
+          const rowId = parseInt($(this).parents('tr:first').attr('data-row'));
+          onColumnChange(colId, rowId, content.target.innerText);
+      }
+  });
+}
 
-    $('.col:last').fadeOut(150,
+function setCellText(colId, rowId, text){
+  const row = $('tr[data-row=' + rowId + ']');
+  const col = row.find('h2[data-col=' + colId + ']');
+  col.text(text);
+}
+
+function onColumnChange(colId, rowId, text) {
+    columns[colId - 1][rowId - 1] = text;
+    updateColumns(columns);
+}
+
+function displayRemoveAllColumns() {
+    if (columns.length <= 0) return false;
+
+    $('.col').fadeOut(150,
         function() {
             $(this).remove();
         }
     );
 
-    totalcolumns--;
 }
 
-function createColumn(name) {
-    if (totalcolumns >= 8) return false;
+function displayRemoveColumn() {
+    if (columns.length <= 0) return false;
 
-    drawNewColumn(name);
-    columns.push(name);
+    $('tr').each(function(){
+      $(this).find('.col:last').fadeOut(150,
+          function() {
+              $(this).remove();
+          }
+      );
+    });
+
+}
+
+function displayRemoveRow() {
+    if (columns.length <= 0) return false;
+    if (columns[0].length <= 1) return false;
+
+    $('tr:last').fadeOut(150,
+        function() {
+            $(this).remove();
+        }
+    );
+
+}
+
+function createColumn() {
+    if (columns.length >= 8) return false;
+
+    drawNewColumn();
+    if (columns.length){
+      // Create a copy of the first col
+      var newCol = columns[0].map((x) => x);
+      columns.push(newCol);
+    }
+    else {
+      columns.push(['New']);
+    }
 
     var action = "updateColumns";
 
@@ -561,8 +634,19 @@ function createColumn(name) {
     sendAction(action, data);
 }
 
+function deleteAllColumns() {
+    if (columns.length <= 0) return false;
+
+    displayRemoveAllColumns();
+    columns = [];
+
+    var action = "updateColumns";
+    var data = columns;
+    sendAction(action, data);
+}
+
 function deleteColumn() {
-    if (totalcolumns <= 0) return false;
+    if (columns.length <= 0) return false;
 
     displayRemoveColumn();
     columns.pop();
@@ -572,6 +656,72 @@ function deleteColumn() {
     var data = columns;
 
     sendAction(action, data);
+}
+
+
+function deleteRow() {
+    if (columns.length <= 0) return false;
+
+    // Delete all cols if last line
+    if (columns[0].length == 1){
+      return deleteAllColumns();
+    }
+
+    if (columns[0].length <= 1) return false;
+
+    displayRemoveRow();
+    columns.forEach(function(col){
+      col.pop();
+    });
+
+    var action = "updateColumns";
+
+    var data = columns;
+
+    sendAction(action, data);
+}
+
+
+function drawNewRow() {
+
+    var line = $('tr:last');
+    var newLine = line.clone();
+    newLine.find('.col').css('opacity', '1');
+    var latestRowId = parseInt(newLine.attr('data-row'));
+    newLine.attr('data-row', latestRowId + 1);
+    newLine.insertAfter(line);
+    newLine.hide();
+    newLine.fadeIn(1500);
+
+    rowCount = $('tr').length;
+
+    $('tr td:last-child').hide();
+    $('tr:first td:last-child').attr('rowspan', rowCount).show();
+
+    refreshEditable();
+
+}
+
+function createRow() {
+  if (!columns.length){
+    return createColumn();
+  }
+  const totalrows = columns[0].length;
+
+  if (totalrows >= 4) return false;
+
+  drawNewRow();
+
+  columns.forEach(function(col){
+    col.push('New');
+  });
+
+  var action = "updateColumns";
+
+  var data = columns;
+
+  sendAction(action, data);
+
 }
 
 function updateColumns(c) {
@@ -590,24 +740,41 @@ function deleteColumns(next) {
 }
 
 function initColumns(columnArray) {
-    totalcolumns = 0;
     columns = columnArray;
 
+    // Remove all cols
     $('.col').remove();
+    // Remove all rows except first
+    $("tr:not(:first)").remove();
 
-    for (var i in columnArray) {
-        column = columnArray[i];
-
-        drawNewColumn(
-            column
-        );
+    // Init cols and rows
+    if (columnArray.length){
+      columnArray.forEach(drawNewColumn);
+      for (var i=0; i < columnArray[0].length - 1; i++)
+        drawNewRow();
     }
+
+    for (var i in columns){
+      const col = columns[i];
+      for (var j in col){
+        setCellText(parseInt(i)+1, parseInt(j)+1, col[j]);
+      }
+    }
+
 }
 
 
 function changeThemeTo(theme) {
     currentTheme = theme;
     $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
+}
+
+
+function changeBgTo(bgUrl) {
+    $("#board-doodles").css(
+      "background-image",
+      "url('" + bgUrl + "')"
+    );
 }
 
 
@@ -642,6 +809,30 @@ function setName(name) {
     sendAction('setUserName', name);
 
     setCookie('scrumscrum-username', name, 365);
+}
+
+function updateUserInfo() {
+    const username = getCookie('adh-username');
+    const userEmail = getCookie('adh-email');
+    const userAvatar = getCookie('adh-avatar');
+
+    if (!username)
+      return false;
+
+    sendAction('setUserInfo', {
+      username,
+      userEmail,
+      userAvatar
+    });
+    userCache[username] = {
+      username,
+      userEmail,
+      userAvatar
+    };
+}
+
+function updateUserCache(users) {
+  userCache = users;
 }
 
 function displayInitialUsers(users) {
@@ -768,7 +959,7 @@ function adjustMarker(originalSize, newSize) {
     $("#marker,#eraser").css('top','');
     // console.log( "markerleft: " + $('#marker').css('left') );
     // console.log( "size: " + newSize.width);
-     
+
     //if either has gone over the edge of the board, just bring it in
     if ( parseFloat($('#marker').css('left')) > newSize.width - 100)
     {
@@ -778,6 +969,18 @@ function adjustMarker(originalSize, newSize) {
     {
         $('#eraser').css('left', newSize.width-100 + 'px' );
     }
+}
+
+
+function fullscreenMode() {
+    var offsets = calcCardOffset();
+    var size = {
+      width: $(window).width() - 32,
+      height: $(window).height() - 85
+    };
+    resizeBoard(size);
+    boardResizeHappened(null, size);
+    adjustCard(offsets, true);
 }
 
 //////////////////////////////////////////////////////////
@@ -809,7 +1012,7 @@ $(function() {
                 randomCardColour(),
                 "card");
         });
-    
+
     $("#create-sticky")
         .click(function() {
             var rotation = Math.random() * 4 - 2; //add a bit of random rotation (+/- 2deg)
@@ -825,6 +1028,21 @@ $(function() {
         });
 
 
+    $("#create-label")
+        .click(function() {
+            var rotation = Math.random() * 4 - 2; //add a bit of random rotation (+/- 2deg)
+            uniqueID = Math.round(Math.random() * 99999999); //is this big enough to assure uniqueness?
+            //alert(uniqueID);
+            createCard(
+                'card' + uniqueID,
+                '',
+                58, $('div.board-outline').height(), // hack - not a great way to get the new card coordinates, but most consistant ATM
+                rotation,
+                randomCardColour(),
+                "label");
+        });
+
+
 
     // Style changer
     $("#smallify").click(function() {
@@ -834,7 +1052,7 @@ $(function() {
         var oldHeight = $(".board-outline").height();
 
         var offsets = calcCardOffset();
-    
+
         if (currentTheme == "bigcards") {
             changeThemeTo('smallcards');
             newBoardSize.height = oldHeight / 1.5;
@@ -849,7 +1067,7 @@ $(function() {
 			currentTheme = "bigcards";
 			$("link[title=cardsize]").attr("href", "css/bigcards.css");
         }*/
-    
+
         resizeBoard(newBoardSize);
         boardResizeHappened(null, newBoardSize);
         adjustCard(offsets, true);
@@ -874,9 +1092,18 @@ $(function() {
         }
     );
 
+    $('.line-buttons').hover(
+        function() {
+            $('.line-icon').fadeIn(10);
+        },
+        function() {
+            $('.line-icon').fadeOut(150);
+        }
+    );
+
     $('#add-col').click(
         function() {
-            createColumn('New');
+            createColumn();
             return false;
         }
     );
@@ -884,6 +1111,20 @@ $(function() {
     $('#delete-col').click(
         function() {
             deleteColumn();
+            return false;
+        }
+    );
+
+    $('#add-line').click(
+        function() {
+            createRow();
+            return false;
+        }
+    );
+
+    $('#delete-line').click(
+        function() {
+            deleteRow();
             return false;
         }
     );
@@ -900,6 +1141,7 @@ $(function() {
     //
 
     var user_name = getCookie('scrumscrum-username');
+    var adh_user_name = getCookie('adh-username');
 
 
 
@@ -921,7 +1163,14 @@ $(function() {
         setName($(this).val());
     });
 
-    $("#yourname-input").val(user_name);
+    if (adh_user_name){
+      $("#yourname-input").val(adh_user_name);
+      $("#yourname-input").prop('readonly', true);
+    }
+    else {
+      $("#yourname-input").val(user_name);
+    }
+
     $("#yourname-input").blur();
 
     $("#yourname-li").hide();
@@ -979,7 +1228,7 @@ $(function() {
     });
 
 
-    
+
     $( "#menu" ).menu();
     $('#configmenu').click(function() {
         $('#menu').show();
@@ -990,7 +1239,7 @@ $(function() {
     $("#menu,#configmenu").click( function(e) {
         e.stopPropagation(); // this stops the event from bubbling up to the body
     });
-    
+
     $(".ceditable").editable({
         multiline: false,
         saveDelay: 600, //wait 600ms before calling "save" callback
@@ -1005,7 +1254,7 @@ $(function() {
                 item: 'board-title',
                 text: content.target.innerText
             };
-            
+
             if (content.target.innerText.length > 0)
                 sendAction(action, data);
         },
@@ -1015,5 +1264,5 @@ $(function() {
         }
     });
 
-    
+
 });

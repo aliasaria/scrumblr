@@ -18,6 +18,115 @@
 	display: block;
 }
 
+/* .label .content {
+	font-family: "Rock Salt" !important;
+	font-size: 1.2em;
+} */
+
+.label {
+	width: 230px;
+	height: 60px;
+	xpadding: 5px; float: left;
+	xmargin: 0 10px 10px 0;
+	font-size: .9em;
+	font-family: "Rock Salt" !important;
+	border-radius: 5px;
+
+
+
+	overflow: hidden;
+
+	position: absolute;
+	z-index: 10;
+
+	top: 460px;
+	left: 0px;
+
+	display: block;
+}
+
+.label .content {
+	overflow: hidden;
+	display: block;
+	width: 190px;
+	height: 60px;
+	margin: auto;
+	padding: 0 20px;
+
+	font-family: "Rock Salt" !important;
+	font-size: 1.2em;
+	letter-spacing: 0px;
+
+	xtext-shadow: 0px 0px 1px #444;
+
+	opacity: .9;
+	text-align: center;
+	xline-height: 16px;
+
+	align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.label .card-icon {
+	left: 210px;
+	top: 5px;
+	z-index: 99999990;
+}
+
+.label .card-icon2 {
+	left: 210px;
+	top: 28px;
+
+}
+
+.label.white {
+	color: black;
+	background: rgba(255, 255, 255, 0.5);
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+
+.label.green {
+	background: #016a70;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #fff;
+	color: #ffffff;
+}
+
+.label.green .content {
+	color: #ffffff;
+}
+
+.label.yellow {
+	background: #f1cd5f;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #ccc;
+	color: #black;
+}
+
+.label.yellow .content {
+	color: black;
+}
+
+.label.blue {
+	background: #d37153;
+	opacity: 0.8;
+	box-shadow: 5px 5px 5px #fff;
+	color: #ffffff;
+}
+
+.label.blue .content {
+	color: #ffffff;
+}
+
+/* .sticky .filler {
+	margin-right: 5px;
+    margin-bottom: 23px;
+    margin-left: 25px;
+} */
+
+
 .pink {
 }
 
@@ -40,6 +149,17 @@
 	z-index: -1000;
 }
 
+.card-avatar {
+	position: absolute;
+	top: 60% !important;
+	left: 80%;
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	z-index: -500;
+	border-radius: 50%;
+}
+
 .content {
 	overflow: hidden;
 	display: block;
@@ -47,7 +167,7 @@
 	height: 88px;
 	margin: 5px 23px 0px 34px;
 
-	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	font-family: 'Handlee',"Arial Rounded MT Bold", arial, serif;
 	font-size: 18px;
 	letter-spacing: 0px;
 
@@ -103,7 +223,8 @@
 	height: 68px;
 	margin: 1px 3px 0px 32px;
 
-	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	font-family: 'Handlee',"Arial Rounded MT Bold", arial, serif;
+	font-weight: bold;
 	font-size: 16px;
 	letter-spacing: 0px;
 
@@ -129,7 +250,7 @@
 .sticky .card-icon2 {
 	left: 100px;
 	top: 14px;
-	
+
 }
 
 .sticky .filler {

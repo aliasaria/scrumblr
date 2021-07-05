@@ -1,22 +1,22 @@
-.card { 
+.card {
 	width: 100px;
 	height: 50px;
 	xpadding: 5px; float: left;
 	xmargin: 0 10px 10px 0;
 	font-size: .9em;
-	
+
 
 
 	overflow: hidden;
-	
+
 	position: absolute;
 	z-index: 10;
-	
+
 	top: 100px;
 	left: 0px;
-	
+
 	display: block;
-	
+
 	xborder: solid rgba(92, 157, 181,0.5) 3px;
 	background-color: #ECDC96;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ECDC96), color-stop(100%,#EAD272));
@@ -46,23 +46,34 @@
 	display: none;
 }
 
-.content { 
+.card-avatar {
+	position: absolute;
+	top: 60% !important;
+	left: 80%;
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	z-index: -500;
+	border-radius: 50%;
+}
+
+.content {
 	overflow: hidden;
 	display: block;
-	xwidth: 70%; 
+	xwidth: 70%;
 	height: 90px;
 	xmargin: 5px 20px 0px 30px;
-	
+
 	font-family: 'Helvetica Neue', arial, serif;
 	font-size: 12px;
-	letter-spacing: 0px;	
-	
+	letter-spacing: 0px;
+
 	xtext-shadow: 0px 0px 1px #444;
-	
+
 	opacity: 1;
-	
+
 	color: black;
 	text-align: center;
 	padding-top: 0px;
-	
+
 }
