@@ -88,13 +88,9 @@ body {
 	font-family: 'Helvetica Neue Light', arial, serif;
 	font-size: 13px;
 	color: #333;
-	background-color: #fff;
-
 	padding-left: 10px;
-
 	xheight: 1400px;
 	xwidth: 2000px;
-
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
