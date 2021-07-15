@@ -762,11 +762,13 @@ input:hover {
 #marker {
 	position: absolute; bottom: 0; right: 200px;
 	z-index: 1;
+  display: none;
 }
 
 #eraser {
 	position: absolute; bottom: 0; right: 70px;
 	z-index: 1;
+  display: none;
 }
 
 
@@ -884,8 +886,10 @@ img {
 
 .logo {
 	position: absolute;
-	top: 20px;
-	left: 20px;
-	opacity: 0.7;
+	top: 100%;
+  margin-top: -35px;
+	left: 100%;
+  margin-left: -95px;
+	opacity: 0.5;
 	z-index: 1;
 }
