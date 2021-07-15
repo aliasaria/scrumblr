@@ -427,6 +427,10 @@ h2 {
 	cursor: pointer;
 }
 
+.buttons.dark {
+  color: #ffffff;
+}
+
 .names {
 	padding-left: 10px;
 	margin-top: 18px;

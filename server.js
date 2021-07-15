@@ -118,7 +118,8 @@ router.get('/:id', function(req, res){
 	else {
 		res.render('index.pug', {
 			pageTitle: ('scrumblr - ' + req.params.id),
-			embed: req.query.embed
+			embed: req.query.embed,
+			darkMode: req.query.darkmode
 		});
 	}
 });
