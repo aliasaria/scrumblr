@@ -57,6 +57,7 @@ var router = express.Router();
 app.set('view engine', 'pug');
 
 app.use(compression());
+app.use(express.json());
 app.use(nconf.get('server:baseurl'), router);
 
 // app.locals.ga = ga.enabled;
@@ -106,11 +107,162 @@ router.get('/demo', function(req, res) {
 });
 
 router.get('/:id', function(req, res){
-	res.render('index.pug', {
-		pageTitle: ('scrumblr - ' + req.params.id)
+
+	// Check for background param
+	if (req.query.bg !== undefined){
+		const room = '/' + req.params.id;
+		db.setBg(room, req.query.bg, function() {
+			res.redirect(302, room);
+		});
+	}
+	else {
+		res.render('index.pug', {
+			pageTitle: ('scrumblr - ' + req.params.id),
+			embed: req.query.embed,
+			darkMode: req.query.darkmode
+		});
+	}
+});
+
+// *******************
+// REST API Routes
+// *******************
+
+router.get('/api/rooms/:id', function(req, res) {
+	const room = '/' + req.params.id;
+
+	db.getAllColumns ( room, function (columns) {
+		db.getTheme( room, function(theme) {
+			db.getBg( room, function(bg) {
+				db.getBoardSize( room, function(size) {
+					db.getAllTextsMap( room , function (texts) {
+						res.json({
+							columns,
+							theme,
+							size,
+							texts,
+							bg
+						});
+					});
+				});
+			});
+		});
 	});
 });
 
+router.put('/api/rooms/:id', function(req, res) {
+	const room = '/' + req.params.id;
+	var operations = [];
+
+	// Add an empty function to avoid hangups
+	operations.push(function (callback){
+		callback && callback();
+	});
+
+	if (req.body.columns){
+		// TODO: check columns format
+		operations.push(function (callback){
+			db.setColumns(room, req.body.columns, callback);
+		});
+	}
+
+	if (req.body.theme){
+		operations.push(function (callback){
+			db.setTheme(room, req.body.theme, callback);
+		});
+	}
+
+	if (req.body.bg){
+		operations.push(function (callback){
+			db.setBg(room, req.body.bg, callback);
+		});
+	}
+
+	if (req.body.size){
+		operations.push(function (callback){
+			db.setBoardSize(room, req.body.size, callback);
+		});
+	}
+
+	if (req.body.texts){
+		operations.push(function (callback){
+			db.setAllTextsMap(room, req.body.texts, callback);
+		});
+	}
+
+	async.parallel(operations, function(){
+		res.json({ ok: true });
+	});
+
+});
+
+
+router.delete('/api/rooms/:id', function(req, res) {
+	const room = '/' + req.params.id;
+	db.clearRoom('/' + room, function() {
+		res.json({ ok: true });
+	});
+});
+
+
+router.get('/api/rooms/:roomId/cards', function(req, res) {
+	const room = '/' + req.params.roomId;
+
+	db.getAllCards( room , function (cards) {
+		res.json(cards);
+	});
+});
+
+router.post('/api/rooms/:roomId/cards', function(req, res) {
+	const room = '/' + req.params.roomId;
+	const card = req.body;
+	const scrub = sanitizer.sanitize;
+
+	//delete card.id;
+	card.id = "card" + Math.floor(Math.random() * 100000000);;
+	card.colour = scrub(card.colour);
+	card.rot = scrub(card.rot);
+	card.rot = scrub(card.rot);
+	card.x = parseFloat(card.x);
+	card.y = parseFloat(card.y);
+	card.text = scrub(card.text);
+	card.type = scrub(card.type);
+	// TODO: validate stickers
+
+	db.createCard(room, card.id, card, function() {
+		res.json(card);
+	});
+
+});
+
+router.get('/api/rooms/:roomId/cards/:cardId', function(req, res) {
+	const room = '/' + req.params.roomId;
+	const id = req.params.cardId;
+
+	db.getCard( room , id , function (card) {
+		res.json(card);
+	});
+});
+
+router.put('/api/rooms/:roomId/cards/:cardId', function(req, res) {
+	const room = '/' + req.params.roomId;
+	const id = req.params.cardId;
+	const card = req.body;
+
+	db.editCard( room , id , card, function (card) {
+		res.json(card);
+	});
+});
+
+
+router.delete('/api/rooms/:roomId/cards/:cardId', function(req, res) {
+	const room = '/' + req.params.roomId;
+	const id = req.params.cardId;
+
+	db.deleteCard( room , id , function (card) {
+		res.json({ok: true});
+	});
+});
 
 /**************
  SOCKET.I0
@@ -195,10 +347,11 @@ io.on('connection', (client) => {
 				clean_data.rot = scrub(data.rot);
 				clean_data.colour = scrub(data.colour);
 				clean_data.type = scrub(data.type);
+				clean_data.username = data.username ? scrub(data.username) : null;
 
 
 				getRoom(client, function(room) {
-					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.type);
+					createCard( room, clean_data.id, clean_data.text, clean_data.x, clean_data.y, clean_data.rot, clean_data.colour, clean_data.type, clean_data.username);
 				});
 
 				message_out = {
@@ -275,17 +428,11 @@ io.on('connection', (client) => {
 				if (!(columns instanceof Array))
 					break;
 
-				var clean_columns = [];
-
-				for (var i in columns)
-				{
-					clean_columns[i] = scrub( columns[i] );
-				}
 				getRoom( client, function(room) {
-					db.setColumns( room, clean_columns );
+					db.setColumns( room, columns );
 				});
 
-				broadcastToRoom( client, { action: 'updateColumns', data: clean_columns } );
+				broadcastToRoom( client, { action: 'updateColumns', data: columns } );
 
 				break;
 
@@ -313,6 +460,30 @@ io.on('connection', (client) => {
 				msg.action = 'nameChangeAnnounce';
 				msg.data = { sid: client.id, user_name: clean_message.data };
 				broadcastToRoom( client, msg );
+				break;
+
+
+			case 'setUserInfo':
+				const username = scrub(message.data.username);
+				const userEmail = scrub(message.data.userEmail);
+				const userAvatar = scrub(message.data.userAvatar);
+				const userinfo = {
+					username,
+					userEmail,
+					userAvatar
+				};
+
+				getRoom(client, function(room) {
+					db.addUser(room, username, userinfo, function(){
+						db.getAllUsers(room, function(users){
+							var msg = {};
+							msg.action = 'updateUserCache';
+							msg.data = users;
+							broadcastToRoom( client, msg );
+						});
+					});
+				});
+
 				break;
 
 			case 'addSticker':
@@ -384,17 +555,14 @@ function initClient ( client )
 	//console.log ('initClient Started');
 	getRoom(client, function(room) {
 
-		db.getAllCards( room , function (cards) {
-
+		db.getAllUsers(room, function(users){
 			client.send(
 				{
-					action: 'initCards',
-					data: cards
+					action: 'updateUserCache',
+					data: users
 				}
 			);
-
 		});
-
 
 		db.getAllColumns ( room, function (columns) {
 			client.send(
@@ -414,6 +582,18 @@ function initClient ( client )
 				{
 					action: 'changeTheme',
 					data: theme
+				}
+			);
+		});
+
+		db.getBg( room, function(bg) {
+
+			if (bg === null) bg = 'css/bg/scribbles2.png';
+
+			client.send(
+				{
+					action: 'changeBg',
+					data: bg
 				}
 			);
 		});
@@ -441,6 +621,17 @@ function initClient ( client )
 					}
 				);
 			}
+		});
+
+		db.getAllCards( room , function (cards) {
+
+			client.send(
+				{
+					action: 'initCards',
+					data: cards
+				}
+			);
+
 		});
 
 		roommates_clients = rooms.room_clients(room);
@@ -497,7 +688,7 @@ function broadcastToRoom ( client, message ) {
 }
 
 //----------------CARD FUNCTIONS
-function createCard( room, id, text, x, y, rot, colour, type ) {
+function createCard( room, id, text, x, y, rot, colour, type, username ) {
 	var card = {
 		id: id,
 		colour: colour,
@@ -506,7 +697,8 @@ function createCard( room, id, text, x, y, rot, colour, type ) {
 		y: y,
 		text: text,
 		type: type,
-		sticker: null
+		sticker: null,
+		username: username
 	};
 
 	db.createCard(room, id, card);

@@ -2,65 +2,14 @@ extends layout
 
 block body
 	// Header Start
-	header.site-header
-		div.site-header__wrapper
-			a.greyheading(href="/") scrumblr
-			//ul.nav__wrapper
-				li.nav__item
-					a#configmenu(href="#")
-						svg.title(width='12', height='12')
-							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-					ul#menu
-						li
-							div Enlarge
-						li
-							div Books
-						li
-							div Electronics
-						li
-							div Movies
-				//- li.nav__item
-				//- 	a(href="#")
-				//- 		svg.title(width='12', height='12')
-				//- 			<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-
-
-	- if (locals.demo)
-		div.notice-bar this is a demo board. to make a private board, go to <a href="/">scrumblr home</a>
-	
-	//div.config
-	//	i.fa.fa-cog.fa-lg.faded-icon
-	//- svg(width='15', height='15')
-	//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--home" />
-	<br/><br/>
-	//p.greyheading scrumblr by <a href="https://github.com/aliasaria">aliasaria</a>
 
 	div.board-wrapper
-		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline;")
-			h1#board-title.ceditable(style="") Board Title
-			//div(style="")
-					a#configmenu(href="#")
-						svg.title(width='12', height='12')
-							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--adjust-horizontal" />
-					ul#menu
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div(style="height: 12px;")
-								svg.title(width='12', height='12')
-									<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--bin" />
-						li
-							div Poop
+		div.topflexcontainer(style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;")
 
 		div.board-outline(style="clear:both;")
+			img.logo(src="images/adh-logo.png", height=25, style="")
 			div#board
-				div#board-doodles
+				div#board-doodles(style="background-image: url('css/bg/scribbles2.png');")
 				//<canvas id="signature-pad" class="signature-pad" width=100% height=100%></canvas>
 
 				image#marker(src='images/marker.png')
@@ -68,21 +17,30 @@ block body
 
 
 				table#board-table.board-table
-					tr
+					tr(data-row='1')
 						td#icon-col(width='1%')
-							svg#add-col.col-icon(width='20', height='20')
+							svg#add-col.col-icon(width='20', height='20', title='Add column')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
-							svg#delete-col.col-icon(width='20', height='20')
+							svg#delete-col.col-icon(width='20', height='20', title='Remove column')
 								<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
 
+				div.line-buttons
+					div.line-buttons-inner
+						svg#add-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--plus-circle" />
+						svg#delete-line.line-icon(width='20', height='20')
+							<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--minus-circle" />
 
-		div.buttons
+
+		div.buttons(class=locals.darkMode ? "dark" : "")
 			//- svg#pen.bottom-icon(width='20', height='20', data-ison='true')
 			//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--pen" />
 			svg#create-card.bottom-icon(width='20', height='20')
 				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--text-document" />
 			svg#create-sticky.bottom-icon(width='20', height='20')
 				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--note" />
+			svg#create-label.bottom-icon(width='20', height='20')
+				<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paragraph" />
 			//- svg#smallify.bottom-icon(width='20', height='20')
 			//- 	<use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--caret-vertical-circle" />
 
@@ -112,12 +70,13 @@ block body
 			//	image(src="/images/stickers/sticker-redstar.png")
 
 
-		div.names
-			p connected:
-			//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
-			input#yourname-input
-			span.you-text (you)
-			ul#names-ul
+		- if (!locals.embed)
+			div.names
+				p Connected users:
+				//image#user-icon(src="/images/icons/cc/black/png/user_icon&16.png")
+				input#yourname-input
+				span.you-text (you)
+				ul#names-ul
 
 	//div.trash
 	//	i.fa.fa-trash-o.fa-lg.faded-icon

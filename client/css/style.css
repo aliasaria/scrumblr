@@ -1,4 +1,73 @@
 /* reset css */
+
+@font-face {
+    font-family: 'Nexa Bold';
+    src: url('/fonts/NexaFreeBoldwebfont.eot');
+    src: local('Nexa Bold'), url('/fonts/NexaFreeBoldwebfont.woff') format('woff'), url('/fonts//NexaFreeBoldwebfont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/NexaFreeBoldwebfont.eot');
+    src: local('Nexa Bold'), url('/fonts/NexaFreeBoldwebfont.woff') format('woff'), url('/fonts//NexaFreeBoldwebfont.ttf') format('truetype');
+}
+
+// ------------------------------------------------
+
+/* Manrope-regular - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Manrope Regular'), local('Manrope-Regular'),
+       url('/fonts/manrope-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Regular.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-regular.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+/* Manrope-500 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Manrope Medium'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-medium.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Medium.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-medium.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+/* Manrope-600 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Manrope SemiBold'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-semibold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-SemiBold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-semibold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+/* Manrope-700 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Manrope Bold'), local('Manrope-SemiBold'),
+       url('/fonts/manrope-bold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-Bold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-bold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+/* Manrope-800 - latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Manrope ExtraBold'), local('Manrope-ExtraBold'),
+       url('/fonts/manrope-extrabold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/Manrope-ExtraBold.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/manrope-extrabold.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
 body{line-height:1}
@@ -19,21 +88,15 @@ body {
 	font-family: 'Helvetica Neue Light', arial, serif;
 	font-size: 13px;
 	color: #333;
-	background-color: #ddd;
-	xbackground-image: -webkit-gradient(radial, 265 118, 456, 147 0, 29, from(#DDDDDD), to(#f3f3f3));
-
 	padding-left: 10px;
-
 	xheight: 1400px;
 	xwidth: 2000px;
-
 	user-select: none;
 	-o-user-select:none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 
-	background-image: url('bg/concrete_wall_2_2.png');
 }
 
 /*
@@ -42,12 +105,12 @@ https://headers-css.vercel.app/styles/header-1.css
 
 .site-header {
 	position: relative;
-	background-color: none; 
+	background-color: none;
 }
 
 .site-header__wrapper {
 	padding-top: 1rem;
-	padding-bottom: 1rem; 
+	padding-bottom: 1rem;
 }
 
 .site-header__wrapper {
@@ -56,10 +119,10 @@ https://headers-css.vercel.app/styles/header-1.css
 	align-items: center;
 	padding-top: 0;
 	padding-bottom: 0;
-} 
+}
 
 .nav__wrapper {
-	  display: flex; 
+	  display: flex;
 }
 
 .ui-menu { width: 150px; }
@@ -74,7 +137,7 @@ https://headers-css.vercel.app/styles/header-1.css
 
 .nav__item a {
 	display: block;
-    padding: .5rem 1rem; 
+    padding: .5rem 1rem;
 }
 
 .ui-widget-content {
@@ -96,21 +159,11 @@ https://headers-css.vercel.app/styles/header-1.css
 
 #board {
 	position: relative;
-	background-color: #dcd5d1;
+	background-color: #f4f3f3;
 
 	height: 100%;
 	xwidth: 980px;
 	xborder: solid silver 8px;
-
-	background-image: -webkit-gradient(
-	    linear,
-	    left top,
-	    right bottom,
-	    color-stop(0.49, rgb(214,210,206)),
-	    color-stop(0.84, rgb(196,191,182))
-	);
-
-	xbackground: -moz-linear-gradient(top,  rgb(214,210,206),  #000);
 
 	-moz-box-shadow:inset 1px 1px 3px #999;
 	box-shadow:inset 1px 1px 3px #999;
@@ -119,10 +172,10 @@ https://headers-css.vercel.app/styles/header-1.css
 
 
 .board-outline {
-	border: solid #ccc 8px;
+	border: solid #ccc 2px;
 	display: block;
 	width: 996px;
-	height: 466px;
+	height: 510px;
 
 	xmargin-left: auto;
 	xmargin-right: auto;
@@ -137,8 +190,8 @@ https://headers-css.vercel.app/styles/header-1.css
 	height: 100%;
 	position: absolute;
 	display: inline;
-	opacity: 0.035;
-	background-image: url('scribbles2.png');
+	opacity: 1;
+	background-repeat: no-repeat;
 }
 
 
@@ -161,9 +214,14 @@ width: 16px; height: 16px;
 }
 
 
+.card-avatar {
+	opacity: 1 !important;
+}
+
+
 .card-icon2 {
 	top: 17%; left: 85%;
-
+  cursor: pointer;
 }
 
 
@@ -224,7 +282,6 @@ width: 16px; height: 16px;
 	xborder-left: dashed #19ba98 5px;
 	text-align: center;
 	vertical-align: top;
-	height: 100%;
 	xopacity: 1;
 	background-image: url('../images/green-board-line.png');
 	background-repeat: repeat-y;
@@ -235,7 +292,6 @@ width: 16px; height: 16px;
 	border-left: none;
 	text-align: center;
 	vertical-align: top;
-	height: 100%;
 	background-image: none;
 
 }
@@ -314,12 +370,35 @@ h2 {
 	position: absolute; right: 3px; top: 228px; display: none;
 }
 
-.col-icon {
-	opacity: 0.4;	
+.col-icon, .line-icon {
+	opacity: 0.4;
+	cursor: pointer;
 }
 
-.col-icon:hover {
+.col-icon:hover, .line-icon:hover {
 	opacity: 1.0;
+}
+
+.line-buttons {
+	position: relative;
+	height: 25px;
+	top: calc(100% - 25px);
+	width: 100%;
+}
+
+.line-buttons-inner {
+	width: 52px;
+	margin: auto;
+	padding-right: 10px;
+}
+
+.line-icon {
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+ #add-line, #delete-line {
+	display: none;
 }
 
 .column-editable {
@@ -345,6 +424,11 @@ h2 {
 
 .buttons {
 	float: left;
+	cursor: pointer;
+}
+
+.buttons.dark {
+  color: #ffffff;
 }
 
 .names {
@@ -353,8 +437,7 @@ h2 {
 	xwidth: 980px;
 	text-align: right;
 	color: #bbb;
-	letter-spacing: 4px;
-	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
+	font-family:  "Manrope", "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
 
 }
@@ -377,7 +460,7 @@ h2 {
    padding: 0; //2px 8px 2px 2px;
     border: none;
     outline: 0;
-    width: 100px;
+    width: 200px;
     background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 
@@ -387,7 +470,6 @@ h2 {
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
-	letter-spacing: 4px;
 	margin:0;
 
 	position: relative;
@@ -397,7 +479,7 @@ h2 {
     xpadding: 2px 2px 2px 2px;
     xborder: solid 1px #E5E5E5;
     outline: 0;
-    width: 100px;
+    width: 200px;
     background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
 xopacity: .5;
@@ -408,7 +490,6 @@ xopacity: .5;
 	text-align: right;
 	font-family:  "Helvetica Neue Light", "HelveticaNeue-Light", 'Helvetica Neue', arial, serif;
 	font-size: 13px;
-	letter-spacing: 4px;
 	margin:0;
 
 }
@@ -636,6 +717,19 @@ input.text {
 	border-bottom: dashed 3px #19ba98;
 }
 
+input.url {
+    width: 360px;
+    background: none;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: none;
+	font-size: 18px;
+	font-family: 'Covered By Your Grace',"Arial Rounded MT Bold", arial, serif;
+	color: #5c9db4;
+	text-align: center;
+	border-bottom: dashed 3px #19ba98;
+}
+
 input:hover {
     x-webkit-box-shadow: 0px 0px 4px #000;
     xbackground: none;
@@ -672,11 +766,13 @@ input:hover {
 #marker {
 	position: absolute; bottom: 0; right: 200px;
 	z-index: 1;
+  display: none;
 }
 
 #eraser {
 	position: absolute; bottom: 0; right: 70px;
 	z-index: 1;
+  display: none;
 }
 
 
@@ -763,7 +859,7 @@ img {
 	-ms-user-select: none;
 	user-select: none;
   }
-  
+
   .signature-pad {
 	position: absolute;
 	left: 0;
@@ -782,4 +878,22 @@ img {
   #pen[data-ison=true] {
 	color: black;
 	opacity: 1;
+}
+
+.sticker, #add-col, #delete-col {
+  cursor: pointer;
+}
+
+.delete-card-icon {
+	cursor: pointer;
+}
+
+.logo {
+	position: absolute;
+	top: 100%;
+  margin-top: -35px;
+	left: 100%;
+  margin-left: -95px;
+	opacity: 0.5;
+	z-index: 1;
 }
