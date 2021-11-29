@@ -23,13 +23,19 @@ nconf.argv()
 .file({ file: 'config.json' });
 
 // Now set default config values:
-nconf.set('server:baseurl', '/');
-nconf.set('server:port', 8080);
-
-nconf.set('ga:account', 'UA-2069672-4');
-
-nconf.set('redis:url', 'redis://127.0.0.1:6379');
-nconf.set('redis:prefix', '#scrumblr#');
+nconf.defaults({
+    server: {
+        baseurl: '/',
+        port: 8080
+    },
+    ga: {
+        account: 'UA-2069672-4'
+    },
+    redis: {
+        url: 'redis://127.0.0.1:6379',
+        prefix: '#scrumblr#'
+    }
+});
 
 console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
 console.log('server: ' + JSON.stringify(nconf.get('server')));
