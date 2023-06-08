@@ -1,0 +1,22 @@
+version: "3"
+services:
+  scrumblr:
+    image: scrumblr:${version}
+    build:
+      context: ./
+      args:
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+        - no_proxy=${no_proxy}
+    environment:
+      - http_proxy=${http_proxy}
+      - https_proxy=${https_proxy}
+      - no_proxy=${no_proxy}
+    depends_on:
+      - redis
+    links:
+      - redis:redis
+    ports:
+      - 80:80
+  redis:
+    image: redis:2.8
