@@ -20,6 +20,8 @@ use scrumblr
 
 if you'd like to use scrumblr go to [scrumblr.ca](http://scrumblr.ca). new boards are made simply by modifying the url to something unique. e.g. your team could use a shared board at: *http://scrumblr.ca/thisisoursecretboard23423242*
 
+if you want to host a on-demand version for e.g. meetups or presentation you can run `docker-compose --build -d`. the application is then reachable via `localhost:7000`.
+
 alternatively, you can follow the instructions below to setup scrumblr yourself. it is very simple -- it just uses redis and node.js.
 
 if you are a developer, please fork and submit changes/fixes.
