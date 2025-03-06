@@ -11,7 +11,7 @@
     "lib": "lib/"
   },
   "engines": {
-    "node": "~13"
+    "node": ">19"
   },
   "dependencies": {
     "async": "3.x",
