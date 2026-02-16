@@ -192,32 +192,30 @@ function drawNewCard(id, text, x, y, rot, colour, type, sticker, animationspeed)
     var h = '';
 
     if (type == 'card' || type == null) {
-        h = '<div id="' + id + '" class="card ' + colour +
-            ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
-            'deg);\
-        ">\
+        h = '<div class="card draggable cardstack">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
-        <svg class="card-icon card-icon2 change-colour" data-colour="' + colour + '" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
-        <img class="card-image" src="images/' + colour + '-card.png">\
-        <div id="content:' + id +
-            '" class="content stickertarget droppable">' +
-            text + '</div><span class="filler"></span>\
+        <svg class="card-icon card-icon2 change-colour" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--paintbrush" /></svg>\
+        <img class="card-image">\
+        <div class="content stickertarget droppable"></div><span class="filler"></span>\
         </div>';
     }
     else if (type == 'sticky') {
-         h = '<div id="' + id + '" class="sticky ' + colour +
-         ' draggable cardstack" style="-webkit-transform:rotate(' + rot +
-         'deg);\
-        ">\
+         h = '<div class="sticky draggable cardstack">\
         <svg class="card-icon delete-card-icon" width="15" height="15"><use xlink:href="teenyicons/teenyicons-outline-sprite.svg#outline--x-circle" /></svg>\
-        <img class="card-image" src="images/postit/p' + colour + '.png">\
-        <div id="content:' + id +
-            '" class="content stickertarget droppable">' +
-            text + '</div><span class="filler"></span>\
+        <img class="card-image">\
+        <div class="content stickertarget droppable"></div><span class="filler"></span>\
         </div>';
     }
 
     var card = $(h);
+    card.attr('id', id).addClass(colour).css('-webkit-transform', 'rotate(' + parseFloat(rot) + 'deg)');
+    card.children('.content').attr('id', 'content:' + id).text(text);
+    card.children('.change-colour').data('colour', colour);
+    if (type == 'card' || type == null) {
+        card.children('.card-image').attr('src', 'images/' + colour + '-card.png');
+    } else if (type == 'sticky') {
+        card.children('.card-image').attr('src', 'images/postit/p' + colour + '.png');
+    }
     card.appendTo('#board');
 
     //@TODO
@@ -387,13 +385,16 @@ function addSticker(cardId, stickerId) {
 
     if (Array.isArray(stickerId)) {
         for (var i in stickerId) {
-            stickerContainer.prepend('<img src="images/stickers/' + stickerId[i] +
-                '.png" class="stuck-sticker">');
+            stickerContainer.prepend(
+                $('<img class="stuck-sticker">').attr('src', 'images/stickers/' + stickerId[i] + '.png')
+            );
         }
     } else {
-        if (stickerContainer.html().indexOf(stickerId) < 0)
-            stickerContainer.prepend('<img src="images/stickers/' + stickerId +
-                '.png" class="stuck-sticker">');
+        if (stickerContainer.html().indexOf(stickerId) < 0) {
+            stickerContainer.prepend(
+                $('<img class="stuck-sticker">').attr('src', 'images/stickers/' + stickerId + '.png')
+            );
+        }
     }
 
     $(".stuck-sticker").draggable({
@@ -500,7 +501,9 @@ function drawNewColumn(columnName) {
 
     $('#icon-col').before('<td class="' + cls +
         '" width="10%" style="display:none"><h2 id="col-' + (totalcolumns + 1) +
-        '" class="editable column-editable">' + columnName + '</h2></td>');
+        '" class="editable column-editable"></h2></td>');
+
+    $('#col-' + (totalcolumns + 1)).text(columnName);
 
     $('.editable').editable({
         multiline: false,
@@ -606,8 +609,8 @@ function initColumns(columnArray) {
 
 
 function changeThemeTo(theme) {
-    currentTheme = theme;
-    $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
+            currentTheme = theme;
+        $("link[title=cardsize]").attr("href", "css/" + theme + ".css");
 }
 
 
@@ -659,7 +662,7 @@ function displayUserJoined(sid, user_name) {
         name = sid.substring(0, 5);
 
 
-    $('#names-ul').append('<li id="user-' + sid + '">' + name + '</li>');
+    $('#names-ul').append($('<li>').attr('id', 'user-' + sid).text(name));
 }
 
 function displayUserLeft(sid) {
