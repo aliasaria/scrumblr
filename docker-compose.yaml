@@ -1,24 +1,22 @@
-version: "2"
 services:
   redis:
-    image: redis:latest
+    image: redis:7
     container_name: "redis-dock"
-    user: "redis"
-    ports:
-      - "6379:6379"
-    expose:
-      - "6379"
     networks:
-      -  scrumblr-net
+      - scrumblr-net
   node:
+    build: .
     image: "scrumblr:latest"
     container_name: "scrumblr"
-    user: "node"
+    environment:
+      - REDIS_URL=redis://redis-dock:6379
     ports:
-      - "1000:1000"
+      - "8080:8080"
+    depends_on:
+      - redis
     networks:
       - scrumblr-net
 networks:
-    scrumblr-net:
-      driver: bridge
-      name: scrumblr-net
+  scrumblr-net:
+    driver: bridge
+    name: scrumblr-net
