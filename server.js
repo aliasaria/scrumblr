@@ -32,7 +32,8 @@ nconf.defaults({
         account: 'UA-2069672-4'
     },
     redis: {
-        url: 'redis://127.0.0.1:6379',
+        // REDIS_URL is the conventional env var on hosts like Fly.io
+        url: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
         prefix: '#scrumblr#'
     }
 });
