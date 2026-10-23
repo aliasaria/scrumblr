@@ -32,14 +32,16 @@ nconf.defaults({
         account: 'UA-2069672-4'
     },
     redis: {
-        url: 'redis://127.0.0.1:6379',
+        // REDIS_URL is the conventional env var on hosts like Fly.io
+        url: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
         prefix: '#scrumblr#'
     }
 });
 
 console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
 console.log('server: ' + JSON.stringify(nconf.get('server')));
-console.log('redis: ' + JSON.stringify(nconf.get('redis')));
+// Mask any password in the redis url so it doesn't end up in logs
+console.log('redis: ' + JSON.stringify(nconf.get('redis')).replace(/(\/\/[^:\/]*:)[^@]*@/, '$1****@'));
 
 /**************
  LOCAL INCLUDES
