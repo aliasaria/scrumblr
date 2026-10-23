@@ -40,7 +40,8 @@ nconf.defaults({
 
 console.log('NODE_ENV: ' + nconf.get('NODE_ENV'));
 console.log('server: ' + JSON.stringify(nconf.get('server')));
-console.log('redis: ' + JSON.stringify(nconf.get('redis')));
+// Mask any password in the redis url so it doesn't end up in logs
+console.log('redis: ' + JSON.stringify(nconf.get('redis')).replace(/(\/\/[^:\/]*:)[^@]*@/, '$1****@'));
 
 /**************
  LOCAL INCLUDES
